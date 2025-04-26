@@ -156,6 +156,6 @@ document.getElementById("btnSalvar").addEventListener("click", () => {
 
 document.getElementById("btnMostrar").addEventListener("click", mostrarEventos);
 
-// Para usar funções globais nos botões
-window.editarEvento = editarEvento;
+// Atribuindo as funções ao window para garantir que sejam globais
 window.excluirEvento = excluirEvento;
+window.editarEvento = editarEvento;
