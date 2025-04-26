@@ -53,7 +53,7 @@ button:hover {
 }
 
 #listaEventos {
-  display: none;
+  display: block; /* Corrigido aqui */
   margin-top: 20px;
 }
 
@@ -83,6 +83,7 @@ button:hover {
   border-radius: 5px;
   padding: 8px;
   margin-right: 8px;
+  width: auto; /* Para os botões não ficarem gigantes */
 }
 
 .evento button:hover {
