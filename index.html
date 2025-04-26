@@ -109,10 +109,86 @@
   <div id="listaEventos"></div>
 </div>
 
-<!-- Seu script continua normalmente -->
+<!-- Script para interação com o Firebase -->
 <script type="module">
-  // Firebase e Funções (não alterei)
+  // Configuração do Firebase
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
+  import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "SUA-API-KEY",
+    authDomain: "SEU-PROJETO.firebaseapp.com",
+    projectId: "SEU-PROJETO",
+    storageBucket: "SEU-PROJETO.appspot.com",
+    messagingSenderId: "SEU-ID",
+    appId: "SUA-APP-ID"
+  };
+
+  // Inicializa o Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Referência para a coleção de eventos
+  const eventosCollection = collection(db, "eventos");
+
+  // Função para salvar evento no Firestore
+  const salvarEvento = async () => {
+    const titulo = document.getElementById('titulo').value;
+    const data = document.getElementById('data').value;
+    const horaTermino = document.getElementById('horaTermino').value;
+    const local = document.getElementById('local').value;
+    const descricao = document.getElementById('descricao').value;
+    const senha = document.getElementById('senha').value;
+
+    if (titulo && data && horaTermino && local && descricao && senha) {
+      try {
+        await addDoc(eventosCollection, {
+          titulo: titulo,
+          data: data,
+          horaTermino: horaTermino,
+          local: local,
+          descricao: descricao,
+          senha: senha
+        });
+        alert('Evento salvo com sucesso!');
+      } catch (e) {
+        console.error('Erro ao salvar evento: ', e);
+        alert('Erro ao salvar evento.');
+      }
+    } else {
+      alert('Preencha todos os campos!');
+    }
+  };
+
+  // Exibe eventos salvos
+  const mostrarEventos = async () => {
+    const eventos = await getDocs(eventosCollection);
+    const listaEventos = document.getElementById('listaEventos');
+    listaEventos.innerHTML = ''; // Limpa a lista antes de mostrar os eventos
+
+    eventos.forEach(doc => {
+      const evento = doc.data();
+      const eventoElement = document.createElement('div');
+      eventoElement.classList.add('evento');
+      eventoElement.innerHTML = `
+        <h3>${evento.titulo}</h3>
+        <p>Data: ${evento.data} | Hora de término: ${evento.horaTermino}</p>
+        <p>Local: ${evento.local}</p>
+        <p>${evento.descricao}</p>
+      `;
+      listaEventos.appendChild(eventoElement);
+    });
+
+    listaEventos.style.display = 'block';
+  };
+
+  // Adiciona evento de click para salvar
+  document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
+
+  // Adiciona evento de click para mostrar eventos
+  document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
 </script>
+
 <footer style="background-color: #3100ff; padding: 20px; text-align: center; font-size: 14px;">
   <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
   <p><strong>Agenda CCB</strong> é um projeto desenvolvido como atividade extensionista do curso de Engenharia de Software.</p>
@@ -120,5 +196,6 @@
   <p>Esta página foi criada por Raphael Henrique, com o uso de tecnologias web como HTML, CSS e JavaScript.</p>
   <p>Projeto acadêmico - 2025</p>
 </footer>
+
 </body>
 </html>
