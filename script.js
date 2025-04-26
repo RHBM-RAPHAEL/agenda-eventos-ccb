@@ -17,9 +17,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Variável de controle para alternar a visibilidade dos eventos
-let eventosVisiveis = false;
-
 // Função para salvar evento no Firestore
 async function salvarEvento(titulo, data, local, descricao, senha) {
   try {
@@ -31,17 +28,18 @@ async function salvarEvento(titulo, data, local, descricao, senha) {
   }
 }
 
-// Função para mostrar eventos
+// Função para mostrar ou esconder eventos
 async function mostrarEventos() {
   const lista = document.getElementById("listaEventos");
-
-  if (eventosVisiveis) {
-    // Se os eventos já estiverem visíveis, esconda-os
+  
+  // Verifica se a lista já está visível
+  if (lista.style.display === "block") {
+    // Se estiver visível, esconde a lista
     lista.style.display = "none";
-    eventosVisiveis = false;
-    return; // Sai da função
+    return;
   }
 
+  // Caso contrário, exibe os eventos
   lista.innerHTML = ""; // Limpa os eventos anteriores (se houver)
 
   try {
@@ -49,7 +47,7 @@ async function mostrarEventos() {
     
     if (querySnapshot.empty) {
       lista.innerHTML = "<p>Nenhum evento encontrado.</p>";
-      return; // Caso não haja eventos, a função é encerrada aqui
+      return;
     }
 
     querySnapshot.forEach((docSnap) => {
@@ -71,7 +69,6 @@ async function mostrarEventos() {
 
     // Exibe a lista de eventos
     lista.style.display = "block";
-    eventosVisiveis = true; // Marca que os eventos estão visíveis
   } catch (error) {
     console.error("Erro ao buscar eventos:", error);
     lista.innerHTML = "<p>Erro ao carregar eventos.</p>";
