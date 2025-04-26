@@ -11,16 +11,15 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(app);
 
-const eventoForm = document.getElementById('eventoForm');
 const tituloInput = document.getElementById('titulo');
 const dataInput = document.getElementById('data');
 const horaInput = document.getElementById('hora');
 const localInput = document.getElementById('local');
 const descricaoInput = document.getElementById('descricao');
 const senhaInput = document.getElementById('senha');
-const eventosDiv = document.getElementById('eventos');
-const salvarEventoButton = document.getElementById('salvarEvento');
-const mostrarEventosButton = document.getElementById('mostrarEventos');
+const eventosDiv = document.getElementById('listaEventos'); // Corrigido!
+const salvarEventoButton = document.getElementById('btnSalvar'); // Corrigido!
+const mostrarEventosButton = document.getElementById('btnMostrar'); // Corrigido!
 
 // Função para salvar evento no Firebase
 function salvarEvento() {
@@ -48,7 +47,13 @@ function salvarEvento() {
     })
     .then(() => {
         alert('Evento salvo com sucesso!');
-        eventoForm.reset();
+        // Limpa os campos manualmente
+        tituloInput.value = '';
+        dataInput.value = '';
+        horaInput.value = '';
+        localInput.value = '';
+        descricaoInput.value = '';
+        senhaInput.value = '';
     })
     .catch((error) => {
         alert('Erro ao salvar evento: ' + error);
@@ -95,9 +100,8 @@ function editarEvento(eventoId) {
     if (novaSenha) {
         db.collection("eventos").doc(eventoId).get().then((doc) => {
             if (doc.exists && doc.data().senha === novaSenha) {
-                // Aqui você pode implementar a lógica para editar o evento
                 alert('Senha correta! Agora edite o evento.');
-                // Exemplo: abrir os campos para editar o evento
+                // Aqui você poderia abrir inputs para permitir editar
             } else {
                 alert('Senha incorreta.');
             }
