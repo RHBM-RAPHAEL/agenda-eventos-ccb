@@ -66,3 +66,26 @@ button {
 button:hover {
   background-color: #2980b9;
 }
+.botoes-topo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* Espaçamento abaixo do botão "Mostrar eventos" */
+}
+
+.botoes-final {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px; /* Espaçamento acima do botão "Salvar evento" */
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
