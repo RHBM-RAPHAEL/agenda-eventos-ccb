@@ -1,164 +1,121 @@
-// Importando módulos do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
 // Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
-  authDomain: "agenda-eventos-ccb.firebaseapp.com",
-  projectId: "agenda-eventos-ccb",
-  storageBucket: "agenda-eventos-ccb.appspot.com",
-  messagingSenderId: "325923477189",
-  appId: "1:325923477189:web:1aba52c8119d290338c2ac",
-  measurementId: "G-PDTYLHH85J"
+    apiKey: "sua_api_key",
+    authDomain: "seu_auth_domain",
+    projectId: "seu_project_id",
+    storageBucket: "seu_storage_bucket",
+    messagingSenderId: "seu_messaging_sender_id",
+    appId: "seu_app_id"
 };
 
-// Inicializar o app e o banco de dados
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore(app);
 
-// Função para salvar evento no Firestore
-async function salvarEvento(titulo, data, local, descricao, senha, horaTermino) {
-  try {
-    await addDoc(collection(db, "eventos"), { titulo, data, local, descricao, senha, horaTermino });
-    alert("✅ Evento salvo com sucesso!");
-  } catch (error) {
-    console.error("Erro ao salvar evento:", error);
-    alert("❌ Erro ao salvar o evento.");
-  }
-}
+const eventoForm = document.getElementById('eventoForm');
+const tituloInput = document.getElementById('titulo');
+const dataInput = document.getElementById('data');
+const horaInput = document.getElementById('hora');
+const localInput = document.getElementById('local');
+const descricaoInput = document.getElementById('descricao');
+const senhaInput = document.getElementById('senha');
+const eventosDiv = document.getElementById('eventos');
+const salvarEventoButton = document.getElementById('salvarEvento');
+const mostrarEventosButton = document.getElementById('mostrarEventos');
 
-// Função para mostrar eventos
-function mostrarEventos() {
-  const listaEventos = document.getElementById("listaEventos"); // Corrigido para o id correto
-  listaEventos.innerHTML = ""; // Limpar a lista antes de adicionar novos itens
+// Função para salvar evento no Firebase
+function salvarEvento() {
+    const titulo = tituloInput.value;
+    const data = dataInput.value;
+    const hora = horaInput.value;
+    const local = localInput.value;
+    const descricao = descricaoInput.value;
+    const senha = senhaInput.value;
 
-  getDocs(collection(db, "eventos"))
-    .then((querySnapshot) => {
-      querySnapshot.forEach((docSnap) => {
-        const evento = docSnap.data();
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <strong>${evento.titulo}</strong><br>
-          📅 ${evento.data} – ⏰ Até ${evento.horaTermino}<br>
-          📍 ${evento.local}<br>
-          📝 ${evento.descricao}<br>
-          <button class="editar" data-id="${docSnap.id}">✏️ Editar</button>
-          <button class="excluir" data-id="${docSnap.id}">🗑️ Excluir</button>
-          <hr>
-        `;
-        listaEventos.appendChild(li);
-      });
+    // Validação dos campos
+    if (!titulo || !data || !hora || !local || !descricao || !senha) {
+        alert('Por favor, preencha todos os campos!');
+        return;
+    }
 
-      // Adicionar eventos de click para os botões de editar e excluir
-      document.querySelectorAll(".excluir").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-id");
-          const senha = prompt("Digite a senha para excluir:");
-          if (senha === "1234") {
-            excluirEvento(id);
-          } else {
-            alert("❌ Senha incorreta.");
-          }
-        });
-      });
-
-      document.querySelectorAll(".editar").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-id");
-          const senha = prompt("Digite a senha para editar:");
-          if (senha === "1234") {
-            editarEvento(id);
-          } else {
-            alert("❌ Senha incorreta.");
-          }
-        });
-      });
+    // Salva o evento no Firestore
+    db.collection("eventos").add({
+        titulo: titulo,
+        data: data,
+        hora: hora,
+        local: local,
+        descricao: descricao,
+        senha: senha
+    })
+    .then(() => {
+        alert('Evento salvo com sucesso!');
+        eventoForm.reset();
     })
     .catch((error) => {
-      console.error("Erro ao mostrar eventos:", error);
+        alert('Erro ao salvar evento: ' + error);
+    });
+}
+
+// Função para mostrar eventos do Firebase
+function mostrarEventos() {
+    db.collection("eventos").get().then((querySnapshot) => {
+        eventosDiv.innerHTML = '';  // Limpa os eventos antes de mostrar os novos
+        querySnapshot.forEach((doc) => {
+            const evento = doc.data();
+            const eventoDiv = document.createElement('div');
+            eventoDiv.classList.add('evento');
+            eventoDiv.innerHTML = `
+                <h3>${evento.titulo}</h3>
+                <p><strong>Data:</strong> ${evento.data}</p>
+                <p><strong>Hora de Término:</strong> ${evento.hora}</p>
+                <p><strong>Local:</strong> ${evento.local}</p>
+                <p><strong>Descrição:</strong> ${evento.descricao}</p>
+                <button class="editarEvento" data-id="${doc.id}">Editar</button>
+                <button class="excluirEvento" data-id="${doc.id}">Excluir</button>
+            `;
+            eventosDiv.appendChild(eventoDiv);
+        });
     });
 }
 
 // Função para excluir evento
-async function excluirEvento(id) {
-  const eventoRef = doc(db, "eventos", id);
-  const eventoSnap = await getDoc(eventoRef);
-
-  if (!eventoSnap.exists()) {
-    alert("Evento não encontrado.");
-    return;
-  }
-
-  const evento = eventoSnap.data();
-  const senhaDigitada = prompt("Digite a senha para excluir este evento:");
-
-  if (senhaDigitada === evento.senha) {
-    if (confirm("Tem certeza que deseja excluir este evento?")) {
-      await deleteDoc(eventoRef);
-      alert("🗑️ Evento excluído com sucesso!");
-      mostrarEventos();
-    }
-  } else {
-    alert("❌ Senha incorreta. Não foi possível excluir o evento.");
-  }
+function excluirEvento(eventoId) {
+    db.collection("eventos").doc(eventoId).delete()
+    .then(() => {
+        alert('Evento excluído com sucesso!');
+        mostrarEventos();  // Atualiza a lista de eventos
+    })
+    .catch((error) => {
+        alert('Erro ao excluir evento: ' + error);
+    });
 }
 
 // Função para editar evento
-async function editarEvento(id) {
-  const eventoRef = doc(db, "eventos", id);
-  const eventoSnap = await getDoc(eventoRef);
-
-  if (!eventoSnap.exists()) {
-    alert("Evento não encontrado.");
-    return;
-  }
-
-  const evento = eventoSnap.data();
-  const senhaDigitada = prompt("Digite a senha para editar:");
-
-  if (senhaDigitada === evento.senha) {
-    const novoTitulo = prompt("Novo título:", evento.titulo);
-    const novaData = prompt("Nova data:", evento.data);
-    const novoLocal = prompt("Novo local:", evento.local);
-    const novaDescricao = prompt("Nova descrição:", evento.descricao);
-    const novaHoraTermino = prompt("Nova hora de término:", evento.horaTermino);
-
-    if (novoTitulo && novaData && novoLocal && novaDescricao && novaHoraTermino) {
-      await updateDoc(eventoRef, {
-        titulo: novoTitulo,
-        data: novaData,
-        local: novoLocal,
-        descricao: novaDescricao,
-        horaTermino: novaHoraTermino
-      });
-      alert("✏️ Evento atualizado!");
-      mostrarEventos();
+function editarEvento(eventoId) {
+    const novaSenha = prompt('Digite a senha para editar o evento:');
+    if (novaSenha) {
+        db.collection("eventos").doc(eventoId).get().then((doc) => {
+            if (doc.exists && doc.data().senha === novaSenha) {
+                // Aqui você pode implementar a lógica para editar o evento
+                alert('Senha correta! Agora edite o evento.');
+                // Exemplo: abrir os campos para editar o evento
+            } else {
+                alert('Senha incorreta.');
+            }
+        });
     }
-  } else {
-    alert("❌ Senha incorreta. Não foi possível editar o evento.");
-  }
 }
 
-// Eventos de clique
-document.getElementById("btnSalvar").addEventListener("click", () => {
-  const titulo = document.getElementById("titulo").value;
-  const data = document.getElementById("data").value;
-  const horaTermino = document.getElementById("horaTermino").value;
-  const local = document.getElementById("local").value;
-  const descricao = document.getElementById("descricao").value;
-  const senha = document.getElementById("senha").value;
+// Adiciona ouvintes de eventos para os botões
+salvarEventoButton.addEventListener('click', salvarEvento);
+mostrarEventosButton.addEventListener('click', mostrarEventos);
 
-  if (!titulo || !data || !horaTermino || !local || !descricao || !senha) {
-    alert("Preencha todos os campos.");
-    return;
-  }
-
-  salvarEvento(titulo, data, local, descricao, senha, horaTermino);
+// Delegação de eventos para os botões de editar e excluir
+eventosDiv.addEventListener('click', (event) => {
+    if (event.target.classList.contains('excluirEvento')) {
+        const eventoId = event.target.dataset.id;
+        excluirEvento(eventoId);
+    } else if (event.target.classList.contains('editarEvento')) {
+        const eventoId = event.target.dataset.id;
+        editarEvento(eventoId);
+    }
 });
-
-document.getElementById("btnMostrar").addEventListener("click", mostrarEventos);
-
-// Deixando funções globais
-window.excluirEvento = excluirEvento;
-window.editarEvento = editarEvento;
