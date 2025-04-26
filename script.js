@@ -22,6 +22,7 @@ async function salvarEvento(titulo, data, local, descricao, senha, horaTermino) 
   try {
     await addDoc(collection(db, "eventos"), { titulo, data, local, descricao, senha, horaTermino });
     alert("✅ Evento salvo com sucesso!");
+    mostrarEventos();
   } catch (error) {
     console.error("Erro ao salvar evento:", error);
     alert("❌ Erro ao salvar o evento.");
@@ -83,25 +84,9 @@ function mostrarEventos() {
 // Função para excluir evento
 async function excluirEvento(id) {
   const eventoRef = doc(db, "eventos", id);
-  const eventoSnap = await getDoc(eventoRef);
-
-  if (!eventoSnap.exists()) {
-    alert("Evento não encontrado.");
-    return;
-  }
-
-  const evento = eventoSnap.data();
-  const senhaDigitada = prompt("Digite a senha para excluir este evento:");
-
-  if (senhaDigitada === evento.senha) {
-    if (confirm("Tem certeza que deseja excluir este evento?")) {
-      await deleteDoc(eventoRef);
-      alert("🗑️ Evento excluído com sucesso!");
-      mostrarEventos();
-    }
-  } else {
-    alert("❌ Senha incorreta. Não foi possível excluir o evento.");
-  }
+  await deleteDoc(eventoRef);
+  alert("🗑️ Evento excluído com sucesso!");
+  mostrarEventos();
 }
 
 // Função para editar evento
@@ -115,28 +100,22 @@ async function editarEvento(id) {
   }
 
   const evento = eventoSnap.data();
-  const senhaDigitada = prompt("Digite a senha para editar este evento:");
+  const novoTitulo = prompt("Novo título:", evento.titulo);
+  const novaData = prompt("Nova data:", evento.data);
+  const novoLocal = prompt("Novo local:", evento.local);
+  const novaDescricao = prompt("Nova descrição:", evento.descricao);
+  const novaHoraTermino = prompt("Nova hora de término:", evento.horaTermino);
 
-  if (senhaDigitada === evento.senha) {
-    const novoTitulo = prompt("Novo título:", evento.titulo);
-    const novaData = prompt("Nova data:", evento.data);
-    const novoLocal = prompt("Novo local:", evento.local);
-    const novaDescricao = prompt("Nova descrição:", evento.descricao);
-    const novaHoraTermino = prompt("Nova hora de término:", evento.horaTermino);
-
-    if (novoTitulo && novaData && novoLocal && novaDescricao && novaHoraTermino) {
-      await updateDoc(eventoRef, {
-        titulo: novoTitulo,
-        data: novaData,
-        local: novoLocal,
-        descricao: novaDescricao,
-        horaTermino: novaHoraTermino
-      });
-      alert("✏️ Evento atualizado!");
-      mostrarEventos();
-    }
-  } else {
-    alert("❌ Senha incorreta. Não foi possível editar o evento.");
+  if (novoTitulo && novaData && novoLocal && novaDescricao && novaHoraTermino) {
+    await updateDoc(eventoRef, {
+      titulo: novoTitulo,
+      data: novaData,
+      local: novoLocal,
+      descricao: novaDescricao,
+      horaTermino: novaHoraTermino
+    });
+    alert("✏️ Evento atualizado!");
+    mostrarEventos();
   }
 }
 
