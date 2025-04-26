@@ -1,310 +1,296 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda de Eventos</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            text-align: center;
-            color: #4CAF50;
-            margin-top: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        input, button, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border: none;
-            font-size: 18px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #listaEventos {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .evento {
-            background-color: #fafafa;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid #4CAF50;
-        }
-
-        .evento h3 {
-            margin-top: 0;
-            font-size: 20px;
-            color: #333;
-        }
-
-        .evento p {
-            font-size: 16px;
-            color: #555;
-        }
-
-        .evento button {
-            background-color: #f44336;
-            color: white;
-            border-radius: 5px;
-            padding: 8px;
-            cursor: pointer;
-            margin-right: 8px;
-        }
-
-        .evento button:hover {
-            background-color: #da190b;
-        }
-
-        footer {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            margin-top: 40px;
-            border-top: 4px solid #fff;
-        }
-
-        footer p {
-            margin: 5px 0;
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda de Eventos</title>
+  <style>
+    /* Seu CSS original (sem alterações) */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    h1 {
+        text-align: center;
+        color: #4CAF50;
+        margin-top: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    input, button, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        border: none;
+        font-size: 18px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    #listaEventos {
+        display: none;
+        margin-top: 20px;
+    }
+    .evento {
+        background-color: #fafafa;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #4CAF50;
+    }
+    .evento h3 {
+        margin-top: 0;
+        font-size: 20px;
+        color: #333;
+    }
+    .evento p {
+        font-size: 16px;
+        color: #555;
+    }
+    .evento button {
+        background-color: #f44336;
+        color: white;
+        border-radius: 5px;
+        padding: 8px;
+        cursor: pointer;
+        margin-right: 8px;
+    }
+    .evento button:hover {
+        background-color: #da190b;
+    }
+    footer {
+        background-color: #4CAF50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        margin-top: 40px;
+        border-top: 4px solid #fff;
+    }
+    footer p {
+        margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Agenda de Eventos</h1>
+<div class="container">
+  <h1>Agenda de Eventos</h1>
 
-        <!-- Formulário de Cadastro de Evento -->
-        <input type="text" id="titulo" placeholder="Título do Evento">
-        <input type="date" id="data">
-        <input type="time" id="horaTermino">
-        <input type="text" id="local" placeholder="Local do Evento">
-        <textarea id="descricao" placeholder="Descrição do Evento"></textarea>
-        <input type="password" id="senha" placeholder="Senha para Edição/Exclusão">
-        <button id="btnSalvar">Salvar Evento</button>
+  <input type="text" id="titulo" placeholder="Título do Evento">
+  <input type="date" id="data">
+  <input type="time" id="horaTermino">
+  <input type="text" id="local" placeholder="Local do Evento">
+  <textarea id="descricao" placeholder="Descrição do Evento"></textarea>
+  <input type="password" id="senha" placeholder="Senha para Edição/Exclusão">
+  <button id="btnSalvar">Salvar Evento</button>
+  <button id="btnMostrar">Mostrar Eventos</button>
 
-        <!-- Botão para Mostrar Eventos -->
-        <button id="btnMostrar">Mostrar Eventos</button>
+  <div id="listaEventos"></div>
+</div>
 
-        <!-- Lista de Eventos -->
-        <div id="listaEventos"></div>
-    </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-    <script type="module">
-        // Importando módulos do Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
+  authDomain: "agenda-eventos-ccb.firebaseapp.com",
+  projectId: "agenda-eventos-ccb",
+  storageBucket: "agenda-eventos-ccb.appspot.com",
+  messagingSenderId: "325923477189",
+  appId: "1:325923477189:web:1aba52c8119d290338c2ac",
+  measurementId: "G-PDTYLHH85J"
+};
 
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
-            authDomain: "agenda-eventos-ccb.firebaseapp.com",
-            projectId: "agenda-eventos-ccb",
-            storageBucket: "agenda-eventos-ccb.appspot.com",
-            messagingSenderId: "325923477189",
-            appId: "1:325923477189:web:1aba52c8119d290338c2ac",
-            measurementId: "G-PDTYLHH85J"
-        };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-        // Inicializar o app e o banco de dados
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+async function salvarEvento(titulo, data, horaTermino, local, descricao, senha) {
+  try {
+    const eventoData = { titulo, data, horaTermino, local, descricao, senha };
+    await addDoc(collection(db, "eventos"), eventoData);
+    alert("✅ Evento salvo com sucesso!");
+  } catch (error) {
+    console.error("Erro ao salvar evento:", error);
+    alert("❌ Erro ao salvar o evento.");
+  }
+}
 
-        // Função para salvar evento no Firestore
-        async function salvarEvento(titulo, data, horaTermino, local, descricao, senha) {
-            try {
-                const eventoData = { titulo, data, horaTermino, local, descricao, senha };
-                await addDoc(collection(db, "eventos"), eventoData);
-                alert("✅ Evento salvo com sucesso!");
-            } catch (error) {
-                console.error("Erro ao salvar evento:", error);
-                alert("❌ Erro ao salvar o evento.");
-            }
-        }
+async function mostrarEventos() {
+  const lista = document.getElementById("listaEventos");
 
-        // Função para mostrar ou esconder eventos
-        async function mostrarEventos() {
-            const lista = document.getElementById("listaEventos");
+  if (lista.style.display === "block") {
+    lista.style.display = "none";
+    return;
+  }
 
-            // Verifica se a lista já está visível
-            if (lista.style.display === "block") {
-                lista.style.display = "none";
-                return;
-            }
+  lista.innerHTML = "";
 
-            lista.innerHTML = "";
+  try {
+    const querySnapshot = await getDocs(collection(db, "eventos"));
 
-            try {
-                const querySnapshot = await getDocs(collection(db, "eventos"));
+    if (querySnapshot.empty) {
+      lista.innerHTML = "<p>Nenhum evento encontrado.</p>";
+      return;
+    }
 
-                if (querySnapshot.empty) {
-                    lista.innerHTML = "<p>Nenhum evento encontrado.</p>";
-                    return;
-                }
+    querySnapshot.forEach((docSnap) => {
+      const evento = docSnap.data();
+      const div = document.createElement("div");
+      div.className = "evento";
 
-                querySnapshot.forEach((docSnap) => {
-                    const evento = docSnap.data();
-                    const div = document.createElement("div");
-                    div.className = "evento";
+      div.innerHTML = `
+        <h3>${evento.titulo}</h3>
+        <p><strong>Data:</strong> ${evento.data}</p>
+        <p><strong>Hora de término:</strong> ${evento.horaTermino}</p>
+        <p><strong>Local:</strong> ${evento.local}</p>
+        <p><strong>Descrição:</strong> ${evento.descricao}</p>
+        <button onclick="editarEvento('${docSnap.id}')">Editar</button>
+        <button onclick="excluirEvento('${docSnap.id}')">Excluir</button>
+      `;
 
-                    div.innerHTML = `
-                        <h3>${evento.titulo}</h3>
-                        <p><strong>Data:</strong> ${evento.data}</p>
-                        <p><strong>Hora de término:</strong> ${evento.horaTermino}</p>
-                        <p><strong>Local:</strong> ${evento.local}</p>
-                        <p><strong>Descrição:</strong> ${evento.descricao}</p>
-                        <button onclick="editarEvento('${docSnap.id}')">Editar</button>
-                        <button onclick="excluirEvento('${docSnap.id}')">Excluir</button>
-                    `;
+      lista.appendChild(div);
+    });
 
-                    lista.appendChild(div);
-                });
+    lista.style.display = "block";
+  } catch (error) {
+    console.error("Erro ao buscar eventos:", error);
+    lista.innerHTML = "<p>Erro ao carregar eventos.</p>";
+  }
+}
 
-                lista.style.display = "block";
-            } catch (error) {
-                console.error("Erro ao buscar eventos:", error);
-                lista.innerHTML = "<p>Erro ao carregar eventos.</p>";
-            }
-        }
+// Função para excluir manualmente (com senha)
+window.excluirEvento = async function(id) {
+  const senhaDigitada = prompt("Digite a senha para excluir este evento:");
+  const eventoRef = doc(db, "eventos", id);
+  const eventoSnap = await getDoc(eventoRef);
 
-        // Função para excluir evento (pedindo senha)
-        async function excluirEvento(id) {
-            const senhaDigitada = prompt("Digite a senha para excluir este evento:");
-            const eventoRef = doc(db, "eventos", id);
-            const eventoSnap = await getDoc(eventoRef);
+  if (!eventoSnap.exists()) {
+    alert("Evento não encontrado.");
+    return;
+  }
 
-            if (!eventoSnap.exists()) {
-                alert("Evento não encontrado.");
-                return;
-            }
+  const evento = eventoSnap.data();
 
-            const evento = eventoSnap.data();
+  if (senhaDigitada === evento.senha) {
+    if (confirm("Tem certeza que deseja excluir este evento?")) {
+      await deleteDoc(eventoRef);
+      alert("🗑️ Evento excluído com sucesso!");
+      mostrarEventos();
+    }
+  } else {
+    alert("❌ Senha incorreta. Não foi possível excluir o evento.");
+  }
+}
 
-            if (senhaDigitada === evento.senha) {
-                if (confirm("Tem certeza que deseja excluir este evento?")) {
-                    await deleteDoc(eventoRef);
-                    alert("🗑️ Evento excluído com sucesso!");
-                    mostrarEventos(); 
-                }
-            } else {
-                alert("❌ Senha incorreta. Não foi possível excluir o evento.");
-            }
-        }
+// Função para excluir automaticamente (sem senha)
+async function excluirEventoAutomatico(id) {
+  const eventoRef = doc(db, "eventos", id);
+  await deleteDoc(eventoRef);
+}
 
-        // Função para editar evento (pedindo senha)
-        async function editarEvento(id) {
-            const senhaDigitada = prompt("Digite a senha para editar este evento:");
-            const eventoRef = doc(db, "eventos", id);
-            const eventoSnap = await getDoc(eventoRef);
+// Função para editar evento
+window.editarEvento = async function(id) {
+  const senhaDigitada = prompt("Digite a senha para editar este evento:");
+  const eventoRef = doc(db, "eventos", id);
+  const eventoSnap = await getDoc(eventoRef);
 
-            if (!eventoSnap.exists()) {
-                alert("Evento não encontrado.");
-                return;
-            }
+  if (!eventoSnap.exists()) {
+    alert("Evento não encontrado.");
+    return;
+  }
 
-            const evento = eventoSnap.data();
+  const evento = eventoSnap.data();
 
-            if (senhaDigitada === evento.senha) {
-                const novoTitulo = prompt("Novo título:", evento.titulo);
-                const novaData = prompt("Nova data:", evento.data);
-                const novaHoraTermino = prompt("Nova hora de término:", evento.horaTermino);
-                const novoLocal = prompt("Novo local:", evento.local);
-                const novaDescricao = prompt("Nova descrição:", evento.descricao);
+  if (senhaDigitada === evento.senha) {
+    const novoTitulo = prompt("Novo título:", evento.titulo);
+    const novaData = prompt("Nova data:", evento.data);
+    const novaHoraTermino = prompt("Nova hora de término:", evento.horaTermino);
+    const novoLocal = prompt("Novo local:", evento.local);
+    const novaDescricao = prompt("Nova descrição:", evento.descricao);
 
-                if (novoTitulo && novaData && novaHoraTermino && novoLocal && novaDescricao) {
-                    await updateDoc(eventoRef, {
-                        titulo: novoTitulo,
-                        data: novaData,
-                        horaTermino: novaHoraTermino,
-                        local: novoLocal,
-                        descricao: novaDescricao
-                    });
-                    alert("✏️ Evento editado com sucesso!");
-                    mostrarEventos(); 
-                }
-            } else {
-                alert("❌ Senha incorreta. Não foi possível editar o evento.");
-            }
-        }
+    if (novoTitulo && novaData && novaHoraTermino && novoLocal && novaDescricao) {
+      await updateDoc(eventoRef, {
+        titulo: novoTitulo,
+        data: novaData,
+        horaTermino: novaHoraTermino,
+        local: novoLocal,
+        descricao: novaDescricao
+      });
+      alert("✏️ Evento editado com sucesso!");
+      mostrarEventos();
+    }
+  } else {
+    alert("❌ Senha incorreta. Não foi possível editar o evento.");
+  }
+}
 
-        // Função para verificar e apagar eventos expirados
-        async function verificarEventosExpirados() {
-            const agora = new Date();
-            const eventosRef = collection(db, "eventos");
-            const querySnapshot = await getDocs(eventosRef);
+// Verificar e excluir eventos expirados automaticamente
+async function verificarEventosExpirados() {
+  const agora = new Date();
+  const eventosRef = collection(db, "eventos");
+  const querySnapshot = await getDocs(eventosRef);
 
-            querySnapshot.forEach((docSnap) => {
-                const evento = docSnap.data();
-                const horaTermino = new Date(`${evento.data}T${evento.horaTermino}:00`);
+  querySnapshot.forEach(async (docSnap) => {
+    const evento = docSnap.data();
+    const horaTermino = new Date(`${evento.data}T${evento.horaTermino}:00`);
 
-                if (horaTermino < agora) {
-                    excluirEvento(docSnap.id);
-                }
-            });
-        }
+    if (horaTermino < agora) {
+      await excluirEventoAutomatico(docSnap.id);
+    }
+  });
+}
 
-        // Ações do botão
-        document.getElementById("btnSalvar").addEventListener("click", () => {
-            const titulo = document.getElementById("titulo").value;
-            const data = document.getElementById("data").value;
-            const horaTermino = document.getElementById("horaTermino").value;
-            const local = document.getElementById("local").value;
-            const descricao = document.getElementById("descricao").value;
-            const senha = document.getElementById("senha").value;
+// Eventos dos botões
+document.getElementById("btnSalvar").addEventListener("click", async () => {
+  const titulo = document.getElementById("titulo").value;
+  const data = document.getElementById("data").value;
+  const horaTermino = document.getElementById("horaTermino").value;
+  const local = document.getElementById("local").value;
+  const descricao = document.getElementById("descricao").value;
+  const senha = document.getElementById("senha").value;
 
-            if (titulo && data && horaTermino && local && descricao && senha) {
-                salvarEvento(titulo, data, horaTermino, local, descricao, senha);
-            } else {
-                alert("❌ Preencha todos os campos.");
-            }
-        });
+  if (titulo && data && horaTermino && local && descricao && senha) {
+    await salvarEvento(titulo, data, horaTermino, local, descricao, senha);
+    document.getElementById("titulo").value = "";
+    document.getElementById("data").value = "";
+    document.getElementById("horaTermino").value = "";
+    document.getElementById("local").value = "";
+    document.getElementById("descricao").value = "";
+    document.getElementById("senha").value = "";
+  } else {
+    alert("❗ Preencha todos os campos antes de salvar.");
+  }
+});
 
-        document.getElementById("btnMostrar").addEventListener("click", mostrarEventos);
+document.getElementById("btnMostrar").addEventListener("click", () => {
+  mostrarEventos();
+});
 
-        // Verificar e apagar eventos expirados a cada 60 segundos
-        setInterval(verificarEventosExpirados, 60000);
+// Inicia verificação de eventos expirados ao carregar
+verificarEventosExpirados();
 
-    </script>
-
-    <footer>
-        <p>&copy; 2025 Todos os direitos reservados</p>
-    </footer>
-
+</script>
 </body>
 </html>
