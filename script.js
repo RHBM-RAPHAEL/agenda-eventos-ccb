@@ -1,125 +1,103 @@
 // Configuração do Firebase
 const firebaseConfig = {
-    apiKey: "sua_api_key",
-    authDomain: "seu_auth_domain",
-    projectId: "seu_project_id",
-    storageBucket: "seu_storage_bucket",
-    messagingSenderId: "seu_messaging_sender_id",
-    appId: "seu_app_id"
+  apiKey: "SUA_API_KEY",
+  authDomain: "seu-projeto-id.firebaseapp.com",
+  databaseURL: "https://agenda-eventos-ccb-default-rtdb.firebaseio.com",
+  projectId: "seu-projeto-id",
+  storageBucket: "seu-projeto-id.appspot.com",
+  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+  appId: "SEU_APP_ID"
 };
 
+// Inicializa o Firebase
 const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore(app);
+const db = firebase.database();
 
-const tituloInput = document.getElementById('titulo');
-const dataInput = document.getElementById('data');
-const horaInput = document.getElementById('hora');
-const localInput = document.getElementById('local');
+// Seleciona elementos do HTML
+const eventoForm = document.getElementById('eventoForm');
+const nomeInput = document.getElementById('nome');
 const descricaoInput = document.getElementById('descricao');
-const senhaInput = document.getElementById('senha');
-const eventosDiv = document.getElementById('listaEventos'); // Corrigido!
-const salvarEventoButton = document.getElementById('btnSalvar'); // Corrigido!
-const mostrarEventosButton = document.getElementById('btnMostrar'); // Corrigido!
+const listaEventos = document.getElementById('listaEventos');
+const salvarButton = document.getElementById('salvar');
 
 // Função para salvar evento no Firebase
-function salvarEvento() {
-    const titulo = tituloInput.value;
-    const data = dataInput.value;
-    const hora = horaInput.value;
-    const local = localInput.value;
-    const descricao = descricaoInput.value;
-    const senha = senhaInput.value;
-
-    // Validação dos campos
-    if (!titulo || !data || !hora || !local || !descricao || !senha) {
-        alert('Por favor, preencha todos os campos!');
-        return;
-    }
-
-    // Salva o evento no Firestore
-    db.collection("eventos").add({
-        titulo: titulo,
-        data: data,
-        hora: hora,
-        local: local,
-        descricao: descricao,
-        senha: senha
-    })
-    .then(() => {
-        alert('Evento salvo com sucesso!');
-        // Limpa os campos manualmente
-        tituloInput.value = '';
-        dataInput.value = '';
-        horaInput.value = '';
-        localInput.value = '';
-        descricaoInput.value = '';
-        senhaInput.value = '';
-    })
-    .catch((error) => {
-        alert('Erro ao salvar evento: ' + error);
-    });
-}
-
-// Função para mostrar eventos do Firebase
-function mostrarEventos() {
-    db.collection("eventos").get().then((querySnapshot) => {
-        eventosDiv.innerHTML = '';  // Limpa os eventos antes de mostrar os novos
-        querySnapshot.forEach((doc) => {
-            const evento = doc.data();
-            const eventoDiv = document.createElement('div');
-            eventoDiv.classList.add('evento');
-            eventoDiv.innerHTML = `
-                <h3>${evento.titulo}</h3>
-                <p><strong>Data:</strong> ${evento.data}</p>
-                <p><strong>Hora de Término:</strong> ${evento.hora}</p>
-                <p><strong>Local:</strong> ${evento.local}</p>
-                <p><strong>Descrição:</strong> ${evento.descricao}</p>
-                <button class="editarEvento" data-id="${doc.id}">Editar</button>
-                <button class="excluirEvento" data-id="${doc.id}">Excluir</button>
-            `;
-            eventosDiv.appendChild(eventoDiv);
-        });
-    });
-}
-
-// Função para excluir evento
-function excluirEvento(eventoId) {
-    db.collection("eventos").doc(eventoId).delete()
-    .then(() => {
-        alert('Evento excluído com sucesso!');
-        mostrarEventos();  // Atualiza a lista de eventos
-    })
-    .catch((error) => {
-        alert('Erro ao excluir evento: ' + error);
-    });
+function salvarEvento(nome, descricao) {
+  const newEventoRef = db.ref('eventos').push();
+  newEventoRef.set({
+    nome: nome,
+    descricao: descricao,
+  }).then(() => {
+    // Limpa os campos do formulário
+    nomeInput.value = '';
+    descricaoInput.value = '';
+    mostrarEventos();
+  });
 }
 
 // Função para editar evento
-function editarEvento(eventoId) {
-    const novaSenha = prompt('Digite a senha para editar o evento:');
-    if (novaSenha) {
-        db.collection("eventos").doc(eventoId).get().then((doc) => {
-            if (doc.exists && doc.data().senha === novaSenha) {
-                alert('Senha correta! Agora edite o evento.');
-                // Aqui você poderia abrir inputs para permitir editar
-            } else {
-                alert('Senha incorreta.');
-            }
-        });
-    }
+function editarEvento(id, novoNome, novaDescricao) {
+  const eventoRef = db.ref('eventos').child(id);
+  eventoRef.update({
+    nome: novoNome,
+    descricao: novaDescricao,
+  }).then(() => {
+    mostrarEventos();
+  });
 }
 
-// Adiciona ouvintes de eventos para os botões
-salvarEventoButton.addEventListener('click', salvarEvento);
-mostrarEventosButton.addEventListener('click', mostrarEventos);
+// Função para excluir evento
+function excluirEvento(id) {
+  const eventoRef = db.ref('eventos').child(id);
+  eventoRef.remove().then(() => {
+    mostrarEventos();
+  });
+}
 
-// Delegação de eventos para os botões de editar e excluir
-eventosDiv.addEventListener('click', (event) => {
-    if (event.target.classList.contains('excluirEvento')) {
-        const eventoId = event.target.dataset.id;
-        excluirEvento(eventoId);
-    } else if (event.target.classList.contains('editarEvento')) {
-        const eventoId = event.target.dataset.id;
-        editarEvento(eventoId);
-    }
+// Função para exibir todos os eventos
+function mostrarEventos() {
+  listaEventos.innerHTML = ''; // Limpa a lista atual de eventos
+  db.ref('eventos').once('value', (snapshot) => {
+    snapshot.forEach((childSnapshot) => {
+      const evento = childSnapshot.val();
+      const id = childSnapshot.key;
+      
+      const eventoDiv = document.createElement('div');
+      eventoDiv.classList.add('evento');
+      eventoDiv.setAttribute('data-id', id);
+
+      eventoDiv.innerHTML = `
+        <h3>${evento.nome}</h3>
+        <p>${evento.descricao}</p>
+        <button class="editar">Editar</button>
+        <button class="excluir">Excluir</button>
+      `;
+      
+      // Adicionar evento de edição
+      eventoDiv.querySelector('.editar').addEventListener('click', () => {
+        nomeInput.value = evento.nome;
+        descricaoInput.value = evento.descricao;
+        salvarButton.textContent = 'Salvar Alterações';
+        salvarButton.onclick = () => {
+          editarEvento(id, nomeInput.value, descricaoInput.value);
+          salvarButton.textContent = 'Salvar Evento'; // Restaura o texto do botão
+        };
+      });
+
+      // Adicionar evento de exclusão
+      eventoDiv.querySelector('.excluir').addEventListener('click', () => {
+        excluirEvento(id);
+      });
+
+      listaEventos.appendChild(eventoDiv);
+    });
+  });
+}
+
+// Chama a função para mostrar eventos quando a página carregar
+mostrarEventos();
+
+// Adicionar evento de envio do formulário
+eventoForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  salvarEvento(nomeInput.value, descricaoInput.value);
 });
