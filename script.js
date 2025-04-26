@@ -31,25 +31,36 @@ async function salvarEvento(titulo, data, local, descricao, senha) {
 // Função para mostrar eventos
 async function mostrarEventos() {
   const lista = document.getElementById("listaEventos");
-  lista.innerHTML = "";
+  lista.innerHTML = ""; // Limpa os eventos anteriores (se houver)
 
-  const querySnapshot = await getDocs(collection(db, "eventos"));
-  querySnapshot.forEach((docSnap) => {
-    const evento = docSnap.data();
-    const div = document.createElement("div");
-    div.className = "evento";
+  try {
+    const querySnapshot = await getDocs(collection(db, "eventos"));
+    
+    if (querySnapshot.empty) {
+      lista.innerHTML = "<p>Nenhum evento encontrado.</p>";
+      return; // Caso não haja eventos, a função é encerrada aqui
+    }
 
-    div.innerHTML = `
-      <h3>${evento.titulo}</h3>
-      <p><strong>Data:</strong> ${evento.data}</p>
-      <p><strong>Local:</strong> ${evento.local}</p>
-      <p><strong>Descrição:</strong> ${evento.descricao}</p>
-      <button onclick="editarEvento('${docSnap.id}')">Editar</button>
-      <button onclick="excluirEvento('${docSnap.id}')">Excluir</button>
-    `;
+    querySnapshot.forEach((docSnap) => {
+      const evento = docSnap.data();
+      const div = document.createElement("div");
+      div.className = "evento";
 
-    lista.appendChild(div);
-  });
+      div.innerHTML = `
+        <h3>${evento.titulo}</h3>
+        <p><strong>Data:</strong> ${evento.data}</p>
+        <p><strong>Local:</strong> ${evento.local}</p>
+        <p><strong>Descrição:</strong> ${evento.descricao}</p>
+        <button onclick="editarEvento('${docSnap.id}')">Editar</button>
+        <button onclick="excluirEvento('${docSnap.id}')">Excluir</button>
+      `;
+
+      lista.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Erro ao buscar eventos:", error);
+    lista.innerHTML = "<p>Erro ao carregar eventos.</p>";
+  }
 }
 
 // Função para excluir evento (pedindo senha)
@@ -69,7 +80,7 @@ async function excluirEvento(id) {
     if (confirm("Tem certeza que deseja excluir este evento?")) {
       await deleteDoc(eventoRef);
       alert("🗑️ Evento excluído com sucesso!");
-      mostrarEventos();
+      mostrarEventos(); // Atualiza a lista após exclusão
     }
   } else {
     alert("❌ Senha incorreta. Não foi possível excluir o evento.");
@@ -103,7 +114,7 @@ async function editarEvento(id) {
         descricao: novaDescricao
       });
       alert("✏️ Evento atualizado!");
-      mostrarEventos();
+      mostrarEventos(); // Atualiza a lista após edição
     }
   } else {
     alert("❌ Senha incorreta. Não foi possível editar o evento.");
