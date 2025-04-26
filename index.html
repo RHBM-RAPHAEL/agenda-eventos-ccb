@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda de Eventos</title>
     <style>
-        /* Definindo uma fonte mais moderna e uma paleta de cores agradável */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f7f7f7;
@@ -114,6 +113,7 @@
         <!-- Formulário de Cadastro de Evento -->
         <input type="text" id="titulo" placeholder="Título do Evento">
         <input type="date" id="data">
+        <input type="time" id="horaTermino">
         <input type="text" id="local" placeholder="Local do Evento">
         <textarea id="descricao" placeholder="Descrição do Evento"></textarea>
         <input type="password" id="senha" placeholder="Senha para Edição/Exclusão">
@@ -147,9 +147,10 @@
         const db = getFirestore(app);
 
         // Função para salvar evento no Firestore
-        async function salvarEvento(titulo, data, local, descricao, senha) {
+        async function salvarEvento(titulo, data, horaTermino, local, descricao, senha) {
             try {
-                await addDoc(collection(db, "eventos"), { titulo, data, local, descricao, senha });
+                const eventoData = { titulo, data, horaTermino, local, descricao, senha };
+                await addDoc(collection(db, "eventos"), eventoData);
                 alert("✅ Evento salvo com sucesso!");
             } catch (error) {
                 console.error("Erro ao salvar evento:", error);
@@ -163,13 +164,11 @@
 
             // Verifica se a lista já está visível
             if (lista.style.display === "block") {
-                // Se estiver visível, esconde a lista
                 lista.style.display = "none";
                 return;
             }
 
-            // Caso contrário, exibe os eventos
-            lista.innerHTML = ""; // Limpa os eventos anteriores (se houver)
+            lista.innerHTML = "";
 
             try {
                 const querySnapshot = await getDocs(collection(db, "eventos"));
@@ -187,6 +186,7 @@
                     div.innerHTML = `
                         <h3>${evento.titulo}</h3>
                         <p><strong>Data:</strong> ${evento.data}</p>
+                        <p><strong>Hora de término:</strong> ${evento.horaTermino}</p>
                         <p><strong>Local:</strong> ${evento.local}</p>
                         <p><strong>Descrição:</strong> ${evento.descricao}</p>
                         <button onclick="editarEvento('${docSnap.id}')">Editar</button>
@@ -196,7 +196,6 @@
                     lista.appendChild(div);
                 });
 
-                // Exibe a lista de eventos
                 lista.style.display = "block";
             } catch (error) {
                 console.error("Erro ao buscar eventos:", error);
@@ -221,7 +220,7 @@
                 if (confirm("Tem certeza que deseja excluir este evento?")) {
                     await deleteDoc(eventoRef);
                     alert("🗑️ Evento excluído com sucesso!");
-                    mostrarEventos(); // Atualiza a lista após exclusão
+                    mostrarEventos(); 
                 }
             } else {
                 alert("❌ Senha incorreta. Não foi possível excluir o evento.");
@@ -244,54 +243,67 @@
             if (senhaDigitada === evento.senha) {
                 const novoTitulo = prompt("Novo título:", evento.titulo);
                 const novaData = prompt("Nova data:", evento.data);
+                const novaHoraTermino = prompt("Nova hora de término:", evento.horaTermino);
                 const novoLocal = prompt("Novo local:", evento.local);
                 const novaDescricao = prompt("Nova descrição:", evento.descricao);
 
-                if (novoTitulo && novaData && novoLocal && novaDescricao) {
+                if (novoTitulo && novaData && novaHoraTermino && novoLocal && novaDescricao) {
                     await updateDoc(eventoRef, {
                         titulo: novoTitulo,
                         data: novaData,
+                        horaTermino: novaHoraTermino,
                         local: novoLocal,
                         descricao: novaDescricao
                     });
-                    alert("✏️ Evento atualizado!");
-                    mostrarEventos(); // Atualiza a lista após edição
+                    alert("✏️ Evento editado com sucesso!");
+                    mostrarEventos(); 
                 }
             } else {
                 alert("❌ Senha incorreta. Não foi possível editar o evento.");
             }
         }
 
-        // Eventos de clique
+        // Função para verificar e apagar eventos expirados
+        async function verificarEventosExpirados() {
+            const agora = new Date();
+            const eventosRef = collection(db, "eventos");
+            const querySnapshot = await getDocs(eventosRef);
+
+            querySnapshot.forEach((docSnap) => {
+                const evento = docSnap.data();
+                const horaTermino = new Date(`${evento.data}T${evento.horaTermino}:00`);
+
+                if (horaTermino < agora) {
+                    excluirEvento(docSnap.id);
+                }
+            });
+        }
+
+        // Ações do botão
         document.getElementById("btnSalvar").addEventListener("click", () => {
             const titulo = document.getElementById("titulo").value;
             const data = document.getElementById("data").value;
+            const horaTermino = document.getElementById("horaTermino").value;
             const local = document.getElementById("local").value;
             const descricao = document.getElementById("descricao").value;
             const senha = document.getElementById("senha").value;
 
-            if (!titulo || !data || !local || !descricao || !senha) {
-                alert("Preencha todos os campos.");
-                return;
+            if (titulo && data && horaTermino && local && descricao && senha) {
+                salvarEvento(titulo, data, horaTermino, local, descricao, senha);
+            } else {
+                alert("❌ Preencha todos os campos.");
             }
-
-            salvarEvento(titulo, data, local, descricao, senha);
         });
 
         document.getElementById("btnMostrar").addEventListener("click", mostrarEventos);
 
-        // Para usar funções globais nos botões
-        window.editarEvento = editarEvento;
-        window.excluirEvento = excluirEvento;
+        // Verificar e apagar eventos expirados a cada 60 segundos
+        setInterval(verificarEventosExpirados, 60000);
+
     </script>
 
-    <!-- Rodapé -->
     <footer>
-        <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
-        <p><strong>Agenda CCB</strong> é um projeto desenvolvido como atividade extensionista do curso de Engenharia de Software.</p>
-        <p>O objetivo é divulgar eventos Religiosos locais, como: Reuniões de adoração, apresentações e encontros comunitários.</p>
-        <p>Esta página foi criada por Raphael Henrique, com o uso de tecnologias web como HTML, CSS e JavaScript.</p>
-        <p>Projeto acadêmico - 2025</p>
+        <p>&copy; 2025 Todos os direitos reservados</p>
     </footer>
 
 </body>
