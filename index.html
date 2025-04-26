@@ -26,21 +26,18 @@
         }
         #listaEventos {
             margin-top: 20px;
+            display: none;
         }
         .evento {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f1f1f1;
             border-radius: 5px;
-        }
-        .evento h3 {
-            margin: 0;
-        }
-        .evento p {
-            margin: 5px 0;
+            border: 1px solid #ddd;
         }
         .evento button {
             background-color: #f44336;
+            color: white;
         }
         .evento button:hover {
             background-color: #da190b;
@@ -65,7 +62,7 @@
     </div>
 
     <!-- Aqui é onde a lista de eventos vai aparecer -->
-    <div id="listaEventos" style="display:none;"></div>
+    <div id="listaEventos"></div>
 
     <script type="module">
         // Importando módulos do Firebase
