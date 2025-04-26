@@ -31,7 +31,7 @@ async function salvarEvento(titulo, data, local, descricao, senha, horaTermino) 
 // Função para mostrar eventos
 function mostrarEventos() {
   const listaEventos = document.getElementById("eventos");
-  listaEventos.innerHTML = "";
+  listaEventos.innerHTML = ""; // Limpar a lista antes de adicionar novos itens
 
   getDocs(collection(db, "eventos"))
     .then((querySnapshot) => {
@@ -50,6 +50,7 @@ function mostrarEventos() {
         listaEventos.appendChild(li);
       });
 
+      // Adicionar eventos de click para os botões de editar e excluir
       document.querySelectorAll(".excluir").forEach((btn) => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-id");
@@ -81,7 +82,6 @@ function mostrarEventos() {
 
 // Função para excluir evento
 async function excluirEvento(id) {
-  const senhaDigitada = prompt("Digite a senha para excluir este evento:");
   const eventoRef = doc(db, "eventos", id);
   const eventoSnap = await getDoc(eventoRef);
 
@@ -91,6 +91,7 @@ async function excluirEvento(id) {
   }
 
   const evento = eventoSnap.data();
+  const senhaDigitada = prompt("Digite a senha para excluir este evento:");
 
   if (senhaDigitada === evento.senha) {
     if (confirm("Tem certeza que deseja excluir este evento?")) {
@@ -105,7 +106,6 @@ async function excluirEvento(id) {
 
 // Função para editar evento
 async function editarEvento(id) {
-  const senhaDigitada = prompt("Digite a senha para editar este evento:");
   const eventoRef = doc(db, "eventos", id);
   const eventoSnap = await getDoc(eventoRef);
 
@@ -115,6 +115,7 @@ async function editarEvento(id) {
   }
 
   const evento = eventoSnap.data();
+  const senhaDigitada = prompt("Digite a senha para editar este evento:");
 
   if (senhaDigitada === evento.senha) {
     const novoTitulo = prompt("Novo título:", evento.titulo);
