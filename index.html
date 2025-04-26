@@ -1,25 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Criar Evento - Agenda CCB</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agenda de Eventos CCB</title>
+  <script type="module" src="script.js"></script>
 </head>
 <body>
-  <h1>Criar Evento</h1>
+  <h1>Agenda de Eventos CCB</h1>
 
-  <form id="formEvento">
-    <label>Título:<br><input type="text" id="titulo" required></label><br><br>
-    <label>Data:<br><input type="date" id="data" required></label><br><br>
-    <label>Local:<br><input type="text" id="local" required></label><br><br>
-    <label>Descrição:<br><textarea id="descricao" required></textarea></label><br><br>
-    <label>Senha para editar/excluir:<br><input type="password" id="senha" required></label><br><br>
-
-    <button type="submit">Salvar Evento</button>
-  </form>
-
-  <p id="mensagem"></p>
-
-  <script src="firebase-config.js"></script>
-  <script src="script.js"></script>
+  <div>
+    <h2>Criar evento</h2>
+    <input type="text" id="titulo" placeholder="Título do evento"><br>
+    <input type="date" id="data"><br>
+    <input type="text" id="local" placeholder="Local do evento"><br>
+    <textarea id="descricao" placeholder="Descrição"></textarea><br>
+    <input type="password" id="senha" placeholder="Crie uma senha"><br>
+    <button id="btnSalvar">Salvar evento</button>
+  </div>
 </body>
 </html>
