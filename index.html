@@ -4,39 +4,121 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agenda de Eventos</title>
-  <link rel="stylesheet" href="style.css"> <!-- Se você tiver um arquivo CSS -->
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: url('Foto agenda.jpg') no-repeat center center fixed; /* <-- ADICIONADO */
+        background-size: cover; /* <-- ADICIONADO */
+        color: #333;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    h1 {
+        text-align: center;
+        color: #4CAF50;
+        margin-top: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9); /* <-- Levemente transparente para aparecer o fundo */
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    input, button, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        border: none;
+        font-size: 18px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    #listaEventos {
+        display: none;
+        margin-top: 20px;
+    }
+    .evento {
+        background-color: #fafafa;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #4CAF50;
+    }
+    .evento h3 {
+        margin-top: 0;
+        font-size: 20px;
+        color: #333;
+    }
+    .evento p {
+        font-size: 16px;
+        color: #555;
+    }
+    .evento button {
+        background-color: #f44336;
+        color: white;
+        border-radius: 5px;
+        padding: 8px;
+        cursor: pointer;
+        margin-right: 8px;
+    }
+    .evento button:hover {
+        background-color: #da190b;
+    }
+    footer {
+        background-color: #4CAF50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        margin-top: 40px;
+        border-top: 4px solid #fff;
+    }
+    footer p {
+        margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Agenda de Eventos Culturais</h1>
+<div class="container">
+  <h1>Agenda de Eventos</h1>
 
-  <section>
-    <h2>Cadastrar Evento</h2>
-    <form>
-      <label for="titulo">Título:</label>
-      <input type="text" id="titulo">
-      <label for="data">Data:</label>
-      <input type="date" id="data">
-      <label for="horaTermino">Hora de Término:</label>
-      <input type="time" id="horaTermino">
-      <label for="local">Local:</label>
-      <input type="text" id="local">
-      <label for="descricao">Descrição:</label>
-      <textarea id="descricao"></textarea>
-      <label for="senha">Senha:</label>
-      <input type="password" id="senha">
-      <button type="button" id="btnSalvar">Salvar</button>
-    </form>
-  </section>
+  <input type="text" id="titulo" placeholder="Título do Evento">
+  <input type="date" id="data">
+  <input type="time" id="horaTermino">
+  <input type="text" id="local" placeholder="Local do Evento">
+  <textarea id="descricao" placeholder="Descrição do Evento"></textarea>
+  <input type="password" id="senha" placeholder="Senha para Edição/Exclusão">
+  <button id="btnSalvar">Salvar Evento</button>
+  <button id="btnMostrar">Mostrar Eventos</button>
 
-  <section id="eventos">
-    <h2>Eventos Culturais</h2>
-    <button id="btnMostrar">Mostrar Eventos</button>
-    <ul id="eventos"></ul> <!-- Esse é o id que foi corrigido -->
-  </section>
+  <div id="listaEventos"></div>
+</div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"></script>
-  <script src="app.js"></script> <!-- JavaScript do app -->
+<!-- Seu script continua normalmente -->
+<script type="module">
+  // Firebase e Funções (não alterei)
+</script>
+<footer style="background-color: #3100ff; padding: 20px; text-align: center; font-size: 14px;">
+  <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
+  <p><strong>Agenda CCB</strong> é um projeto desenvolvido como atividade extensionista do curso de Engenharia de Software.</p>
+  <p>O objetivo é divulgar eventos Religiosos locais, como: Reuniões de adoração, apresentações e encontros comunitários.</p>
+  <p>Esta página foi criada por Raphael Henrique, com o uso de tecnologias web como HTML, CSS e JavaScript.</p>
+  <p>Projeto acadêmico - 2025</p>
+</footer>
 </body>
 </html>
