@@ -10,6 +10,10 @@
 <body>
   <h1>Agenda de Eventos CCB</h1>
 
+  <div class="botoes-topo">
+    <button id="btnMostrar">Mostrar eventos</button>
+  </div>
+
   <div class="formulario">
     <h2>Criar evento</h2>
     <input type="text" id="titulo" placeholder="Título do evento"><br>
@@ -17,8 +21,10 @@
     <input type="text" id="local" placeholder="Local do evento"><br>
     <textarea id="descricao" placeholder="Descrição"></textarea><br>
     <input type="password" id="senha" placeholder="Crie uma senha"><br>
+  </div>
+
+  <div class="botoes-final">
     <button id="btnSalvar">Salvar evento</button>
-    <button id="btnMostrar">Mostrar eventos</button>
   </div>
 
   <div id="listaEventos" class="lista-eventos"></div>
