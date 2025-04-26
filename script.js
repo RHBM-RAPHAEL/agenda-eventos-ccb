@@ -30,7 +30,7 @@ async function salvarEvento(titulo, data, local, descricao, senha, horaTermino) 
 
 // Função para mostrar eventos
 function mostrarEventos() {
-  const listaEventos = document.getElementById("eventos");
+  const listaEventos = document.getElementById("listaEventos"); // Corrigido para o id correto
   listaEventos.innerHTML = ""; // Limpar a lista antes de adicionar novos itens
 
   getDocs(collection(db, "eventos"))
@@ -38,7 +38,7 @@ function mostrarEventos() {
       querySnapshot.forEach((docSnap) => {
         const evento = docSnap.data();
         const li = document.createElement("li");
-        li.innerHTML = 
+        li.innerHTML = `
           <strong>${evento.titulo}</strong><br>
           📅 ${evento.data} – ⏰ Até ${evento.horaTermino}<br>
           📍 ${evento.local}<br>
@@ -46,7 +46,7 @@ function mostrarEventos() {
           <button class="editar" data-id="${docSnap.id}">✏️ Editar</button>
           <button class="excluir" data-id="${docSnap.id}">🗑️ Excluir</button>
           <hr>
-        ;
+        `;
         listaEventos.appendChild(li);
       });
 
@@ -115,7 +115,7 @@ async function editarEvento(id) {
   }
 
   const evento = eventoSnap.data();
-  const senhaDigitada = prompt("Digite a senha para editar este evento:");
+  const senhaDigitada = prompt("Digite a senha para editar:");
 
   if (senhaDigitada === evento.senha) {
     const novoTitulo = prompt("Novo título:", evento.titulo);
