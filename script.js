@@ -157,5 +157,6 @@ document.getElementById("btnSalvar").addEventListener("click", () => {
 document.getElementById("btnMostrar").addEventListener("click", mostrarEventos);
 
 // Atribuindo as funções ao window para garantir que sejam globais
-window.excluirEvento = excluirEvento;
+// No final do script
 window.editarEvento = editarEvento;
+window.excluirEvento = excluirEvento;
