@@ -29,52 +29,56 @@ async function salvarEvento(titulo, data, local, descricao, senha) {
 }
 
 // Função para mostrar ou esconder eventos
-async function mostrarEventos() {
-  const lista = document.getElementById("listaEventos");
-  
-  // Verifica se a lista já está visível
-  if (lista.style.display === "block") {
-    // Se estiver visível, esconde a lista
-    lista.style.display = "none";
-    return;
-  }
+function mostrarEventos() {
+    const listaEventos = document.getElementById("eventos");
+    listaEventos.innerHTML = "";
 
-  // Caso contrário, exibe os eventos
-  lista.innerHTML = ""; // Limpa os eventos anteriores (se houver)
+    getDocs(collection(db, "eventos"))
+        .then((querySnapshot) => {
+            querySnapshot.forEach((docSnap) => {
+                const evento = docSnap.data();
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <strong>${evento.titulo}</strong><br>
+                    📅 ${evento.data} – ⏰ Até ${evento.horaTermino}<br>
+                    📍 ${evento.local}<br>
+                    📝 ${evento.descricao}<br>
+                    <button class="editar" data-id="${docSnap.id}">✏️ Editar</button>
+                    <button class="excluir" data-id="${docSnap.id}">🗑️ Excluir</button>
+                    <hr>
+                `;
+                listaEventos.appendChild(li);
+            });
 
-  try {
-    const querySnapshot = await getDocs(collection(db, "eventos"));
-    
-    if (querySnapshot.empty) {
-      lista.innerHTML = "<p>Nenhum evento encontrado.</p>";
-      return;
-    }
+            // 🔁 Reatribuir eventos aos botões criados dinamicamente
+            document.querySelectorAll(".excluir").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-id");
+                    const senha = prompt("Digite a senha para excluir:");
+                    if (senha === "1234") {
+                        excluirEvento(id);
+                    } else {
+                        alert("❌ Senha incorreta.");
+                    }
+                });
+            });
 
-    querySnapshot.forEach((docSnap) => {
-      const evento = docSnap.data();
-      const div = document.createElement("div");
-      div.className = "evento";
-
-      div.innerHTML = `
-        <h3>${evento.titulo}</h3>
-        <p><strong>Data:</strong> ${evento.data}</p>
-        <p><strong>Local:</strong> ${evento.local}</p>
-        <p><strong>Descrição:</strong> ${evento.descricao}</p>
-        <button onclick="editarEvento('${docSnap.id}')">Editar</button>
-        <button onclick="excluirEvento('${docSnap.id}')">Excluir</button>
-      `;
-
-      lista.appendChild(div);
-    });
-
-    // Exibe a lista de eventos
-    lista.style.display = "block";
-  } catch (error) {
-    console.error("Erro ao buscar eventos:", error);
-    lista.innerHTML = "<p>Erro ao carregar eventos.</p>";
-  }
+            document.querySelectorAll(".editar").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-id");
+                    const senha = prompt("Digite a senha para editar:");
+                    if (senha === "1234") {
+                        editarEvento(id);
+                    } else {
+                        alert("❌ Senha incorreta.");
+                    }
+                });
+            });
+        })
+        .catch((error) => {
+            console.error("Erro ao mostrar eventos:", error);
+        });
 }
-
 // Função para excluir evento (pedindo senha)
 async function excluirEvento(id) {
   const senhaDigitada = prompt("Digite a senha para excluir este evento:");
