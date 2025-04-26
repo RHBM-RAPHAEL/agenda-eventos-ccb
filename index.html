@@ -1,79 +1,212 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agenda de Eventos</title>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
-
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: url('Foto agenda.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    h1 {
+        text-align: center;
+        color: #4CAF50;
+        margin-top: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    input, button, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        border: none;
+        font-size: 18px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    #listaEventos {
+        display: none;
+        margin-top: 20px;
+    }
+    .evento {
+        background-color: #fafafa;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #4CAF50;
+    }
+    .evento h3 {
+        margin-top: 0;
+        font-size: 20px;
+        color: #333;
+    }
+    .evento p {
+        font-size: 16px;
+        color: #555;
+    }
+    .evento button {
+        background-color: #f44336;
+        color: white;
+        border-radius: 5px;
+        padding: 8px;
+        cursor: pointer;
+        margin-right: 8px;
+    }
+    .evento button:hover {
+        background-color: #da190b;
+    }
+    footer {
+        background-color: #4CAF50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        margin-top: 40px;
+        border-top: 4px solid #fff;
+    }
+    footer p {
+        margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
 
+<div class="container">
   <h1>Agenda de Eventos</h1>
 
-  <form id="eventoForm">
-    <input type="text" id="titulo" placeholder="Título do Evento" required><br><br>
-    <input type="date" id="data" required><br><br>
-    <button type="submit">Salvar Evento</button>
-  </form>
+  <input type="text" id="titulo" placeholder="Título do Evento">
+  <input type="date" id="data">
+  <input type="time" id="horaTermino">
+  <input type="text" id="local" placeholder="Local do Evento">
+  <textarea id="descricao" placeholder="Descrição do Evento"></textarea>
+  <input type="password" id="senha" placeholder="Senha para Edição/Exclusão">
+  <button id="btnSalvar">Salvar Evento</button>
+  <button id="btnMostrar">Mostrar Eventos</button>
 
-  <h2>Lista de Eventos:</h2>
-  <ul id="eventosList"></ul>
+  <div id="listaEventos"></div>
+</div>
 
-  <script>
-    // Configuração do seu Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
-      authDomain: "agenda-eventos-ccb.firebaseapp.com",
-      projectId: "agenda-eventos-ccb",
-      storageBucket: "agenda-eventos-ccb.firebasestorage.app",
-      messagingSenderId: "325923477189",
-      appId: "1:325923477189:web:1aba52c8119d290338c2ac",
-      measurementId: "G-PDTYLHH85J"
-    };
+<script type="module">
+  // Importar Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
+  // Suas configurações do Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
+    authDomain: "agenda-eventos-ccb.firebaseapp.com",
+    projectId: "agenda-eventos-ccb",
+    storageBucket: "agenda-eventos-ccb.appspot.com",
+    messagingSenderId: "325923477189",
+    appId: "1:325923477189:web:1aba52c8119d290338c2ac",
+    measurementId: "G-PDTYLHH85J",
+    databaseURL: "https://agenda-eventos-ccb-default-rtdb.firebaseio.com/"
+  };
 
-    // Referência ao banco de dados
-    const database = firebase.database();
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-    // Formulário para adicionar eventos
-    const eventoForm = document.getElementById('eventoForm');
-    const eventosList = document.getElementById('eventosList');
+  // Função para salvar evento
+  document.getElementById('btnSalvar').addEventListener('click', () => {
+    const titulo = document.getElementById('titulo').value;
+    const data = document.getElementById('data').value;
+    const horaTermino = document.getElementById('horaTermino').value;
+    const local = document.getElementById('local').value;
+    const descricao = document.getElementById('descricao').value;
+    const senha = document.getElementById('senha').value;
 
-    eventoForm.addEventListener('submit', function(event) {
-      event.preventDefault(); // Evita o recarregamento da página
-
-      const titulo = document.getElementById('titulo').value;
-      const data = document.getElementById('data').value;
-
-      // Salva no Firebase
-      database.ref('eventos').push({
-        titulo: titulo,
-        data: data
+    if (titulo && data && local && descricao && senha) {
+      const novoEventoRef = push(ref(db, 'eventos'));
+      set(novoEventoRef, {
+        titulo,
+        data,
+        horaTermino,
+        local,
+        descricao,
+        senha
       });
+      alert('Evento salvo com sucesso!');
+      // Limpar campos
+      document.getElementById('titulo').value = '';
+      document.getElementById('data').value = '';
+      document.getElementById('horaTermino').value = '';
+      document.getElementById('local').value = '';
+      document.getElementById('descricao').value = '';
+      document.getElementById('senha').value = '';
+    } else {
+      alert('Por favor, preencha todos os campos!');
+    }
+  });
 
-      // Limpar o formulário
-      eventoForm.reset();
-    });
+  // Função para mostrar eventos
+  document.getElementById('btnMostrar').addEventListener('click', () => {
+    const lista = document.getElementById('listaEventos');
+    lista.innerHTML = '';
+    lista.style.display = 'block';
 
-    // Função para mostrar eventos cadastrados
-    database.ref('eventos').on('value', function(snapshot) {
-      eventosList.innerHTML = ''; // Limpar lista
-
-      snapshot.forEach(function(childSnapshot) {
+    const eventosRef = ref(db, 'eventos');
+    onValue(eventosRef, (snapshot) => {
+      lista.innerHTML = '';
+      snapshot.forEach((childSnapshot) => {
         const evento = childSnapshot.val();
-        const li = document.createElement('li');
-        li.textContent = `${evento.titulo} - ${evento.data}`;
-        eventosList.appendChild(li);
+        const key = childSnapshot.key;
+        const div = document.createElement('div');
+        div.classList.add('evento');
+        div.innerHTML = `
+          <h3>${evento.titulo}</h3>
+          <p><strong>Data:</strong> ${evento.data}</p>
+          <p><strong>Hora de Término:</strong> ${evento.horaTermino}</p>
+          <p><strong>Local:</strong> ${evento.local}</p>
+          <p><strong>Descrição:</strong> ${evento.descricao}</p>
+          <button onclick="excluirEvento('${key}', '${evento.senha}')">Excluir</button>
+        `;
+        lista.appendChild(div);
       });
     });
+  });
 
-  </script>
+  // Função para excluir evento
+  window.excluirEvento = (key, senhaSalva) => {
+    const senhaDigitada = prompt('Digite a senha para excluir o evento:');
+    if (senhaDigitada === senhaSalva) {
+      remove(ref(db, 'eventos/' + key));
+      alert('Evento excluído com sucesso!');
+    } else {
+      alert('Senha incorreta!');
+    }
+  };
+</script>
+
+<footer style="background-color: #3100ff; padding: 20px; text-align: center; font-size: 14px;">
+  <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
+  <p><strong>Agenda CCB</strong> é um projeto desenvolvido como atividade extensionista do curso de Engenharia de Software.</p>
+  <p>O objetivo é divulgar eventos Religiosos locais, como: Reuniões de adoração, apresentações e encontros comunitários.</p>
+  <p>Esta página foi criada por Raphael Henrique, com o uso de tecnologias web como HTML, CSS e JavaScript.</p>
+  <p>Projeto acadêmico - 2025</p>
+</footer>
 
 </body>
 </html>
