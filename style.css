@@ -6,7 +6,8 @@
 }
 
 body {
-  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+  background: url('Foto agenda.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: #333;
   padding: 40px;
   display: flex;
@@ -17,75 +18,87 @@ body {
 h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #2c3e50;
+  color: #4CAF50;
+  text-align: center;
 }
 
-h2 {
-  margin-bottom: 15px;
-  color: #34495e;
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-div {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 500px;
-}
-
-input,
-textarea {
+input, button, textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
+  font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-}
-
-input:focus,
-textarea:focus {
-  border-color: #3498db;
-  outline: none;
+  border-radius: 6px;
 }
 
 button {
-  background-color: #3498db;
+  background-color: #4CAF50;
   color: white;
-  padding: 12px;
-  font-size: 1rem;
-  width: 100%;
+  cursor: pointer;
+  font-size: 18px;
   border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #2980b9;
-}
-.botoes-topo {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px; /* Espaçamento abaixo do botão "Mostrar eventos" */
+  background-color: #45a049;
 }
 
-.botoes-final {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px; /* Espaçamento acima do botão "Salvar evento" */
+#listaEventos {
+  display: none;
+  margin-top: 20px;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 1.1rem;
+.evento {
+  background-color: #fafafa;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #4CAF50;
+}
+
+.evento h3 {
+  margin-top: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.evento p {
+  font-size: 16px;
+  color: #555;
+}
+
+.evento button {
+  background-color: #f44336;
+  color: white;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  padding: 8px;
+  margin-right: 8px;
 }
 
-button:hover {
-  background-color: #2980b9;
+.evento button:hover {
+  background-color: #da190b;
+}
+
+footer {
+  background-color: #3100ff;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 40px;
+  border-top: 4px solid #fff;
+}
+
+footer p {
+  margin: 5px 0;
 }
