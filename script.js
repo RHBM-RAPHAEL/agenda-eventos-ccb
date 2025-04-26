@@ -30,55 +30,54 @@ async function salvarEvento(titulo, data, local, descricao, senha) {
 
 // Função para mostrar ou esconder eventos
 function mostrarEventos() {
-  const listaEventos = document.getElementById("eventos");
-  listaEventos.innerHTML = "";
+    const listaEventos = document.getElementById("eventos");
+    listaEventos.innerHTML = "";
 
-  getDocs(collection(db, "eventos"))
-    .then((querySnapshot) => {
-      querySnapshot.forEach((docSnap) => {
-        const evento = docSnap.data();
-        const hora = evento.horaTermino ? `– ⏰ Até ${evento.horaTermino}` : "";
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <strong>${evento.titulo}</strong><br>
-          📅 ${evento.data} ${hora}<br>
-          📍 ${evento.local}<br>
-          📝 ${evento.descricao}<br>
-          <button class="editar" data-id="${docSnap.id}">✏️ Editar</button>
-          <button class="excluir" data-id="${docSnap.id}">🗑️ Excluir</button>
-          <hr>
-        `;
-        listaEventos.appendChild(li);
-      });
+    getDocs(collection(db, "eventos"))
+        .then((querySnapshot) => {
+            querySnapshot.forEach((docSnap) => {
+                const evento = docSnap.data();
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <strong>${evento.titulo}</strong><br>
+                    📅 ${evento.data} – ⏰ Até ${evento.horaTermino}<br>
+                    📍 ${evento.local}<br>
+                    📝 ${evento.descricao}<br>
+                    <button class="editar" data-id="${docSnap.id}">✏️ Editar</button>
+                    <button class="excluir" data-id="${docSnap.id}">🗑️ Excluir</button>
+                    <hr>
+                `;
+                listaEventos.appendChild(li);
+            });
 
-      // Reatribuir eventos aos botões criados dinamicamente
-      document.querySelectorAll(".excluir").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-id");
-          const senha = prompt("Digite a senha para excluir:");
-          if (senha === "1234") {
-            excluirEvento(id);
-          } else {
-            alert("❌ Senha incorreta.");
-          }
+            // 🔁 Reatribuir eventos aos botões criados dinamicamente
+            document.querySelectorAll(".excluir").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-id");
+                    const senha = prompt("Digite a senha para excluir:");
+                    if (senha === "1234") {
+                        excluirEvento(id);
+                    } else {
+                        alert("❌ Senha incorreta.");
+                    }
+                });
+            });
+
+            document.querySelectorAll(".editar").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-id");
+                    const senha = prompt("Digite a senha para editar:");
+                    if (senha === "1234") {
+                        editarEvento(id);
+                    } else {
+                        alert("❌ Senha incorreta.");
+                    }
+                });
+            });
+        })
+        .catch((error) => {
+            console.error("Erro ao mostrar eventos:", error);
         });
-      });
-
-      document.querySelectorAll(".editar").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-id");
-          const senha = prompt("Digite a senha para editar:");
-          if (senha === "1234") {
-            editarEvento(id);
-          } else {
-            alert("❌ Senha incorreta.");
-          }
-        });
-      });
-    })
-    .catch((error) => {
-      console.error("Erro ao mostrar eventos:", error);
-    });
 }
 
 // Função para excluir evento (pedindo senha)
