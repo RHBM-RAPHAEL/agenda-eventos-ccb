@@ -5,12 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agenda de Eventos CCB</title>
-  <script type="module" src="script.js"></script>
+  <script type="module" src="script.js" defer></script>
 </head>
 <body>
   <h1>Agenda de Eventos CCB</h1>
 
-  <div>
+  <div class="formulario">
     <h2>Criar evento</h2>
     <input type="text" id="titulo" placeholder="Título do evento"><br>
     <input type="date" id="data"><br>
@@ -18,6 +18,9 @@
     <textarea id="descricao" placeholder="Descrição"></textarea><br>
     <input type="password" id="senha" placeholder="Crie uma senha"><br>
     <button id="btnSalvar">Salvar evento</button>
+    <button id="btnMostrar">Mostrar eventos</button>
   </div>
+
+  <div id="listaEventos" class="lista-eventos"></div>
 </body>
 </html>
