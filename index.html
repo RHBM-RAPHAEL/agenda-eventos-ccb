@@ -85,15 +85,16 @@
     }
 
     .evento button {
-      background-color: #f44336;
+      background-color: #2196F3;
       color: white;
       border-radius: 5px;
       padding: 8px;
       margin-right: 8px;
+      margin-top: 10px;
     }
 
     .evento button:hover {
-      background-color: #da190b;
+      background-color: #0b7dda;
     }
 
     footer {
@@ -128,93 +129,7 @@
   <div id="listaEventos"></div>
 </div>
 
-<script type="module">
-  // Importa o SDK do Firebase
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getDatabase, ref, set, push, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-
-  // Configuração do Firebase (substitua com suas credenciais)
-  const firebaseConfig = {
-    apiKey: "sua-apiKey",
-    authDomain: "seu-authDomain",
-    databaseURL: "https://agenda-eventos-ccb-default-rtdb.firebaseio.com",
-    projectId: "seu-projectId",
-    storageBucket: "seu-storageBucket",
-    messagingSenderId: "seu-messagingSenderId",
-    appId: "seu-appId"
-  };
-
-  // Inicializa o Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // Função para salvar evento no Firebase
-  function salvarEvento() {
-    const titulo = document.getElementById('titulo').value;
-    const data = document.getElementById('data').value;
-    const horaTermino = document.getElementById('horaTermino').value;
-    const local = document.getElementById('local').value;
-    const descricao = document.getElementById('descricao').value;
-    const senha = document.getElementById('senha').value;
-
-    if (!titulo || !data || !horaTermino || !local || !descricao || !senha) {
-      alert('Todos os campos devem ser preenchidos!');
-      return;
-    }
-
-    const eventosRef = ref(db, 'events');
-    const newEventRef = push(eventosRef);
-
-    set(newEventRef, {
-      title: titulo,
-      date: data,
-      timeEnd: horaTermino,
-      location: local,
-      description: descricao,
-      password: senha,
-    }).then(() => {
-      alert('Evento salvo com sucesso!');
-    }).catch((error) => {
-      alert('Erro ao salvar evento: ' + error.message);
-    });
-  }
-
-  // Função para mostrar eventos
-  function mostrarEventos() {
-    const eventosRef = ref(db, 'events');
-    
-    get(eventosRef).then((snapshot) => {
-      const listaEventos = document.getElementById('listaEventos');
-      listaEventos.innerHTML = ''; // Limpa a lista antes de mostrar
-
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-          const evento = childSnapshot.val();
-          const divEvento = document.createElement('div');
-          divEvento.classList.add('evento');
-          divEvento.innerHTML = `
-            <h3>${evento.title}</h3>
-            <p><strong>Data:</strong> ${evento.date}</p>
-            <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
-            <p><strong>Local:</strong> ${evento.location}</p>
-            <p><strong>Descrição:</strong> ${evento.description}</p>
-          `;
-          listaEventos.appendChild(divEvento);
-        });
-        listaEventos.style.display = 'block';
-      } else {
-        listaEventos.innerHTML = '<p>Nenhum evento encontrado.</p>';
-      }
-    }).catch((error) => {
-      alert('Erro ao carregar eventos: ' + error.message);
-    });
-  }
-
-  // Ações dos botões
-  document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
-  document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
-
-</script>
+<script type="module" src="./script.js"></script>
 
 <footer>
   <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
