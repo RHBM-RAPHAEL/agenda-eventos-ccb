@@ -1,6 +1,7 @@
 // Importa o SDK do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, set, push, get, update, remove, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // Configuração do Firebase (substitua com suas credenciais)
 const firebaseConfig = {
@@ -16,6 +17,7 @@ const firebaseConfig = {
 // Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
 // Função para salvar evento no Firebase
 function salvarEvento() {
@@ -34,27 +36,28 @@ function salvarEvento() {
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
-  // Criptografar a senha antes de salvar
-  bcrypt.hash(senha, 10, function(err, hash) {
-    if (err) {
-      alert('Erro ao criptografar senha');
-      return;
-    }
+  // Criação de um usuário fictício para gerar a senha criptografada usando Firebase Authentication
+  createUserWithEmailAndPassword(auth, "event@event.com", senha)
+    .then((userCredential) => {
+      const user = userCredential.user;
 
-    set(newEventRef, {
-      title: titulo,
-      date: data,
-      timeEnd: horaTermino,
-      location: local,
-      description: descricao,
-      password: hash // <--- SALVA A SENHA CRIPTOGRAFADA
-    }).then(() => {
-      alert('Evento salvo com sucesso!');
-      limparCampos();
-    }).catch((error) => {
-      alert('Erro ao salvar evento: ' + error.message);
+      set(newEventRef, {
+        title: titulo,
+        date: data,
+        timeEnd: horaTermino,
+        location: local,
+        description: descricao,
+        password: userCredential.user.stsTokenManager.accessToken // Salva o token do Firebase (não a senha em texto plano)
+      }).then(() => {
+        alert('Evento salvo com sucesso!');
+        limparCampos();
+      }).catch((error) => {
+        alert('Erro ao salvar evento: ' + error.message);
+      });
+    })
+    .catch((error) => {
+      alert('Erro ao criar usuário: ' + error.message);
     });
-  });
 }
 
 // Função para limpar campos após salvar
@@ -108,35 +111,27 @@ window.editarEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para editar este evento:');
   
   // Comparar a senha fornecida com a senha criptografada
-  bcrypt.compare(senha, senhaCorreta, function(err, res) {
-    if (err) {
-      alert('Erro ao verificar a senha');
-      return;
-    }
+  if (senha === senhaCorreta) {
+    const novoTitulo = prompt('Novo título:');
+    const novaDescricao = prompt('Nova descrição:');
+    const novaLocal = prompt('Novo local:');
 
-    // Se as senhas coincidirem
-    if (res) {
-      const novoTitulo = prompt('Novo título:');
-      const novaDescricao = prompt('Nova descrição:');
-      const novaLocal = prompt('Novo local:');
-
-      if (novoTitulo && novaDescricao && novaLocal) {
-        const eventoRef = ref(db, 'events/' + id);
-        update(eventoRef, {
-          title: novoTitulo,
-          description: novaDescricao,
-          location: novaLocal
-        }).then(() => {
-          alert('Evento editado com sucesso!');
-          mostrarEventos(); // Atualizar a lista de eventos
-        }).catch((error) => {
-          alert('Erro ao editar evento: ' + error.message);
-        });
-      }
-    } else {
-      alert('Senha incorreta!');
+    if (novoTitulo && novaDescricao && novaLocal) {
+      const eventoRef = ref(db, 'events/' + id);
+      update(eventoRef, {
+        title: novoTitulo,
+        description: novaDescricao,
+        location: novaLocal
+      }).then(() => {
+        alert('Evento editado com sucesso!');
+        mostrarEventos(); // Atualizar a lista de eventos
+      }).catch((error) => {
+        alert('Erro ao editar evento: ' + error.message);
+      });
     }
-  });
+  } else {
+    alert('Senha incorreta!');
+  }
 };
 
 // Função para excluir evento
@@ -144,25 +139,17 @@ window.excluirEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para excluir este evento:');
   
   // Comparar a senha fornecida com a senha criptografada
-  bcrypt.compare(senha, senhaCorreta, function(err, res) {
-    if (err) {
-      alert('Erro ao verificar a senha');
-      return;
-    }
-
-    // Se as senhas coincidirem
-    if (res) {
-      const eventoRef = ref(db, 'events/' + id);
-      remove(eventoRef).then(() => {
-        alert('Evento excluído com sucesso!');
-        mostrarEventos(); // Atualizar a lista de eventos
-      }).catch((error) => {
-        alert('Erro ao excluir evento: ' + error.message);
-      });
-    } else {
-      alert('Senha incorreta!');
-    }
-  });
+  if (senha === senhaCorreta) {
+    const eventoRef = ref(db, 'events/' + id);
+    remove(eventoRef).then(() => {
+      alert('Evento excluído com sucesso!');
+      mostrarEventos(); // Atualizar a lista de eventos
+    }).catch((error) => {
+      alert('Erro ao excluir evento: ' + error.message);
+    });
+  } else {
+    alert('Senha incorreta!');
+  }
 };
 
 // Event listeners para os botões
