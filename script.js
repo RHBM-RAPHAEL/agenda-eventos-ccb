@@ -34,7 +34,7 @@ function salvarEvento() {
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
-    // Criptografar a senha antes de salvar
+  // Criptografar a senha antes de salvar
   bcrypt.hash(senha, 10, function(err, hash) {
     if (err) {
       alert('Erro ao criptografar senha');
@@ -55,6 +55,7 @@ function salvarEvento() {
       alert('Erro ao salvar evento: ' + error.message);
     });
   });
+}
 
 // Função para limpar campos após salvar
 function limparCampos() {
@@ -105,53 +106,71 @@ function mostrarEventos() {
 // Função para editar evento
 window.editarEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para editar este evento:');
-  if (senha === senhaCorreta) {
-    const novoTitulo = prompt('Novo título:');
-    const novaData = prompt('Nova data (yyyy-mm-dd):');
-    const novoHorario = prompt('Novo horário de término:');
-    const novoLocal = prompt('Novo local:');
-    const novaDescricao = prompt('Nova descrição:');
+  
+  // Comparar a senha fornecida com a senha criptografada
+  bcrypt.compare(senha, senhaCorreta, function(err, res) {
+    if (err) {
+      alert('Erro ao verificar a senha');
+      return;
+    }
 
-    const eventoRef = ref(db, 'events/' + id);
-    update(eventoRef, {
-      title: novoTitulo,
-      date: novaData,
-      timeEnd: novoHorario,
-      location: novoLocal,
-      description: novaDescricao
-    }).then(() => {
-      alert('Evento atualizado com sucesso!');
-      mostrarEventos();
-    }).catch((error) => {
-      alert('Erro ao atualizar evento: ' + error.message);
-    });
-  } else {
-    alert('Senha incorreta!');
-  }
+    // Se as senhas coincidirem
+    if (res) {
+      const novoTitulo = prompt('Novo título:');
+      const novaData = prompt('Nova data (yyyy-mm-dd):');
+      const novoHorario = prompt('Novo horário de término:');
+      const novoLocal = prompt('Novo local:');
+      const novaDescricao = prompt('Nova descrição:');
+
+      const eventoRef = ref(db, 'events/' + id);
+      update(eventoRef, {
+        title: novoTitulo,
+        date: novaData,
+        timeEnd: novoHorario,
+        location: novoLocal,
+        description: novaDescricao
+      }).then(() => {
+        alert('Evento atualizado com sucesso!');
+        mostrarEventos();
+      }).catch((error) => {
+        alert('Erro ao atualizar evento: ' + error.message);
+      });
+    } else {
+      alert('Senha incorreta!');
+    }
+  });
 }
 
 // Função para excluir evento
 window.excluirEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para excluir este evento:');
-  if (senha === senhaCorreta) {
-    const confirmar = confirm('Tem certeza que deseja excluir este evento?');
-    if (!confirmar) return;
+  
+  // Comparar a senha fornecida com a senha criptografada
+  bcrypt.compare(senha, senhaCorreta, function(err, res) {
+    if (err) {
+      alert('Erro ao verificar a senha');
+      return;
+    }
 
-    const eventoRef = ref(db, 'events/' + id);
-    remove(eventoRef).then(() => {
-      alert('Evento excluído com sucesso!');
-      mostrarEventos();
-    }).catch((error) => {
-      alert('❌ Erro ao salvar o evento: ' + error.message);
-    });
-  } else {
-    alert('Senha incorreta!');
-  }
+    // Se as senhas coincidirem
+    if (res) {
+      const confirmar = confirm('Tem certeza que deseja excluir este evento?');
+      if (!confirmar) return;
+
+      const eventoRef = ref(db, 'events/' + id);
+      remove(eventoRef).then(() => {
+        alert('Evento excluído com sucesso!');
+        mostrarEventos();
+      }).catch((error) => {
+        alert('Erro ao excluir o evento: ' + error.message);
+      });
+    } else {
+      alert('Senha incorreta!');
+    }
+  });
 }
-
 
 // Ações dos botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
 window.addEventListener('load', mostrarEventos);
-
