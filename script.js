@@ -34,20 +34,27 @@ function salvarEvento() {
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
-  set(newEventRef, {
-    title: titulo,
-    date: data,
-    timeEnd: horaTermino,
-    location: local,
-    description: descricao,
-    password: senha,
-  }).then(() => {
-    alert('Evento salvo com sucesso!');
-    limparCampos();
-  }).catch((error) => {
-    alert('Erro ao salvar evento: ' + error.message);
+    // Criptografar a senha antes de salvar
+  bcrypt.hash(senha, 10, function(err, hash) {
+    if (err) {
+      alert('Erro ao criptografar senha');
+      return;
+    }
+
+    set(newEventRef, {
+      title: titulo,
+      date: data,
+      timeEnd: horaTermino,
+      location: local,
+      description: descricao,
+      password: hash // <--- SALVA A SENHA CRIPTOGRAFADA
+    }).then(() => {
+      alert('Evento salvo com sucesso!');
+      limparCampos();
+    }).catch((error) => {
+      alert('Erro ao salvar evento: ' + error.message);
+    });
   });
-}
 
 // Função para limpar campos após salvar
 function limparCampos() {
