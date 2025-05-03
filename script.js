@@ -130,13 +130,16 @@ function mostrarEventos() {
 }
 
 // Função para abrir o modal de edição de evento
-function abrirModalEdicao(evento) {
+function abrirModalEdicao(evento, eventoKey) {
   document.getElementById('editarTitulo').value = evento.title;
   document.getElementById('editarData').value = evento.date;
   document.getElementById('editarHoraTermino').value = evento.timeEnd;
   document.getElementById('editarLocal').value = evento.location;
   document.getElementById('editarDescricao').value = evento.description;
   document.getElementById('modalEditar').style.display = 'flex';
+
+  // Passa a chave do evento para a função de salvar edição
+  document.getElementById('btnSalvarEdicao').onclick = () => salvarEdicao(eventoKey);
 }
 
 // Função para fechar o modal
@@ -145,14 +148,13 @@ function fecharModal() {
 }
 
 // Função para salvar a edição do evento
-function salvarEdicao() {
+function salvarEdicao(eventoKey) {
   const titulo = document.getElementById('editarTitulo').value;
   const data = document.getElementById('editarData').value;
   const horaTermino = document.getElementById('editarHoraTermino').value;
   const local = document.getElementById('editarLocal').value;
   const descricao = document.getElementById('editarDescricao').value;
 
-  // Atualiza o evento no Firebase
   const eventoRef = ref(db, 'events/' + eventoKey);
 
   update(eventoRef, {
@@ -181,13 +183,18 @@ window.editarEvento = function (id) {
     }
 
     const evento = snapshot.val();
-    abrirModalEdicao(evento);
+    abrirModalEdicao(evento, id);
   });
 };
 
 // Função para excluir evento
 window.excluirEvento = function (id) {
   const senha = prompt('Digite a senha para excluir este evento:');
+  if (!senha) {
+    alert('Senha não fornecida!');
+    return;
+  }
+
   const eventoRef = ref(db, 'events/' + id);
 
   get(eventoRef).then((snapshot) => {
@@ -216,3 +223,6 @@ window.excluirEvento = function (id) {
 // Botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
+
+// Carregar eventos ao carregar a página
+document.addEventListener('DOMContentLoaded', mostrarEventos);
