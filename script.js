@@ -1,7 +1,7 @@
 // Importa o SDK do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, set, push, get, update, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // Configuração do Firebase (substitua com suas credenciais)
 const firebaseConfig = {
@@ -35,10 +35,21 @@ function loginUsuario(email, senha) {
   signInWithEmailAndPassword(auth, email, senha)
     .then((userCredential) => {
       alert('Usuário logado com sucesso!');
+      mostrarEventos();
     })
     .catch((error) => {
       alert('Erro ao fazer login: ' + error.message);
     });
+}
+
+// Função para fazer logout
+function logoutUsuario() {
+  signOut(auth).then(() => {
+    alert('Usuário deslogado com sucesso!');
+    limparCampos();
+  }).catch((error) => {
+    alert('Erro ao fazer logout: ' + error.message);
+  });
 }
 
 // Função para salvar evento
@@ -77,6 +88,7 @@ function salvarEvento() {
   }).then(() => {
     alert('Evento salvo com sucesso!');
     limparCampos();
+    mostrarEventos(); // Atualiza a lista de eventos
   }).catch((error) => {
     alert('Erro ao salvar evento: ' + error.message);
   });
@@ -220,9 +232,15 @@ window.excluirEvento = function (id) {
   });
 };
 
-// Botões
+// Botões de login, logout e salvar evento
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
+document.getElementById('btnLogin').addEventListener('click', () => {
+  const email = document.getElementById('emailLogin').value;
+  const senha = document.getElementById('senhaLogin').value;
+  loginUsuario(email, senha);
+});
+document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
 
 // Carregar eventos ao carregar a página
 document.addEventListener('DOMContentLoaded', mostrarEventos);
