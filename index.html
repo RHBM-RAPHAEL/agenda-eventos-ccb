@@ -48,6 +48,7 @@
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: none;
     }
 
     input, button, textarea {
@@ -141,6 +142,34 @@
       margin: 5px 0;
     }
 
+    /* Formulários de Login e Cadastro */
+    #login-container, #cadastro-container {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    input[type="email"], input[type="password"] {
+      margin-bottom: 10px;
+    }
+
+    #login-container button, #cadastro-container button {
+      background-color: #4CAF50;
+    }
+
+    #login-container p, #cadastro-container p {
+      text-align: center;
+    }
+
+    #login-container a, #cadastro-container a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+
     @media screen and (max-width: 768px) {
       .container {
         padding: 15px;
@@ -167,6 +196,29 @@
 </head>
 <body>
 
+<!-- Formulário de Login -->
+<div id="login-container">
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Seu Email" required>
+    <input type="password" id="senha" placeholder="Sua Senha" required>
+    <button type="submit">Login</button>
+  </form>
+  <p>Não tem uma conta? <a href="#" id="showCadastro">Cadastrar-se</a></p>
+</div>
+
+<!-- Formulário de Cadastro -->
+<div id="cadastro-container" style="display: none;">
+  <h2>Cadastro</h2>
+  <form id="cadastroForm">
+    <input type="email" id="emailCadastro" placeholder="Seu Email" required>
+    <input type="password" id="senhaCadastro" placeholder="Sua Senha" required>
+    <button type="submit">Cadastrar</button>
+  </form>
+  <p>Já tem uma conta? <a href="#" id="showLogin">Fazer Login</a></p>
+</div>
+
+<!-- Conteúdo da Agenda -->
 <div class="container">
   <div class="titulo">
     <img src="blue-badge.png" alt="Logo Agenda CCB" class="logo">
@@ -193,6 +245,83 @@
   <p>Projeto acadêmico - 2025</p>
 </footer>
 
-<script type="module" src="./script.js"></script>
+<!-- Script do Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+<script>
+  // Configuração do Firebase
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://SEU_PROJECT_ID.firebaseio.com",
+    projectId: "SEU_PROJECT_ID",
+    storageBucket: "SEU_PROJECT_ID.appspot.com",
+    messagingSenderId: "SUA_MESSAGING_SENDER_ID",
+    appId: "SEU_APP_ID"
+  };
+
+  // Inicializar Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  // Alternar entre Login e Cadastro
+  document.getElementById('showCadastro').addEventListener('click', () => {
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('cadastro-container').style.display = 'block';
+  });
+
+  document.getElementById('showLogin').addEventListener('click', () => {
+    document.getElementById('cadastro-container').style.display = 'none';
+    document.getElementById('login-container').style.display = 'block';
+  });
+
+  // Função de login
+  document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+    auth.signInWithEmailAndPassword(email, senha)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log('Usuário logado:', user);
+        document.getElementById('login-container').style.display = 'none';
+        document.querySelector('.container').style.display = 'block'; // Exibe a agenda
+      })
+      .catch((error) => {
+        console.error('Erro no login:', error.message);
+      });
+  });
+
+  // Função de cadastro
+  document.getElementById('cadastroForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('emailCadastro').value;
+    const senha = document.getElementById('senhaCadastro').value;
+    auth.createUserWithEmailAndPassword(email, senha)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log('Usuário cadastrado:', user);
+        document.getElementById('cadastro-container').style.display = 'none';
+        document.querySelector('.container').style.display = 'block'; // Exibe a agenda
+      })
+      .catch((error) => {
+        console.error('Erro no cadastro:', error.message);
+      });
+  });
+
+  // Verifica se o usuário está autenticado
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log('Usuário autenticado:', user);
+      document.querySelector('.container').style.display = 'block'; // Exibe a agenda
+    } else {
+      console.log('Nenhum usuário autenticado');
+      document.getElementById('login-container').style.display = 'block'; // Exibe o login
+    }
+  });
+
+</script>
 </body>
 </html>
