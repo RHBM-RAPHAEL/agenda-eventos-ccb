@@ -117,29 +117,27 @@ window.editarEvento = function (id, senhaCorreta) {
     // Se as senhas coincidirem
     if (res) {
       const novoTitulo = prompt('Novo título:');
-      const novaData = prompt('Nova data (yyyy-mm-dd):');
-      const novoHorario = prompt('Novo horário de término:');
-      const novoLocal = prompt('Novo local:');
       const novaDescricao = prompt('Nova descrição:');
+      const novaLocal = prompt('Novo local:');
 
-      const eventoRef = ref(db, 'events/' + id);
-      update(eventoRef, {
-        title: novoTitulo,
-        date: novaData,
-        timeEnd: novoHorario,
-        location: novoLocal,
-        description: novaDescricao
-      }).then(() => {
-        alert('Evento atualizado com sucesso!');
-        mostrarEventos();
-      }).catch((error) => {
-        alert('Erro ao atualizar evento: ' + error.message);
-      });
+      if (novoTitulo && novaDescricao && novaLocal) {
+        const eventoRef = ref(db, 'events/' + id);
+        update(eventoRef, {
+          title: novoTitulo,
+          description: novaDescricao,
+          location: novaLocal
+        }).then(() => {
+          alert('Evento editado com sucesso!');
+          mostrarEventos(); // Atualizar a lista de eventos
+        }).catch((error) => {
+          alert('Erro ao editar evento: ' + error.message);
+        });
+      }
     } else {
       alert('Senha incorreta!');
     }
   });
-}
+};
 
 // Função para excluir evento
 window.excluirEvento = function (id, senhaCorreta) {
@@ -154,23 +152,19 @@ window.excluirEvento = function (id, senhaCorreta) {
 
     // Se as senhas coincidirem
     if (res) {
-      const confirmar = confirm('Tem certeza que deseja excluir este evento?');
-      if (!confirmar) return;
-
       const eventoRef = ref(db, 'events/' + id);
       remove(eventoRef).then(() => {
         alert('Evento excluído com sucesso!');
-        mostrarEventos();
+        mostrarEventos(); // Atualizar a lista de eventos
       }).catch((error) => {
-        alert('Erro ao excluir o evento: ' + error.message);
+        alert('Erro ao excluir evento: ' + error.message);
       });
     } else {
       alert('Senha incorreta!');
     }
   });
-}
+};
 
-// Ações dos botões
+// Event listeners para os botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
-window.addEventListener('load', mostrarEventos);
