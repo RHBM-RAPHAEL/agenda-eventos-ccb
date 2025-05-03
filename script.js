@@ -127,6 +127,9 @@ window.editarEvento = function (id, senhaCorreta) {
 window.excluirEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para excluir este evento:');
   if (senha === senhaCorreta) {
+    const confirmar = confirm('Tem certeza que deseja excluir este evento?');
+    if (!confirmar) return;
+
     const eventoRef = ref(db, 'events/' + id);
     remove(eventoRef).then(() => {
       alert('Evento excluído com sucesso!');
@@ -138,6 +141,7 @@ window.excluirEvento = function (id, senhaCorreta) {
     alert('Senha incorreta!');
   }
 }
+
 
 // Ações dos botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
