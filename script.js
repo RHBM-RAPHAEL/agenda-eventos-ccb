@@ -9,11 +9,6 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
-// Inicializa o Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth();
-
 // Função para registrar um novo usuário
 function registrarUsuario(email, senha) {
   createUserWithEmailAndPassword(auth, email, senha)
