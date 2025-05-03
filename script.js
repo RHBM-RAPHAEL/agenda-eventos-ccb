@@ -1,18 +1,13 @@
 // Importa o SDK do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, set, push, get, update, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+// script.js
+import { firebaseConfig } from './firebase-config.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+import { getDatabase, ref, set, push, get, update, remove } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
 
-// Configuração do Firebase (substitua com suas credenciais)
-const firebaseConfig = {
-  apiKey: "sua-apiKey",
-  authDomain: "seu-authDomain",
-  databaseURL: "https://agenda-eventos-ccb-default-rtdb.firebaseio.com",
-  projectId: "seu-projectId",
-  storageBucket: "seu-storageBucket",
-  messagingSenderId: "seu-messagingSenderId",
-  appId: "seu-appId"
-};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth();
 
 // Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
