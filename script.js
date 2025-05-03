@@ -26,14 +26,23 @@ function salvarEvento() {
   const descricao = document.getElementById('descricao').value;
   const senha = document.getElementById('senha').value;
 
+  // Verifica se todos os campos estão preenchidos
   if (!titulo || !data || !horaTermino || !local || !descricao || !senha) {
     alert('Todos os campos devem ser preenchidos!');
+    return;
+  }
+
+  // Verifica se a data e hora são válidas e no futuro
+  const dataEvento = new Date(`${data}T${horaTermino}`);
+  if (isNaN(dataEvento.getTime()) || dataEvento < new Date()) {
+    alert('Insira uma data e hora válidas no futuro.');
     return;
   }
 
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
+  // Salva os dados no Firebase
   set(newEventRef, {
     title: titulo,
     date: data,
@@ -59,7 +68,7 @@ function limparCampos() {
   document.getElementById('senha').value = '';
 }
 
-// Mostra todos os eventos
+// Mostra todos os eventos salvos
 function mostrarEventos() {
   const eventosRef = ref(db, 'events');
 
@@ -80,64 +89,87 @@ function mostrarEventos() {
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
           <p><strong>Local:</strong> ${evento.location}</p>
           <p><strong>Descrição:</strong> ${evento.description}</p>
-          <button onclick="editarEvento('${eventoKey}', '${evento.password}')">Editar</button>
-          <button onclick="excluirEvento('${eventoKey}', '${evento.password}')">Excluir</button>
+          <button onclick="editarEvento('${eventoKey}')">Editar</button>
+          <button onclick="excluirEvento('${eventoKey}')">Excluir</button>
         `;
 
         listaEventos.appendChild(divEvento);
       });
+
       listaEventos.style.display = 'block';
     } else {
-      listaEventos.innerHTML = '<p>Nenhum evento encontrado.</p>';
+      listaEventos.innerHTML = '<p style="color: gray; font-style: italic;">Nenhum evento encontrado.</p>';
     }
   }).catch((error) => {
     alert('Erro ao carregar eventos: ' + error.message);
   });
 }
 
-// Editar evento
-window.editarEvento = function (id, senhaCorreta) {
+// Editar evento (com verificação da senha no banco)
+window.editarEvento = function (id) {
   const senha = prompt('Digite a senha para editar este evento:');
-  if (senha === senhaCorreta) {
-    const novoTitulo = prompt('Novo título:');
-    const novaData = prompt('Nova data (yyyy-mm-dd):');
-    const novoHorario = prompt('Novo horário de término:');
-    const novoLocal = prompt('Novo local:');
-    const novaDescricao = prompt('Nova descrição:');
+  const eventoRef = ref(db, 'events/' + id);
 
-    const eventoRef = ref(db, 'events/' + id);
-    update(eventoRef, {
-      title: novoTitulo,
-      date: novaData,
-      timeEnd: novoHorario,
-      location: novoLocal,
-      description: novaDescricao
-    }).then(() => {
-      alert('Evento atualizado com sucesso!');
-      mostrarEventos();
-    }).catch((error) => {
-      alert('Erro ao atualizar evento: ' + error.message);
-    });
-  } else {
-    alert('Senha incorreta!');
-  }
-}
+  get(eventoRef).then((snapshot) => {
+    if (!snapshot.exists()) {
+      alert('Evento não encontrado.');
+      return;
+    }
 
-// Excluir evento
-window.excluirEvento = function (id, senhaCorreta) {
+    const evento = snapshot.val();
+
+    if (senha === evento.password) {
+      const novoTitulo = prompt('Novo título:', evento.title);
+      const novaData = prompt('Nova data (aaaa-mm-dd):', evento.date);
+      const novoHorario = prompt('Novo horário de término:', evento.timeEnd);
+      const novoLocal = prompt('Novo local:', evento.location);
+      const novaDescricao = prompt('Nova descrição:', evento.description);
+
+      update(eventoRef, {
+        title: novoTitulo,
+        date: novaData,
+        timeEnd: novoHorario,
+        location: novoLocal,
+        description: novaDescricao
+      }).then(() => {
+        alert('Evento atualizado com sucesso!');
+        mostrarEventos();
+      }).catch((error) => {
+        alert('Erro ao atualizar evento: ' + error.message);
+      });
+    } else {
+      alert('Senha incorreta!');
+    }
+  });
+};
+
+// Excluir evento (com verificação da senha no banco)
+window.excluirEvento = function (id) {
   const senha = prompt('Digite a senha para excluir este evento:');
-  if (senha === senhaCorreta) {
-    const eventoRef = ref(db, 'events/' + id);
-    remove(eventoRef).then(() => {
-      alert('Evento excluído com sucesso!');
-      mostrarEventos();
-    }).catch((error) => {
-      alert('Erro ao excluir evento: ' + error.message);
-    });
-  } else {
-    alert('Senha incorreta!');
-  }
-}
+  const eventoRef = ref(db, 'events/' + id);
+
+  get(eventoRef).then((snapshot) => {
+    if (!snapshot.exists()) {
+      alert('Evento não encontrado.');
+      return;
+    }
+
+    const evento = snapshot.val();
+
+    if (senha === evento.password) {
+      if (confirm('Tem certeza que deseja excluir este evento?')) {
+        remove(eventoRef).then(() => {
+          alert('Evento excluído com sucesso!');
+          mostrarEventos();
+        }).catch((error) => {
+          alert('Erro ao excluir evento: ' + error.message);
+        });
+      }
+    } else {
+      alert('Senha incorreta!');
+    }
+  });
+};
 
 // Botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
