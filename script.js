@@ -1,6 +1,6 @@
 // Importa o SDK do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, set, push, get, update, remove, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase, ref, set, push, get, update, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 // Configuração do Firebase (substitua com suas credenciais)
 const firebaseConfig = {
@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Função para salvar evento no Firebase
+// Função para salvar evento
 function salvarEvento() {
   const titulo = document.getElementById('titulo').value;
   const data = document.getElementById('data').value;
@@ -40,7 +40,7 @@ function salvarEvento() {
     timeEnd: horaTermino,
     location: local,
     description: descricao,
-    password: senha,
+    password: senha
   }).then(() => {
     alert('Evento salvo com sucesso!');
     limparCampos();
@@ -49,7 +49,7 @@ function salvarEvento() {
   });
 }
 
-// Função para limpar campos após salvar
+// Limpa os campos do formulário
 function limparCampos() {
   document.getElementById('titulo').value = '';
   document.getElementById('data').value = '';
@@ -59,7 +59,7 @@ function limparCampos() {
   document.getElementById('senha').value = '';
 }
 
-// Função para mostrar eventos
+// Mostra todos os eventos
 function mostrarEventos() {
   const eventosRef = ref(db, 'events');
 
@@ -74,7 +74,7 @@ function mostrarEventos() {
 
         const divEvento = document.createElement('div');
         divEvento.classList.add('evento');
-        divEvento.innerHTML = 
+        divEvento.innerHTML = `
           <h3>${evento.title}</h3>
           <p><strong>Data:</strong> ${evento.date}</p>
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
@@ -82,7 +82,7 @@ function mostrarEventos() {
           <p><strong>Descrição:</strong> ${evento.description}</p>
           <button onclick="editarEvento('${eventoKey}', '${evento.password}')">Editar</button>
           <button onclick="excluirEvento('${eventoKey}', '${evento.password}')">Excluir</button>
-        ;
+        `;
 
         listaEventos.appendChild(divEvento);
       });
@@ -95,7 +95,7 @@ function mostrarEventos() {
   });
 }
 
-// Função para editar evento
+// Editar evento
 window.editarEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para editar este evento:');
   if (senha === senhaCorreta) {
@@ -123,7 +123,7 @@ window.editarEvento = function (id, senhaCorreta) {
   }
 }
 
-// Função para excluir evento
+// Excluir evento
 window.excluirEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para excluir este evento:');
   if (senha === senhaCorreta) {
@@ -139,6 +139,6 @@ window.excluirEvento = function (id, senhaCorreta) {
   }
 }
 
-// Ações dos botões
+// Botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
