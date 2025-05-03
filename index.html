@@ -48,7 +48,6 @@
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      display: none;
     }
 
     input, button, textarea {
@@ -82,7 +81,6 @@
     }
 
     #listaEventos {
-      display: none;
       margin-top: 20px;
       width: 100%;
     }
@@ -142,7 +140,6 @@
       margin: 5px 0;
     }
 
-    /* Formulários de Login e Cadastro */
     #login-container, #cadastro-container {
       max-width: 400px;
       margin: 0 auto;
@@ -195,133 +192,57 @@
   </style>
 </head>
 <body>
+  <img src="logo.png" alt="Logo" class="logo">
+  <h1>Agenda de Eventos da Igreja</h1>
 
-<!-- Formulário de Login -->
-<div id="login-container">
-  <h2>Login</h2>
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Seu Email" required>
-    <input type="password" id="senha" placeholder="Sua Senha" required>
-    <button type="submit">Login</button>
-  </form>
-  <p>Não tem uma conta? <a href="#" id="showCadastro">Cadastrar-se</a></p>
-</div>
-
-<!-- Formulário de Cadastro -->
-<div id="cadastro-container" style="display: none;">
-  <h2>Cadastro</h2>
-  <form id="cadastroForm">
-    <input type="email" id="emailCadastro" placeholder="Seu Email" required>
-    <input type="password" id="senhaCadastro" placeholder="Sua Senha" required>
-    <button type="submit">Cadastrar</button>
-  </form>
-  <p>Já tem uma conta? <a href="#" id="showLogin">Fazer Login</a></p>
-</div>
-
-<!-- Conteúdo da Agenda -->
-<div class="container">
-  <div class="titulo">
-    <img src="blue-badge.png" alt="Logo Agenda CCB" class="logo">
-    <h1>Agenda CCB</h1>
+  <div id="login-container">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email">
+    <input type="password" id="login-senha" placeholder="Senha">
+    <button id="btnEntrar">Entrar</button>
+    <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
   </div>
-  
-  <input type="text" id="titulo" placeholder="Título do Evento">
-  <input type="date" id="data" placeholder="Data">
-  <input type="time" id="horaTermino" placeholder="Hora de término">
-  <input type="text" id="local" placeholder="Local do Evento">
-  <textarea id="descricao" placeholder="Descrição do Evento"></textarea>
-  <input type="password" id="senha" placeholder="Senha para Edição/Exclusão">
-  <button id="btnSalvar">Salvar Evento</button>
-  <button id="btnMostrar">Mostrar Eventos</button>
 
-  <div id="listaEventos"></div>
-</div>
+  <div id="cadastro-container" style="display:none;">
+    <h2>Cadastro</h2>
+    <input type="email" id="cadastro-email" placeholder="Email">
+    <input type="password" id="cadastro-senha" placeholder="Senha">
+    <button id="btnCadastrar">Cadastrar</button>
+    <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
+  </div>
 
-<footer>
-  <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
-  <p><strong>Agenda CCB</strong> é um projeto desenvolvido como atividade extensionista do curso de Engenharia de Software.</p>
-  <p>O objetivo é divulgar eventos Religiosos locais, como: Reuniões de adoração, apresentações e encontros comunitários.</p>
-  <p>Esta página foi criada por Raphael Henrique, com o uso de tecnologias web como HTML, CSS e JavaScript.</p>
-  <p>Projeto acadêmico - 2025</p>
-</footer>
+  <div class="container" id="evento-container" style="display:none;">
+    <h2>Novo Evento</h2>
+    <input type="text" id="titulo" placeholder="Título do Evento">
+    <textarea id="descricao" placeholder="Descrição"></textarea>
+    <input type="date" id="data">
+    <button id="btnSalvar">Salvar Evento</button>
+    <button id="btnSair">Sair</button>
 
-<!-- Script do Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
-<script type="module" src="https://raw.githubusercontent.com/RHBM-RAPHAEL/agenda-eventos-ccb/main/script.js">
-  // Configuração do Firebase
-  const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://SEU_PROJECT_ID.firebaseio.com",
-    projectId: "SEU_PROJECT_ID",
-    storageBucket: "SEU_PROJECT_ID.appspot.com",
-    messagingSenderId: "SUA_MESSAGING_SENDER_ID",
-    appId: "SEU_APP_ID"
-  };
+    <div id="listaEventos"></div>
+  </div>
 
-  // Inicializar Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.database();
+  <footer>
+    <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
+  </footer>
 
-  // Alternar entre Login e Cadastro
-  document.getElementById('showCadastro').addEventListener('click', () => {
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('cadastro-container').style.display = 'block';
-  });
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const loginContainer = document.getElementById("login-container");
+      const cadastroContainer = document.getElementById("cadastro-container");
 
-  document.getElementById('showLogin').addEventListener('click', () => {
-    document.getElementById('cadastro-container').style.display = 'none';
-    document.getElementById('login-container').style.display = 'block';
-  });
-
-  // Função de login
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const senha = document.getElementById('senha').value;
-    auth.signInWithEmailAndPassword(email, senha)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log('Usuário logado:', user);
-        document.getElementById('login-container').style.display = 'none';
-        document.querySelector('.container').style.display = 'block'; // Exibe a agenda
-      })
-      .catch((error) => {
-        console.error('Erro no login:', error.message);
+      document.getElementById("mostrarCadastro").addEventListener("click", function (e) {
+        e.preventDefault();
+        loginContainer.style.display = "none";
+        cadastroContainer.style.display = "block";
       });
-  });
 
-  // Função de cadastro
-  document.getElementById('cadastroForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('emailCadastro').value;
-    const senha = document.getElementById('senhaCadastro').value;
-    auth.createUserWithEmailAndPassword(email, senha)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log('Usuário cadastrado:', user);
-        document.getElementById('cadastro-container').style.display = 'none';
-        document.querySelector('.container').style.display = 'block'; // Exibe a agenda
-      })
-      .catch((error) => {
-        console.error('Erro no cadastro:', error.message);
+      document.getElementById("mostrarLogin").addEventListener("click", function (e) {
+        e.preventDefault();
+        cadastroContainer.style.display = "none";
+        loginContainer.style.display = "block";
       });
-  });
-
-  // Verifica se o usuário está autenticado
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      console.log('Usuário autenticado:', user);
-      document.querySelector('.container').style.display = 'block'; // Exibe a agenda
-    } else {
-      console.log('Nenhum usuário autenticado');
-      document.getElementById('login-container').style.display = 'block'; // Exibe o login
-    }
-  });
-
-</script>
+    });
+  </script>
 </body>
 </html>
