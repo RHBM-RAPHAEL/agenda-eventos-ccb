@@ -1,7 +1,6 @@
 // Importa o SDK do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, set, push, get, update, remove, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // Configuração do Firebase (substitua com suas credenciais)
 const firebaseConfig = {
@@ -17,7 +16,6 @@ const firebaseConfig = {
 // Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const auth = getAuth(app);
 
 // Função para salvar evento no Firebase
 function salvarEvento() {
@@ -36,28 +34,19 @@ function salvarEvento() {
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
-  // Criação de um usuário fictício para gerar a senha criptografada usando Firebase Authentication
-  createUserWithEmailAndPassword(auth, "event@event.com", senha)
-    .then((userCredential) => {
-      const user = userCredential.user;
-
-      set(newEventRef, {
-        title: titulo,
-        date: data,
-        timeEnd: horaTermino,
-        location: local,
-        description: descricao,
-        password: userCredential.user.stsTokenManager.accessToken // Salva o token do Firebase (não a senha em texto plano)
-      }).then(() => {
-        alert('Evento salvo com sucesso!');
-        limparCampos();
-      }).catch((error) => {
-        alert('Erro ao salvar evento: ' + error.message);
-      });
-    })
-    .catch((error) => {
-      alert('Erro ao criar usuário: ' + error.message);
-    });
+  set(newEventRef, {
+    title: titulo,
+    date: data,
+    timeEnd: horaTermino,
+    location: local,
+    description: descricao,
+    password: senha,
+  }).then(() => {
+    alert('Evento salvo com sucesso!');
+    limparCampos();
+  }).catch((error) => {
+    alert('Erro ao salvar evento: ' + error.message);
+  });
 }
 
 // Função para limpar campos após salvar
@@ -109,49 +98,51 @@ function mostrarEventos() {
 // Função para editar evento
 window.editarEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para editar este evento:');
-  
-  // Comparar a senha fornecida com a senha criptografada
   if (senha === senhaCorreta) {
     const novoTitulo = prompt('Novo título:');
+    const novaData = prompt('Nova data (yyyy-mm-dd):');
+    const novoHorario = prompt('Novo horário de término:');
+    const novoLocal = prompt('Novo local:');
     const novaDescricao = prompt('Nova descrição:');
-    const novaLocal = prompt('Novo local:');
 
-    if (novoTitulo && novaDescricao && novaLocal) {
-      const eventoRef = ref(db, 'events/' + id);
-      update(eventoRef, {
-        title: novoTitulo,
-        description: novaDescricao,
-        location: novaLocal
-      }).then(() => {
-        alert('Evento editado com sucesso!');
-        mostrarEventos(); // Atualizar a lista de eventos
-      }).catch((error) => {
-        alert('Erro ao editar evento: ' + error.message);
-      });
-    }
+    const eventoRef = ref(db, 'events/' + id);
+    update(eventoRef, {
+      title: novoTitulo,
+      date: novaData,
+      timeEnd: novoHorario,
+      location: novoLocal,
+      description: novaDescricao
+    }).then(() => {
+      alert('Evento atualizado com sucesso!');
+      mostrarEventos();
+    }).catch((error) => {
+      alert('Erro ao atualizar evento: ' + error.message);
+    });
   } else {
     alert('Senha incorreta!');
   }
-};
+}
 
 // Função para excluir evento
 window.excluirEvento = function (id, senhaCorreta) {
   const senha = prompt('Digite a senha para excluir este evento:');
-  
-  // Comparar a senha fornecida com a senha criptografada
   if (senha === senhaCorreta) {
+    const confirmar = confirm('Tem certeza que deseja excluir este evento?');
+    if (!confirmar) return;
+
     const eventoRef = ref(db, 'events/' + id);
     remove(eventoRef).then(() => {
       alert('Evento excluído com sucesso!');
-      mostrarEventos(); // Atualizar a lista de eventos
+      mostrarEventos();
     }).catch((error) => {
       alert('Erro ao excluir evento: ' + error.message);
     });
   } else {
     alert('Senha incorreta!');
   }
-};
+}
 
-// Event listeners para os botões
+
+// Ações dos botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
