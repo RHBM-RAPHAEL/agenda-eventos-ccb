@@ -1,6 +1,7 @@
 // Importa o SDK do Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, set, push, get, update, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // Configuração do Firebase (substitua com suas credenciais)
 const firebaseConfig = {
@@ -16,6 +17,29 @@ const firebaseConfig = {
 // Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth();
+
+// Função para registrar um novo usuário
+function registrarUsuario(email, senha) {
+  createUserWithEmailAndPassword(auth, email, senha)
+    .then((userCredential) => {
+      alert('Usuário registrado com sucesso!');
+    })
+    .catch((error) => {
+      alert('Erro ao registrar usuário: ' + error.message);
+    });
+}
+
+// Função para login de usuário
+function loginUsuario(email, senha) {
+  signInWithEmailAndPassword(auth, email, senha)
+    .then((userCredential) => {
+      alert('Usuário logado com sucesso!');
+    })
+    .catch((error) => {
+      alert('Erro ao fazer login: ' + error.message);
+    });
+}
 
 // Função para salvar evento
 function salvarEvento() {
@@ -105,9 +129,49 @@ function mostrarEventos() {
   });
 }
 
-// Editar evento (com verificação da senha no banco)
+// Função para abrir o modal de edição de evento
+function abrirModalEdicao(evento) {
+  document.getElementById('editarTitulo').value = evento.title;
+  document.getElementById('editarData').value = evento.date;
+  document.getElementById('editarHoraTermino').value = evento.timeEnd;
+  document.getElementById('editarLocal').value = evento.location;
+  document.getElementById('editarDescricao').value = evento.description;
+  document.getElementById('modalEditar').style.display = 'flex';
+}
+
+// Função para fechar o modal
+function fecharModal() {
+  document.getElementById('modalEditar').style.display = 'none';
+}
+
+// Função para salvar a edição do evento
+function salvarEdicao() {
+  const titulo = document.getElementById('editarTitulo').value;
+  const data = document.getElementById('editarData').value;
+  const horaTermino = document.getElementById('editarHoraTermino').value;
+  const local = document.getElementById('editarLocal').value;
+  const descricao = document.getElementById('editarDescricao').value;
+
+  // Atualiza o evento no Firebase
+  const eventoRef = ref(db, 'events/' + eventoKey);
+
+  update(eventoRef, {
+    title: titulo,
+    date: data,
+    timeEnd: horaTermino,
+    location: local,
+    description: descricao
+  }).then(() => {
+    alert('Evento atualizado com sucesso!');
+    mostrarEventos();
+    fecharModal();
+  }).catch((error) => {
+    alert('Erro ao atualizar evento: ' + error.message);
+  });
+}
+
+// Função para editar evento
 window.editarEvento = function (id) {
-  const senha = prompt('Digite a senha para editar este evento:');
   const eventoRef = ref(db, 'events/' + id);
 
   get(eventoRef).then((snapshot) => {
@@ -117,33 +181,11 @@ window.editarEvento = function (id) {
     }
 
     const evento = snapshot.val();
-
-    if (senha === evento.password) {
-      const novoTitulo = prompt('Novo título:', evento.title);
-      const novaData = prompt('Nova data (aaaa-mm-dd):', evento.date);
-      const novoHorario = prompt('Novo horário de término:', evento.timeEnd);
-      const novoLocal = prompt('Novo local:', evento.location);
-      const novaDescricao = prompt('Nova descrição:', evento.description);
-
-      update(eventoRef, {
-        title: novoTitulo,
-        date: novaData,
-        timeEnd: novoHorario,
-        location: novoLocal,
-        description: novaDescricao
-      }).then(() => {
-        alert('Evento atualizado com sucesso!');
-        mostrarEventos();
-      }).catch((error) => {
-        alert('Erro ao atualizar evento: ' + error.message);
-      });
-    } else {
-      alert('Senha incorreta!');
-    }
+    abrirModalEdicao(evento);
   });
 };
 
-// Excluir evento (com verificação da senha no banco)
+// Função para excluir evento
 window.excluirEvento = function (id) {
   const senha = prompt('Digite a senha para excluir este evento:');
   const eventoRef = ref(db, 'events/' + id);
