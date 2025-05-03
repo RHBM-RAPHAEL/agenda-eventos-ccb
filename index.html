@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda CCB</title>
+  <title>Agenda de Eventos</title>
   <style>
     * {
       margin: 0;
@@ -60,7 +60,7 @@
     }
 
     #listaEventos {
-      display: block;
+      display: none;
       margin-top: 20px;
     }
 
@@ -115,7 +115,7 @@
 <body>
 
 <div class="container">
-  <h1>Agenda CCB</h1>
+  <h1>Agenda de Eventos</h1>
 
   <input type="text" id="titulo" placeholder="Título do Evento">
   <input type="date" id="data" placeholder="Data">
@@ -123,8 +123,8 @@
   <input type="text" id="local" placeholder="Local do Evento">
   <textarea id="descricao" placeholder="Descrição do Evento"></textarea>
   <input type="password" id="senha" placeholder="Senha para Edição/Exclusão">
-  <button id="btnSalvar">💾 Salvar Evento</button>
-  <button id="btnMostrar">📅 Mostrar Eventos</button>
+  <button id="btnSalvar">Salvar Evento</button>
+  <button id="btnMostrar">Mostrar Eventos</button>
 
   <div id="listaEventos"></div>
 </div>
@@ -136,7 +136,6 @@
   <p>Esta página foi criada por Raphael Henrique, com o uso de tecnologias web como HTML, CSS e JavaScript.</p>
   <p>Projeto acadêmico - 2025</p>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script> 
 <script type="module" src="./script.js"></script>
 </body>
 </html>
