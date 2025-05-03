@@ -146,3 +146,5 @@ window.excluirEvento = function (id, senhaCorreta) {
 // Ações dos botões
 document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
+window.addEventListener('load', mostrarEventos);
+
