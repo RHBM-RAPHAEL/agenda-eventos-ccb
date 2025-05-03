@@ -138,6 +138,15 @@ footer p {
   h1 {
     font-size: 2rem;
   }
+.logo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid #4CAF50;
+  display: block;
+  margin: 0 auto 20px;
+  object-fit: cover;
+}
 
   .evento {
     padding: 10px;
