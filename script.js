@@ -135,7 +135,7 @@ window.excluirEvento = function (id, senhaCorreta) {
       alert('Evento excluído com sucesso!');
       mostrarEventos();
     }).catch((error) => {
-      alert('Erro ao excluir evento: ' + error.message);
+      alert('❌ Erro ao salvar o evento: ' + error.message);
     });
   } else {
     alert('Senha incorreta!');
