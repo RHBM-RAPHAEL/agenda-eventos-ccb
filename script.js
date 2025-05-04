@@ -1,11 +1,9 @@
 // Importa o SDK do Firebase
-// script.js
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getDatabase, ref, set, push, get, update, remove } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js';
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
   authDomain: "agenda-eventos-ccb.firebaseapp.com",
@@ -17,9 +15,8 @@ const firebaseConfig = {
   measurementId: "G-PDTYLHH85J"
 };
 
-// Initialize Firebase
+// Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getDatabase(app);
 const auth = getAuth();
 
@@ -236,15 +233,21 @@ window.excluirEvento = function (id) {
   });
 };
 
-// Botões de login, logout e salvar evento
-document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
-document.getElementById('btnMostrar').addEventListener('click', mostrarEventos);
+// Funções de login e logout
 document.getElementById('btnLogin').addEventListener('click', () => {
   const email = document.getElementById('emailLogin').value;
   const senha = document.getElementById('senhaLogin').value;
   loginUsuario(email, senha);
 });
+
 document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
 
-// Carregar eventos ao carregar a página
+// Função de registro
+document.getElementById('btnCadastrar').addEventListener('click', () => {
+  const email = document.getElementById('cadastro-email').value;
+  const senha = document.getElementById('cadastro-senha').value;
+  registrarUsuario(email, senha);
+});
+
+// Evento para carregar os eventos ao carregar a página
 document.addEventListener('DOMContentLoaded', mostrarEventos);
