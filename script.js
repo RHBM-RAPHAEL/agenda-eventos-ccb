@@ -240,8 +240,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Event listener para cadastro
   document.getElementById('btnCadastrar').addEventListener('click', function () {
-    const email = document.getElementById('cadastro-email').value;
-    const senha = document.getElementById('cadastro-senha').value;
+    const email = document.getElementById('emailCadastro').value;
+    const senha = document.getElementById('senhaCadastro').value;
     registrarUsuario(email, senha);
   });
 
