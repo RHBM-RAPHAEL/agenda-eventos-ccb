@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <!-- Firebase App (necessário para inicializar o Firebase) -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="blue-badge.png">
@@ -52,9 +50,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    input,
-    button,
-    textarea {
+    input, button, textarea {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -64,9 +60,7 @@
       transition: border 0.3s ease;
     }
 
-    input:focus,
-    textarea:focus,
-    button:focus {
+    input:focus, textarea:focus, button:focus {
       border-color: #4CAF50;
       outline: none;
     }
@@ -146,8 +140,7 @@
       margin: 5px 0;
     }
 
-    #login-container,
-    #cadastro-container {
+    #login-container, #cadastro-container {
       max-width: 400px;
       margin: 0 auto;
       background-color: rgba(255, 255, 255, 0.8);
@@ -157,23 +150,19 @@
       margin-bottom: 20px;
     }
 
-    input[type="email"],
-    input[type="password"] {
+    input[type="email"], input[type="password"] {
       margin-bottom: 10px;
     }
 
-    #login-container button,
-    #cadastro-container button {
+    #login-container button, #cadastro-container button {
       background-color: #4CAF50;
     }
 
-    #login-container p,
-    #cadastro-container p {
+    #login-container p, #cadastro-container p {
       text-align: center;
     }
 
-    #login-container a,
-    #cadastro-container a {
+    #login-container a, #cadastro-container a {
       color: #4CAF50;
       text-decoration: none;
     }
@@ -183,9 +172,7 @@
         padding: 15px;
       }
 
-      input,
-      button,
-      textarea {
+      input, button, textarea {
         padding: 10px;
       }
 
@@ -204,7 +191,6 @@
     }
   </style>
 </head>
-
 <body>
   <img src="logo.png" alt="Logo" class="logo">
   <h1>Agenda de Eventos da Igreja</h1>
@@ -232,7 +218,7 @@
     <input type="date" id="data">
     <input type="time" id="horaTermino" placeholder="Hora de Término">
     <input type="text" id="local" placeholder="Local">
-    <input type="password" id="senhaEvento" placeholder="Senha para editar/excluir">
+    <input type="password" id="senha" placeholder="Senha para editar/excluir">
     <button id="btnSalvar">Salvar Evento</button>
     <button id="btnSair">Sair</button>
 
@@ -243,25 +229,6 @@
     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
   </footer>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const loginContainer = document.getElementById("login-container");
-      const cadastroContainer = document.getElementById("cadastro-container");
-
-      document.getElementById("mostrarCadastro").addEventListener("click", function (e) {
-        e.preventDefault();
-        loginContainer.style.display = "none";
-        cadastroContainer.style.display = "block";
-      });
-
-      document.getElementById("mostrarLogin").addEventListener("click", function (e) {
-        e.preventDefault();
-        cadastroContainer.style.display = "none";
-        loginContainer.style.display = "block";
-      });
-    });
-  </script>
   <script type="module" src="script.js"></script>
 </body>
-
 </html>
