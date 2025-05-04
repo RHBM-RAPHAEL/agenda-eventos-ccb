@@ -239,7 +239,8 @@ document.addEventListener('DOMContentLoaded', function () {
     registrarUsuario(email, senha);
   });
 
-  document.getElementById('btnSair').addEventListener('click', logoutUsuario);
+  document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
+
 
   document.getElementById('mostrarCadastro').addEventListener('click', (e) => {
     e.preventDefault();
