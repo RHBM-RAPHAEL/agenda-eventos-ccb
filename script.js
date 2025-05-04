@@ -229,7 +229,7 @@ function excluirEvento(id) {
 // Adiciona event listeners após o carregamento da página
 document.addEventListener('DOMContentLoaded', function () {
   // Event listener para login
-  document.getElementById('btnLogin').addEventListener('click', function () {
+  document.getElementById('btnEntrar').addEventListener('click', () => {
     const email = document.getElementById('emailLogin').value;
     const senha = document.getElementById('senhaLogin').value;
     loginUsuario(email, senha);
