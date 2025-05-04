@@ -20,21 +20,20 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
-// Função para registrar um novo usuário
 function registrarUsuario(email, senha) {
   createUserWithEmailAndPassword(auth, email, senha)
-    .then((userCredential) => {
+    .then(() => {
       alert('Usuário registrado com sucesso!');
+      mostrarLogin();
     })
     .catch((error) => {
       alert('Erro ao registrar usuário: ' + error.message);
     });
 }
 
-// Função para login de usuário
 function loginUsuario(email, senha) {
   signInWithEmailAndPassword(auth, email, senha)
-    .then((userCredential) => {
+    .then(() => {
       alert('Usuário logado com sucesso!');
       mostrarEventos();
     })
@@ -43,17 +42,15 @@ function loginUsuario(email, senha) {
     });
 }
 
-// Função para fazer logout
 function logoutUsuario() {
   signOut(auth).then(() => {
     alert('Usuário deslogado com sucesso!');
-    limparCampos();
+    mostrarLogin();
   }).catch((error) => {
     alert('Erro ao fazer logout: ' + error.message);
   });
 }
 
-// Função para salvar evento
 function salvarEvento() {
   const titulo = document.getElementById('titulo').value;
   const data = document.getElementById('data').value;
@@ -62,13 +59,11 @@ function salvarEvento() {
   const descricao = document.getElementById('descricao').value;
   const senha = document.getElementById('senha').value;
 
-  // Verifica se todos os campos estão preenchidos
   if (!titulo || !data || !horaTermino || !local || !descricao || !senha) {
     alert('Todos os campos devem ser preenchidos!');
     return;
   }
 
-  // Verifica se a data e hora são válidas e no futuro
   const dataEvento = new Date(`${data}T${horaTermino}`);
   if (isNaN(dataEvento.getTime()) || dataEvento < new Date()) {
     alert('Insira uma data e hora válidas no futuro.');
@@ -78,7 +73,6 @@ function salvarEvento() {
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
-  // Salva os dados no Firebase
   set(newEventRef, {
     title: titulo,
     date: data,
@@ -89,13 +83,12 @@ function salvarEvento() {
   }).then(() => {
     alert('Evento salvo com sucesso!');
     limparCampos();
-    mostrarEventos(); // Atualiza a lista de eventos
+    mostrarEventos();
   }).catch((error) => {
     alert('Erro ao salvar evento: ' + error.message);
   });
 }
 
-// Limpa os campos do formulário
 function limparCampos() {
   document.getElementById('titulo').value = '';
   document.getElementById('data').value = '';
@@ -105,8 +98,11 @@ function limparCampos() {
   document.getElementById('senha').value = '';
 }
 
-// Mostra todos os eventos salvos
 function mostrarEventos() {
+  document.getElementById('login-container').style.display = 'none';
+  document.getElementById('cadastro-container').style.display = 'none';
+  document.getElementById('evento-container').style.display = 'block';
+
   const eventosRef = ref(db, 'events');
 
   get(eventosRef).then((snapshot) => {
@@ -132,8 +128,6 @@ function mostrarEventos() {
 
         listaEventos.appendChild(divEvento);
       });
-
-      listaEventos.style.display = 'block';
     } else {
       listaEventos.innerHTML = '<p style="color: gray; font-style: italic;">Nenhum evento encontrado.</p>';
     }
@@ -142,7 +136,6 @@ function mostrarEventos() {
   });
 }
 
-// Função para editar evento
 function editarEvento(id) {
   const eventoRef = ref(db, 'events/' + id);
 
@@ -153,8 +146,6 @@ function editarEvento(id) {
     }
 
     const evento = snapshot.val();
-
-    // Preenche os campos de edição com os dados do evento
     document.getElementById('titulo').value = evento.title;
     document.getElementById('data').value = evento.date;
     document.getElementById('horaTermino').value = evento.timeEnd;
@@ -162,13 +153,11 @@ function editarEvento(id) {
     document.getElementById('descricao').value = evento.description;
     document.getElementById('senha').value = evento.password;
 
-    // Muda a ação do botão de salvar para atualizar
     const btnSalvar = document.getElementById('btnSalvar');
     btnSalvar.onclick = () => salvarEdicao(id);
   });
 }
 
-// Função para salvar a edição do evento
 function salvarEdicao(id) {
   const titulo = document.getElementById('titulo').value;
   const data = document.getElementById('data').value;
@@ -193,7 +182,6 @@ function salvarEdicao(id) {
   });
 }
 
-// Função para excluir evento
 function excluirEvento(id) {
   const eventoRef = ref(db, 'events/' + id);
 
@@ -226,25 +214,44 @@ function excluirEvento(id) {
   });
 }
 
-// Adiciona event listeners após o carregamento da página
+function mostrarCadastro() {
+  document.getElementById('login-container').style.display = 'none';
+  document.getElementById('cadastro-container').style.display = 'block';
+  document.getElementById('evento-container').style.display = 'none';
+}
+
+function mostrarLogin() {
+  document.getElementById('login-container').style.display = 'block';
+  document.getElementById('cadastro-container').style.display = 'none';
+  document.getElementById('evento-container').style.display = 'none';
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-  // Event listener para login
   document.getElementById('btnEntrar').addEventListener('click', () => {
     const email = document.getElementById('emailLogin').value;
     const senha = document.getElementById('senhaLogin').value;
     loginUsuario(email, senha);
   });
 
-  // Event listener para logout
-  document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
-
-  // Event listener para cadastro
-  document.getElementById('btnCadastrar').addEventListener('click', function () {
+  document.getElementById('btnCadastrar').addEventListener('click', () => {
     const email = document.getElementById('emailCadastro').value;
     const senha = document.getElementById('senhaCadastro').value;
     registrarUsuario(email, senha);
   });
 
-  // Mostra eventos ao carregar a página
-  mostrarEventos();
+  document.getElementById('btnSair').addEventListener('click', logoutUsuario);
+
+  document.getElementById('mostrarCadastro').addEventListener('click', (e) => {
+    e.preventDefault();
+    mostrarCadastro();
+  });
+
+  document.getElementById('mostrarLogin').addEventListener('click', (e) => {
+    e.preventDefault();
+    mostrarLogin();
+  });
+
+  document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
+
+  mostrarLogin();
 });
