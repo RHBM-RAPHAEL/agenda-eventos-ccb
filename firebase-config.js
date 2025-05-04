@@ -1,4 +1,4 @@
-export const firebaseConfig = {
+export const firebaseconfig = {
   apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
   authDomain: "agenda-eventos-ccb.firebaseapp.com",
   databaseURL: "https://agenda-eventos-ccb-default-rtdb.firebaseio.com",
