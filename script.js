@@ -142,33 +142,41 @@ function mostrarEventos() {
   });
 }
 
-// Função para abrir o modal de edição de evento
-function abrirModalEdicao(evento, eventoKey) {
-  document.getElementById('editarTitulo').value = evento.title;
-  document.getElementById('editarData').value = evento.date;
-  document.getElementById('editarHoraTermino').value = evento.timeEnd;
-  document.getElementById('editarLocal').value = evento.location;
-  document.getElementById('editarDescricao').value = evento.description;
-  document.getElementById('modalEditar').style.display = 'flex';
+// Função para editar evento
+function editarEvento(id) {
+  const eventoRef = ref(db, 'events/' + id);
 
-  // Passa a chave do evento para a função de salvar edição
-  document.getElementById('btnSalvarEdicao').onclick = () => salvarEdicao(eventoKey);
-}
+  get(eventoRef).then((snapshot) => {
+    if (!snapshot.exists()) {
+      alert('Evento não encontrado.');
+      return;
+    }
 
-// Função para fechar o modal
-function fecharModal() {
-  document.getElementById('modalEditar').style.display = 'none';
+    const evento = snapshot.val();
+
+    // Preenche os campos de edição com os dados do evento
+    document.getElementById('titulo').value = evento.title;
+    document.getElementById('data').value = evento.date;
+    document.getElementById('horaTermino').value = evento.timeEnd;
+    document.getElementById('local').value = evento.location;
+    document.getElementById('descricao').value = evento.description;
+    document.getElementById('senha').value = evento.password;
+
+    // Muda a ação do botão de salvar para atualizar
+    const btnSalvar = document.getElementById('btnSalvar');
+    btnSalvar.onclick = () => salvarEdicao(id);
+  });
 }
 
 // Função para salvar a edição do evento
-function salvarEdicao(eventoKey) {
-  const titulo = document.getElementById('editarTitulo').value;
-  const data = document.getElementById('editarData').value;
-  const horaTermino = document.getElementById('editarHoraTermino').value;
-  const local = document.getElementById('editarLocal').value;
-  const descricao = document.getElementById('editarDescricao').value;
+function salvarEdicao(id) {
+  const titulo = document.getElementById('titulo').value;
+  const data = document.getElementById('data').value;
+  const horaTermino = document.getElementById('horaTermino').value;
+  const local = document.getElementById('local').value;
+  const descricao = document.getElementById('descricao').value;
 
-  const eventoRef = ref(db, 'events/' + eventoKey);
+  const eventoRef = ref(db, 'events/' + id);
 
   update(eventoRef, {
     title: titulo,
@@ -179,36 +187,21 @@ function salvarEdicao(eventoKey) {
   }).then(() => {
     alert('Evento atualizado com sucesso!');
     mostrarEventos();
-    fecharModal();
+    limparCampos();
   }).catch((error) => {
     alert('Erro ao atualizar evento: ' + error.message);
   });
 }
 
-// Função para editar evento
-window.editarEvento = function (id) {
+// Função para excluir evento
+function excluirEvento(id) {
   const eventoRef = ref(db, 'events/' + id);
 
-  get(eventoRef).then((snapshot) => {
-    if (!snapshot.exists()) {
-      alert('Evento não encontrado.');
-      return;
-    }
-
-    const evento = snapshot.val();
-    abrirModalEdicao(evento, id);
-  });
-};
-
-// Função para excluir evento
-window.excluirEvento = function (id) {
   const senha = prompt('Digite a senha para excluir este evento:');
   if (!senha) {
     alert('Senha não fornecida!');
     return;
   }
-
-  const eventoRef = ref(db, 'events/' + id);
 
   get(eventoRef).then((snapshot) => {
     if (!snapshot.exists()) {
@@ -231,23 +224,27 @@ window.excluirEvento = function (id) {
       alert('Senha incorreta!');
     }
   });
-};
+}
 
-// Funções de login e logout
-document.getElementById('btnLogin').addEventListener('click', () => {
-  const email = document.getElementById('emailLogin').value;
-  const senha = document.getElementById('senhaLogin').value;
-  loginUsuario(email, senha);
+// Adiciona event listeners após o carregamento da página
+document.addEventListener('DOMContentLoaded', function () {
+  // Event listener para login
+  document.getElementById('btnLogin').addEventListener('click', function () {
+    const email = document.getElementById('emailLogin').value;
+    const senha = document.getElementById('senhaLogin').value;
+    loginUsuario(email, senha);
+  });
+
+  // Event listener para logout
+  document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
+
+  // Event listener para cadastro
+  document.getElementById('btnCadastrar').addEventListener('click', function () {
+    const email = document.getElementById('cadastro-email').value;
+    const senha = document.getElementById('cadastro-senha').value;
+    registrarUsuario(email, senha);
+  });
+
+  // Mostra eventos ao carregar a página
+  mostrarEventos();
 });
-
-document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
-
-// Função de registro
-document.getElementById('btnCadastrar').addEventListener('click', () => {
-  const email = document.getElementById('cadastro-email').value;
-  const senha = document.getElementById('cadastro-senha').value;
-  registrarUsuario(email, senha);
-});
-
-// Evento para carregar os eventos ao carregar a página
-document.addEventListener('DOMContentLoaded', mostrarEventos);
