@@ -5,6 +5,19 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase
 import { getDatabase, ref, set, push, get, update, remove } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
 
+// firebase-config.js
+
+export const firebaseConfig = {
+  apiKey: "AIzaSyCe3EqDWGXF9cR8mzCrOb_yryaWzsCuRaM",
+  authDomain: "agenda-eventos-ccb.firebaseapp.com",
+  databaseURL: "https://agenda-eventos-ccb-default-rtdb.firebaseio.com",
+  projectId: "agenda-eventos-ccb",
+  storageBucket: "agenda-eventos-ccb.firebasestorage.app",
+  messagingSenderId: "325923477189",
+  appId: "1:325923477189:web:1aba52c8119d290338c2ac",
+  measurementId: "G-PDTYLHH85J"
+};
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
