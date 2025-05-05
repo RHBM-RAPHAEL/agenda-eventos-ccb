@@ -198,6 +198,11 @@ if (dataEventoTermino <= agora) {
   excluirEventoAutomaticamente(eventoKey);
   return;
 }
+// Exclui evento se já passou
+if (dataEventoTermino <= agora) {
+  excluirEvento(eventoKey);
+  return;
+}
 
   const senha = prompt('Digite a senha para excluir este evento:');
   if (!senha) {
