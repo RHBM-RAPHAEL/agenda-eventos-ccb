@@ -167,6 +167,34 @@
       text-decoration: none;
     }
 
+    /* Estilo do campo de senha com ícone de olho */
+    .campo-senha {
+      position: relative;
+      width: 100%;
+      max-width: 300px; /* ou qualquer valor desejado */
+      margin: 10px 0;
+    }
+
+    .campo-senha input {
+      width: 100%;
+      padding: 12px;
+      padding-right: 30px; /* Deixa espaço para o ícone de olho */
+      border-radius: 25px; /* Para deixar o campo oval */
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .campo-senha .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      cursor: pointer;
+      pointer-events: all;
+      user-select: none;
+    }
+
     @media screen and (max-width: 768px) {
       .container {
         padding: 15px;
@@ -198,7 +226,10 @@
   <div id="login-container">
     <h2>Login</h2>
     <input type="email" id="emailLogin" placeholder="Email">
-    <input type="password" id="senhaLogin" placeholder="Senha">
+    <div class="campo-senha">
+      <input type="password" id="senhaLogin" placeholder="Senha">
+      <i class="eye-icon" id="eyeLogin">👁️</i>
+    </div>
     <label>
       <input type="checkbox" id="mostrarSenhaLogin"> Mostrar senha
     </label>
@@ -209,7 +240,10 @@
   <div id="cadastro-container" style="display:none;">
     <h2>Cadastro</h2>
     <input type="email" id="emailCadastro" placeholder="Email">
-    <input type="password" id="senhaCadastro" placeholder="Senha">
+    <div class="campo-senha">
+      <input type="password" id="senhaCadastro" placeholder="Senha">
+      <i class="eye-icon" id="eyeCadastro">👁️</i>
+    </div>
     <label>
       <input type="checkbox" id="mostrarSenhaCadastro"> Mostrar senha
     </label>
@@ -218,26 +252,28 @@
   </div>
 
   <div class="container" id="evento-container" style="display:none;">
-  <h2>Novo Evento</h2>
-  <input type="text" id="titulo" placeholder="Título do Evento">
-  <textarea id="descricao" placeholder="Descrição"></textarea>
-  <input type="date" id="data">
-  <label for="horaInicio">Hora de início:</label>
-  <input type="time" id="horaInicio" required>
-  <input type="time" id="horaTermino" placeholder="Hora de Término">
-  <input type="text" id="local" placeholder="Local">
-  <input type="password" id="senha" placeholder="Senha para editar/excluir">
+    <h2>Novo Evento</h2>
+    <input type="text" id="titulo" placeholder="Título do Evento">
+    <textarea id="descricao" placeholder="Descrição"></textarea>
+    <input type="date" id="data">
+    <label for="horaInicio">Hora de início:</label>
+    <input type="time" id="horaInicio" required>
+    <input type="time" id="horaTermino" placeholder="Hora de Término">
+    <input type="text" id="local" placeholder="Local">
+    <div class="campo-senha">
+      <input type="password" id="senha" placeholder="Senha para editar/excluir">
+      <i class="eye-icon" id="eyeEvento">👁️</i>
+    </div>
 
-  <!-- Novo bloco de mostrar senha -->
-  <label>
-    <input type="checkbox" id="mostrarSenhaEvento"> Mostrar Senha
-  </label>
+    <label>
+      <input type="checkbox" id="mostrarSenhaEvento"> Mostrar Senha
+    </label>
 
-  <button id="btnSalvar">Salvar Evento</button>
-  <button id="btnLogout">Sair</button>
+    <button id="btnSalvar">Salvar Evento</button>
+    <button id="btnLogout">Sair</button>
 
-  <div id="listaEventos"></div>
-</div>
+    <div id="listaEventos"></div>
+  </div>
 
   <footer>
     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
@@ -249,12 +285,15 @@
     document.addEventListener('DOMContentLoaded', function () {
       const senhaLogin = document.getElementById('senhaLogin');
       const mostrarSenhaLogin = document.getElementById('mostrarSenhaLogin');
+      const eyeLogin = document.getElementById('eyeLogin');
 
       const senhaCadastro = document.getElementById('senhaCadastro');
       const mostrarSenhaCadastro = document.getElementById('mostrarSenhaCadastro');
+      const eyeCadastro = document.getElementById('eyeCadastro');
 
       const senhaEvento = document.getElementById('senha');
       const mostrarSenhaEvento = document.getElementById('mostrarSenhaEvento');
+      const eyeEvento = document.getElementById('eyeEvento');
 
       mostrarSenhaLogin.addEventListener('change', function () {
         senhaLogin.type = this.checked ? 'text' : 'password';
@@ -266,6 +305,22 @@
 
       mostrarSenhaEvento.addEventListener('change', function () {
         senhaEvento.type = this.checked ? 'text' : 'password';
+      });
+
+      // Trocar o ícone de olho ao clicar
+      eyeLogin.addEventListener('click', () => {
+        senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
+        eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
+      });
+
+      eyeCadastro.addEventListener('click', () => {
+        senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
+        eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
+      });
+
+      eyeEvento.addEventListener('click', () => {
+        senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
+        eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
       });
     });
   </script>
