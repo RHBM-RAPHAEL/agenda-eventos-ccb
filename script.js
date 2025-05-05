@@ -269,6 +269,16 @@ function mostrarLogin() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('mostrarSenhaLogin').addEventListener('change', function () {
+  const senhaLogin = document.getElementById('senhaLogin');
+  senhaLogin.type = this.checked ? 'text' : 'password';
+});
+
+document.getElementById('mostrarSenhaEvento').addEventListener('change', function () {
+  const senhaEvento = document.getElementById('senha');
+  senhaEvento.type = this.checked ? 'text' : 'password';
+});
+
   // Verifica se o usuário está logado
   onAuthStateChanged(auth, (user) => {
     if (user) {
