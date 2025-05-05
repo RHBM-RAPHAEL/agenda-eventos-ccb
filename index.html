@@ -199,6 +199,9 @@
     <h2>Login</h2>
     <input type="email" id="emailLogin" placeholder="Email">
     <input type="password" id="senhaLogin" placeholder="Senha">
+    <label>
+      <input type="checkbox" id="mostrarSenhaLogin"> Mostrar senha
+    </label>
     <button id="btnEntrar">Entrar</button>
     <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
   </div>
@@ -207,6 +210,9 @@
     <h2>Cadastro</h2>
     <input type="email" id="emailCadastro" placeholder="Email">
     <input type="password" id="senhaCadastro" placeholder="Senha">
+    <label>
+      <input type="checkbox" id="mostrarSenhaCadastro"> Mostrar senha
+    </label>
     <button id="btnCadastrar">Cadastrar</button>
     <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
   </div>
@@ -221,6 +227,9 @@
     <input type="time" id="horaTermino" placeholder="Hora de Término">
     <input type="text" id="local" placeholder="Local">
     <input type="password" id="senha" placeholder="Senha para editar/excluir">
+    <label>
+      <input type="checkbox" id="mostrarSenhaEvento"> Mostrar senha
+    </label>
     <button id="btnSalvar">Salvar Evento</button>
     <button id="btnLogout">Sair</button>
 
@@ -232,5 +241,30 @@
   </footer>
 
   <script type="module" src="script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const senhaLogin = document.getElementById('senhaLogin');
+      const mostrarSenhaLogin = document.getElementById('mostrarSenhaLogin');
+
+      const senhaCadastro = document.getElementById('senhaCadastro');
+      const mostrarSenhaCadastro = document.getElementById('mostrarSenhaCadastro');
+
+      const senhaEvento = document.getElementById('senha');
+      const mostrarSenhaEvento = document.getElementById('mostrarSenhaEvento');
+
+      mostrarSenhaLogin.addEventListener('change', function () {
+        senhaLogin.type = this.checked ? 'text' : 'password';
+      });
+
+      mostrarSenhaCadastro.addEventListener('change', function () {
+        senhaCadastro.type = this.checked ? 'text' : 'password';
+      });
+
+      mostrarSenhaEvento.addEventListener('change', function () {
+        senhaEvento.type = this.checked ? 'text' : 'password';
+      });
+    });
+  </script>
 </body>
 </html>
