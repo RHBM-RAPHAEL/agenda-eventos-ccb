@@ -247,30 +247,9 @@
     <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
   </div>
 
-  <!-- Formulário de Novo Evento -->
-  <div class="container" id="evento-container" style="display:none;">
-    <h2>Novo Evento</h2>
-    <input type="text" id="titulo" placeholder="Título do Evento">
-    <textarea id="descricao" placeholder="Descrição"></textarea>
-    <input type="date" id="data">
-    <label for="horaInicio">Hora de início:</label>
-    <input type="time" id="horaInicio" required>
-    <input type="time" id="horaTermino" placeholder="Hora de Término">
-    <input type="text" id="local" placeholder="Local">
-    <div class="campo-senha">
-      <input type="password" id="senha" placeholder="Senha para editar/excluir">
-      <i class="eye-icon" id="eyeEvento">👁️</i>
-    </div>
-    <button id="btnSalvar">Salvar Evento</button>
-    <button id="btnLogout">Sair</button>
-    <div id="listaEventos"></div>
-  </div>
-
   <footer>
     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
   </footer>
-
-  <script type="module" src="script.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -279,21 +258,23 @@
       const eyeLogin = document.getElementById('eyeLogin');
       const senhaCadastro = document.getElementById('senhaCadastro');
       const eyeCadastro = document.getElementById('eyeCadastro');
-      const senhaEvento = document.getElementById('senha');
-      const eyeEvento = document.getElementById('eyeEvento');
 
       // Função de alternância de visibilidade de senha
       function alternarVisibilidadeSenha(senhaFieldId, eyeIconId) {
         const senha = document.getElementById(senhaFieldId);
         const eyeIcon = document.getElementById(eyeIconId);
-        senha.type = senha.type === 'password' ? 'text' : 'password';
-        eyeIcon.textContent = senha.type === 'password' ? '👁️' : '🙈';
+        if (senha.type === 'password') {
+          senha.type = 'text';
+          eyeIcon.textContent = '🙈'; // Muda para o ícone de olho fechado
+        } else {
+          senha.type = 'password';
+          eyeIcon.textContent = '👁️'; // Muda para o ícone de olho aberto
+        }
       }
 
       // Adicionando ouvintes de eventos para alternar a visibilidade das senhas
       eyeLogin.addEventListener('click', () => alternarVisibilidadeSenha('senhaLogin', 'eyeLogin'));
       eyeCadastro.addEventListener('click', () => alternarVisibilidadeSenha('senhaCadastro', 'eyeCadastro'));
-      eyeEvento.addEventListener('click', () => alternarVisibilidadeSenha('senha', 'eyeEvento'));
 
       // Testando se os eventos de alternância de senha estão funcionando
       console.log('Eventos de alternância de senha configurados.');
@@ -301,3 +282,4 @@
   </script>
 </body>
 </html>
+
