@@ -122,15 +122,11 @@ function mostrarEventos() {
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
           <p><strong>Local:</strong> ${evento.location}</p>
           <p><strong>Descrição:</strong> ${evento.description}</p>
-          <button id="editar-${eventoKey}">Editar</button>
-          <button id="excluir-${eventoKey}">Excluir</button>
+          <button onclick="editarEvento('${eventoKey}')">Editar</button>
+          <button onclick="excluirEvento('${eventoKey}')">Excluir</button>
         `;
 
         listaEventos.appendChild(divEvento);
-
-        // Adiciona os listeners para os botões de editar e excluir
-        document.getElementById(`editar-${eventoKey}`).addEventListener('click', () => editarEvento(eventoKey));
-        document.getElementById(`excluir-${eventoKey}`).addEventListener('click', () => excluirEvento(eventoKey));
       });
     } else {
       listaEventos.innerHTML = '<p style="color: gray; font-style: italic;">Nenhum evento encontrado.</p>';
@@ -150,15 +146,26 @@ function editarEvento(id) {
     }
 
     const evento = snapshot.val();
-    document.getElementById('titulo').value = evento.title;
-    document.getElementById('data').value = evento.date;
-    document.getElementById('horaTermino').value = evento.timeEnd;
-    document.getElementById('local').value = evento.location;
-    document.getElementById('descricao').value = evento.description;
-    document.getElementById('senha').value = evento.password;
+    const senha = prompt('Digite a senha para editar este evento:');
+    if (!senha) {
+      alert('Senha não fornecida!');
+      return;
+    }
 
-    const btnSalvar = document.getElementById('btnSalvar');
-    btnSalvar.onclick = () => salvarEdicao(id);
+    if (senha === evento.password) {
+      // Se a senha for correta, preenche os campos de edição
+      document.getElementById('titulo').value = evento.title;
+      document.getElementById('data').value = evento.date;
+      document.getElementById('horaTermino').value = evento.timeEnd;
+      document.getElementById('local').value = evento.location;
+      document.getElementById('descricao').value = evento.description;
+      document.getElementById('senha').value = evento.password;
+
+      const btnSalvar = document.getElementById('btnSalvar');
+      btnSalvar.onclick = () => salvarEdicao(id);
+    } else {
+      alert('Senha incorreta!');
+    }
   });
 }
 
