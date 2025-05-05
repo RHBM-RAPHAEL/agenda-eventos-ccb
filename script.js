@@ -298,30 +298,35 @@ function mostrarLogin() {
 
 // Inicializa os eventos no carregamento da página
 document.addEventListener('DOMContentLoaded', function () {
-  // Funcionalidade para alternar a visibilidade da senha no login
+  // Alternar visibilidade das senhas
+  function alternarVisibilidadeSenha(senhaFieldId, eyeIconId) {
+    const senha = document.getElementById(senhaFieldId);
+    const eyeIcon = document.getElementById(eyeIconId);
+    senha.type = senha.type === 'password' ? 'text' : 'password';
+    eyeIcon.textContent = senha.type === 'password' ? '👁️' : '🙈';
+  }
+
+  // Adicionar eventos de clique para alternar a visibilidade da senha
   document.getElementById('eyeLogin').addEventListener('click', () => {
-    const senhaLogin = document.getElementById('senhaLogin');
-    const eyeLogin = document.getElementById('eyeLogin');
-    senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
-    eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
+    alternarVisibilidadeSenha('senhaLogin', 'eyeLogin');
   });
 
-  // Funcionalidade para alternar a visibilidade da senha no cadastro
   document.getElementById('eyeCadastro').addEventListener('click', () => {
-    const senhaCadastro = document.getElementById('senhaCadastro');
-    const eyeCadastro = document.getElementById('eyeCadastro');
-    senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
-    eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
+    alternarVisibilidadeSenha('senhaCadastro', 'eyeCadastro');
   });
-
+  document.getElementById('eyeEvento').addEventListener('click', () => {
+  alternarVisibilidadeSenha('senha', 'eyeEvento');
+  });
+  // Controle de autenticação
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      mostrarEventos(); // Exibe eventos se o usuário estiver logado
+      mostrarEventos();
     } else {
-      mostrarLogin(); // Exibe a tela de login se o usuário não estiver logado
+      mostrarLogin();
     }
   });
 
+  // Eventos de Login e Cadastro
   document.getElementById('btnEntrar').addEventListener('click', () => {
     const email = document.getElementById('emailLogin').value;
     const senha = document.getElementById('senhaLogin').value;
@@ -336,6 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
 
+  // Alternar entre telas de login e cadastro
   document.getElementById('mostrarCadastro').addEventListener('click', (e) => {
     e.preventDefault();
     mostrarCadastro();
@@ -346,5 +352,6 @@ document.addEventListener('DOMContentLoaded', function () {
     mostrarLogin();
   });
 
+  // Salvar evento
   document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
 });
