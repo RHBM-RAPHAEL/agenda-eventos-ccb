@@ -272,47 +272,33 @@
    <script type="module" src="script.js"></script>
  
    <script>
-     document.addEventListener('DOMContentLoaded', function () {
-       const senhaLogin = document.getElementById('senhaLogin');
-       const mostrarSenhaLogin = document.getElementById('mostrarSenhaLogin');
-       const eyeLogin = document.getElementById('eyeLogin');
- 
-       const senhaCadastro = document.getElementById('senhaCadastro');
-       const mostrarSenhaCadastro = document.getElementById('mostrarSenhaCadastro');
-       const eyeCadastro = document.getElementById('eyeCadastro');
- 
-       const senhaEvento = document.getElementById('senha');
-       const mostrarSenhaEvento = document.getElementById('mostrarSenhaEvento');
-       const eyeEvento = document.getElementById('eyeEvento');
- 
-       mostrarSenhaLogin.addEventListener('change', function () {
-         senhaLogin.type = this.checked ? 'text' : 'password';
-       });
- 
-       mostrarSenhaCadastro.addEventListener('change', function () {
-         senhaCadastro.type = this.checked ? 'text' : 'password';
-       });
- 
-       mostrarSenhaEvento.addEventListener('change', function () {
-         senhaEvento.type = this.checked ? 'text' : 'password';
-       });
- 
-       // Trocar o ícone de olho ao clicar
-       eyeLogin.addEventListener('click', () => {
-         senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
-         eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
-       });
- 
-       eyeCadastro.addEventListener('click', () => {
-         senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
-         eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
-       });
- 
-       eyeEvento.addEventListener('click', () => {
-         senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
-         eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
-       });
-     });
-   </script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const senhaLogin = document.getElementById('senhaLogin');
+    const eyeLogin = document.getElementById('eyeLogin');
+
+    const senhaCadastro = document.getElementById('senhaCadastro');
+    const eyeCadastro = document.getElementById('eyeCadastro');
+
+    const senhaEvento = document.getElementById('senha');
+    const eyeEvento = document.getElementById('eyeEvento');
+
+    // Trocar o ícone de olho ao clicar
+    eyeLogin.addEventListener('click', () => {
+      senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
+      eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
+    });
+
+    eyeCadastro.addEventListener('click', () => {
+      senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
+      eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
+    });
+
+    eyeEvento.addEventListener('click', () => {
+      senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
+      eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
+    });
+  });
+</script>
+
  </body>
  </html>
