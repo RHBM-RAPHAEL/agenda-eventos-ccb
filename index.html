@@ -223,6 +223,7 @@
   <img src="logo.png" alt="Logo" class="logo">
   <h1>Agenda de Eventos da Igreja</h1>
 
+  <!-- Formulário de Login -->
   <div id="login-container">
     <h2>Login</h2>
     <input type="email" id="emailLogin" placeholder="Email">
@@ -234,6 +235,7 @@
     <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
   </div>
 
+  <!-- Formulário de Cadastro -->
   <div id="cadastro-container" style="display:none;">
     <h2>Cadastro</h2>
     <input type="email" id="emailCadastro" placeholder="Email">
@@ -245,6 +247,7 @@
     <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
   </div>
 
+  <!-- Formulário de Novo Evento -->
   <div class="container" id="evento-container" style="display:none;">
     <h2>Novo Evento</h2>
     <input type="text" id="titulo" placeholder="Título do Evento">
@@ -258,10 +261,8 @@
       <input type="password" id="senha" placeholder="Senha para editar/excluir">
       <i class="eye-icon" id="eyeEvento">👁️</i>
     </div>
-
     <button id="btnSalvar">Salvar Evento</button>
     <button id="btnLogout">Sair</button>
-
     <div id="listaEventos"></div>
   </div>
 
@@ -273,29 +274,29 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // Seleção dos elementos
       const senhaLogin = document.getElementById('senhaLogin');
       const eyeLogin = document.getElementById('eyeLogin');
-
       const senhaCadastro = document.getElementById('senhaCadastro');
       const eyeCadastro = document.getElementById('eyeCadastro');
-
       const senhaEvento = document.getElementById('senha');
       const eyeEvento = document.getElementById('eyeEvento');
 
-      eyeLogin.addEventListener('click', () => {
-        senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
-        eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
-      });
+      // Função de alternância de visibilidade de senha
+      function alternarVisibilidadeSenha(senhaFieldId, eyeIconId) {
+        const senha = document.getElementById(senhaFieldId);
+        const eyeIcon = document.getElementById(eyeIconId);
+        senha.type = senha.type === 'password' ? 'text' : 'password';
+        eyeIcon.textContent = senha.type === 'password' ? '👁️' : '🙈';
+      }
 
-      eyeCadastro.addEventListener('click', () => {
-        senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
-        eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
-      });
+      // Adicionando ouvintes de eventos para alternar a visibilidade das senhas
+      eyeLogin.addEventListener('click', () => alternarVisibilidadeSenha('senhaLogin', 'eyeLogin'));
+      eyeCadastro.addEventListener('click', () => alternarVisibilidadeSenha('senhaCadastro', 'eyeCadastro'));
+      eyeEvento.addEventListener('click', () => alternarVisibilidadeSenha('senha', 'eyeEvento'));
 
-      eyeEvento.addEventListener('click', () => {
-        senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
-        eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
-      });
+      // Testando se os eventos de alternância de senha estão funcionando
+      console.log('Eventos de alternância de senha configurados.');
     });
   </script>
 </body>
