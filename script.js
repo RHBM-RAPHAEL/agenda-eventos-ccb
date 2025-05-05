@@ -182,9 +182,22 @@ function mostrarEventos() {
   });
 }
 
-// Exclui um evento
-function excluirEvento(id) {
+function excluirEventoAutomaticamente(id) {
   const eventoRef = ref(db, 'events/' + id);
+  remove(eventoRef)
+    .then(() => {
+      console.log(`Evento ${id} excluído automaticamente por tempo expirado.`);
+    })
+    .catch((error) => {
+      console.error('Erro ao excluir evento automaticamente:', error.message);
+    });
+}
+
+// Exclui evento se já passou
+if (dataEventoTermino <= agora) {
+  excluirEventoAutomaticamente(eventoKey);
+  return;
+}
 
   const senha = prompt('Digite a senha para excluir este evento:');
   if (!senha) {
