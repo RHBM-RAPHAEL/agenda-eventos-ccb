@@ -241,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
 
-
   document.getElementById('mostrarCadastro').addEventListener('click', (e) => {
     e.preventDefault();
     mostrarCadastro();
@@ -256,6 +255,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
   mostrarLogin();
 });
-// Torna as funções visíveis globalmente
-window.editarEvento = editarEvento;
-window.excluirEvento = excluirEvento;
