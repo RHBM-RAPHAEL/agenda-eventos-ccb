@@ -172,8 +172,15 @@ function mostrarEventos() {
   });
 }
 
+// Exclui um evento
 function excluirEvento(id) {
   const eventoRef = ref(db, 'events/' + id);
+
+  const senha = prompt('Digite a senha para excluir este evento:');
+  if (!senha) {
+    alert('Senha não fornecida!');
+    return;
+  }
 
   get(eventoRef).then((snapshot) => {
     if (!snapshot.exists()) {
@@ -181,12 +188,20 @@ function excluirEvento(id) {
       return;
     }
 
-    remove(eventoRef).then(() => {
-      alert('Evento excluído com sucesso!');
-      mostrarEventos(); // Atualiza a lista de eventos
-    }).catch((error) => {
-      alert('Erro ao excluir evento: ' + error.message);
-    });
+    const evento = snapshot.val();
+
+    if (senha === evento.password) {
+      if (confirm('Tem certeza que deseja excluir este evento?')) {
+        remove(eventoRef).then(() => {
+          alert('Evento excluído com sucesso!');
+          mostrarEventos();
+        }).catch((error) => {
+          alert('Erro ao excluir evento: ' + error.message);
+        });
+      }
+    } else {
+      alert('Senha incorreta!');
+    }
   });
 }
 
@@ -259,38 +274,6 @@ function salvarEdicao(id) {
     limparCampos();
   }).catch((error) => {
     alert('Erro ao atualizar evento: ' + error.message);
-  });
-}
-
-function excluirEvento(id) {
-  const eventoRef = ref(db, 'events/' + id);
-
-  const senha = prompt('Digite a senha para excluir este evento:');
-  if (!senha) {
-    alert('Senha não fornecida!');
-    return;
-  }
-
-  get(eventoRef).then((snapshot) => {
-    if (!snapshot.exists()) {
-      alert('Evento não encontrado.');
-      return;
-    }
-
-    const evento = snapshot.val();
-
-    if (senha === evento.password) {
-      if (confirm('Tem certeza que deseja excluir este evento?')) {
-        remove(eventoRef).then(() => {
-          alert('Evento excluído com sucesso!');
-          mostrarEventos();
-        }).catch((error) => {
-          alert('Erro ao excluir evento: ' + error.message);
-        });
-      }
-    } else {
-      alert('Senha incorreta!');
-    }
   });
 }
 
