@@ -20,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
+// Funções de registro e login de usuário
 function registrarUsuario(email, senha) {
   createUserWithEmailAndPassword(auth, email, senha)
     .then(() => {
@@ -51,6 +52,7 @@ function logoutUsuario() {
   });
 }
 
+// Funções de manipulação de eventos
 function salvarEvento() {
   const horaInicio = document.getElementById('horaInicio').value;
   const titulo = document.getElementById('titulo').value;
@@ -60,21 +62,29 @@ function salvarEvento() {
   const descricao = document.getElementById('descricao').value;
   const senha = document.getElementById('senha').value;
 
+  // Validação dos campos
   if (!titulo || !data || !horaInicio || !horaTermino || !local || !descricao || !senha) {
     alert('Todos os campos devem ser preenchidos!');
     return;
   }
 
-  const dataEvento = new Date(`${data}T${horaTermino}`);
-  if (isNaN(dataEvento.getTime()) || dataEvento < new Date()) {
-    alert('Insira uma data e hora válidas no futuro.');
+  const horaIni = new Date(`${data}T${horaInicio}`);
+  const horaFim = new Date(`${data}T${horaTermino}`);
+
+  // Validações de hora
+  if (isNaN(horaIni.getTime()) || isNaN(horaFim.getTime())) {
+    alert('Insira uma data e hora válidas.');
     return;
   }
 
-  const horaIni = new Date(`${data}T${horaInicio}`);
-  const horaFim = new Date(`${data}T${horaTermino}`);
   if (horaFim <= horaIni) {
     alert('A hora de término deve ser depois da hora de início.');
+    return;
+  }
+
+  // Verifica se a data é no futuro
+  if (horaFim <= new Date()) {
+    alert('A data do evento deve ser no futuro.');
     return;
   }
 
@@ -98,6 +108,7 @@ function salvarEvento() {
   });
 }
 
+// Limpa os campos do formulário
 function limparCampos() {
   document.getElementById('titulo').value = '';
   document.getElementById('data').value = '';
@@ -107,6 +118,7 @@ function limparCampos() {
   document.getElementById('senha').value = '';
 }
 
+// Exibe os eventos na interface
 function mostrarEventos() {
   document.getElementById('login-container').style.display = 'none';
   document.getElementById('cadastro-container').style.display = 'none';
@@ -123,14 +135,13 @@ function mostrarEventos() {
         const evento = childSnapshot.val();
         const eventoKey = childSnapshot.key;
 
-        // Verifica se o evento já passou
         const dataEventoTermino = new Date(`${evento.date}T${evento.timeEnd}`);
         const agora = new Date();
-        
+
+        // Exclui evento se já passou
         if (dataEventoTermino <= agora) {
-          // Exclui o evento se ele já passou
           excluirEvento(eventoKey);
-          return; // Não exibe o evento na interface
+          return;
         }
 
         // Cria a interface do evento
@@ -146,11 +157,10 @@ function mostrarEventos() {
           <button class="btnEditar" data-id="${eventoKey}">Editar</button>
           <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>
         `;
-
         listaEventos.appendChild(divEvento);
       });
 
-      // Adiciona os event listeners após os eventos serem carregados
+      // Event listeners para editar e excluir
       document.querySelectorAll('.btnEditar').forEach((button) => {
         button.addEventListener('click', (event) => {
           const id = event.target.getAttribute('data-id');
@@ -205,6 +215,7 @@ function excluirEvento(id) {
   });
 }
 
+// Edita um evento
 function editarEvento(id) {
   const eventoRef = ref(db, 'events/' + id);
 
@@ -235,12 +246,6 @@ function editarEvento(id) {
     document.getElementById('descricao').value = evento.description;
     document.getElementById('senha').value = evento.password;
 
-    // Altera a visibilidade da senha
-    document.getElementById('mostrarSenhaEvento').addEventListener('change', function () {
-      const senhaEvento = document.getElementById('senha');
-      senhaEvento.type = this.checked ? 'text' : 'password';
-    });
-
     const btnSalvar = document.getElementById('btnSalvar');
 
     // Remove qualquer outro event listener anterior
@@ -251,6 +256,7 @@ function editarEvento(id) {
   });
 }
 
+// Salva a edição do evento
 function salvarEdicao(id) {
   const titulo = document.getElementById('titulo').value;
   const data = document.getElementById('data').value;
@@ -277,6 +283,7 @@ function salvarEdicao(id) {
   });
 }
 
+// Funções de exibição de telas
 function mostrarCadastro() {
   document.getElementById('login-container').style.display = 'none';
   document.getElementById('cadastro-container').style.display = 'block';
@@ -289,13 +296,13 @@ function mostrarLogin() {
   document.getElementById('evento-container').style.display = 'none';
 }
 
+// Inicializa os eventos no carregamento da página
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('mostrarSenhaLogin').addEventListener('change', function () {
     const senhaLogin = document.getElementById('senhaLogin');
     senhaLogin.type = this.checked ? 'text' : 'password';
   });
 
-  // Verifica se o usuário está logado
   onAuthStateChanged(auth, (user) => {
     if (user) {
       mostrarEventos(); // Exibe eventos se o usuário estiver logado
