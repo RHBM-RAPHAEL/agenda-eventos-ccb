@@ -225,27 +225,34 @@
 
   <!-- Formulário de Login -->
   <div id="login-container">
-    <h2>Login</h2>
-    <input type="email" id="emailLogin" placeholder="Email">
-    <div class="campo-senha">
-      <input type="password" id="senhaLogin" placeholder="Senha">
-      <i class="eye-icon" id="eyeLogin">👁️</i>
-    </div>
-    <button id="btnEntrar">Entrar</button>
-    <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
-  </div>
+  <input type="email" id="emailLogin" placeholder="Email">
+  <input type="password" id="senhaLogin" placeholder="Senha">
+  <button id="btnEntrar">Entrar</button>
+  <button id="mostrarCadastro">Não tem uma conta? Cadastre-se</button>
+  <span id="eyeLogin">👁️</span>
+</div>
 
-  <!-- Formulário de Cadastro -->
-  <div id="cadastro-container" style="display:none;">
-    <h2>Cadastro</h2>
-    <input type="email" id="emailCadastro" placeholder="Email">
-    <div class="campo-senha">
-      <input type="password" id="senhaCadastro" placeholder="Senha">
-      <i class="eye-icon" id="eyeCadastro">👁️</i>
-    </div>
-    <button id="btnCadastrar">Cadastrar</button>
-    <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
-  </div>
+<div id="cadastro-container" style="display: none;">
+  <input type="email" id="emailCadastro" placeholder="Email">
+  <input type="password" id="senhaCadastro" placeholder="Senha">
+  <button id="btnCadastrar">Cadastrar</button>
+  <button id="mostrarLogin">Já tem uma conta? Entrar</button>
+  <span id="eyeCadastro">👁️</span>
+</div>
+
+<div id="evento-container" style="display: none;">
+  <input type="text" id="titulo" placeholder="Título do Evento">
+  <input type="date" id="data">
+  <input type="time" id="horaInicio">
+  <input type="time" id="horaTermino">
+  <input type="text" id="local" placeholder="Local">
+  <textarea id="descricao" placeholder="Descrição do evento"></textarea>
+  <input type="password" id="senha" placeholder="Senha para edição/exclusão">
+  <button id="btnSalvar">Salvar Evento</button>
+  <button id="btnLogout">Sair</button>
+  <div id="listaEventos"></div>
+  <span id="eyeEvento">👁️</span>
+</div>
 
   <footer>
     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
