@@ -224,35 +224,58 @@
   <h1>Agenda de Eventos da Igreja</h1>
 
   <!-- Formulário de Login -->
-  <div id="login-container">
-  <input type="email" id="emailLogin" placeholder="Email">
-  <input type="password" id="senhaLogin" placeholder="Senha">
+<div id="login-container">
+  <div class="campo-senha">
+    <input type="email" id="emailLogin" placeholder="Email">
+  </div>
+  <div class="campo-senha">
+    <input type="password" id="senhaLogin" placeholder="Senha">
+    <span id="eyeLogin" class="icone-eye">👁️</span>
+  </div>
   <button id="btnEntrar">Entrar</button>
   <button id="mostrarCadastro">Não tem uma conta? Cadastre-se</button>
-  <span id="eyeLogin">👁️</span>
 </div>
 
 <div id="cadastro-container" style="display: none;">
-  <input type="email" id="emailCadastro" placeholder="Email">
-  <input type="password" id="senhaCadastro" placeholder="Senha">
+  <div class="campo-senha">
+    <input type="email" id="emailCadastro" placeholder="Email">
+  </div>
+  <div class="campo-senha">
+    <input type="password" id="senhaCadastro" placeholder="Senha">
+    <span id="eyeCadastro" class="icone-eye">👁️</span>
+  </div>
   <button id="btnCadastrar">Cadastrar</button>
   <button id="mostrarLogin">Já tem uma conta? Entrar</button>
-  <span id="eyeCadastro">👁️</span>
 </div>
 
 <div id="evento-container" style="display: none;">
-  <input type="text" id="titulo" placeholder="Título do Evento">
-  <input type="date" id="data">
-  <input type="time" id="horaInicio">
-  <input type="time" id="horaTermino">
-  <input type="text" id="local" placeholder="Local">
-  <textarea id="descricao" placeholder="Descrição do evento"></textarea>
-  <input type="password" id="senha" placeholder="Senha para edição/exclusão">
+  <div class="campo-senha">
+    <input type="text" id="titulo" placeholder="Título do Evento">
+  </div>
+  <div class="campo-senha">
+    <input type="date" id="data">
+  </div>
+  <div class="campo-senha">
+    <input type="time" id="horaInicio">
+  </div>
+  <div class="campo-senha">
+    <input type="time" id="horaTermino">
+  </div>
+  <div class="campo-senha">
+    <input type="text" id="local" placeholder="Local">
+  </div>
+  <div class="campo-senha">
+    <textarea id="descricao" placeholder="Descrição do evento"></textarea>
+  </div>
+  <div class="campo-senha">
+    <input type="password" id="senha" placeholder="Senha para edição/exclusão">
+    <span id="eyeEvento" class="icone-eye">👁️</span>
+  </div>
   <button id="btnSalvar">Salvar Evento</button>
   <button id="btnLogout">Sair</button>
   <div id="listaEventos"></div>
-  <span id="eyeEvento">👁️</span>
 </div>
+
 
   <footer>
     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
