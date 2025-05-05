@@ -298,10 +298,45 @@ function mostrarLogin() {
 
 // Inicializa os eventos no carregamento da página
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('eyeLogin').addEventListener('click', function () {
-  senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
-  eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
-});
+  const senhaLogin = document.getElementById('senhaLogin');
+  const eyeLogin = document.getElementById('eyeLogin');
+  const senhaCadastro = document.getElementById('senhaCadastro');
+  const eyeCadastro = document.getElementById('eyeCadastro');
+  const senhaEvento = document.getElementById('senha');
+  const eyeEvento = document.getElementById('eyeEvento');
+
+  // Login
+  eyeLogin.addEventListener('click', () => {
+    if (senhaLogin.type === 'password') {
+      senhaLogin.type = 'text';
+      eyeLogin.textContent = '🙈'; // Ícone de macaco
+    } else {
+      senhaLogin.type = 'password';
+      eyeLogin.textContent = '👁️'; // Ícone de olho
+    }
+  });
+
+  // Cadastro
+  eyeCadastro.addEventListener('click', () => {
+    if (senhaCadastro.type === 'password') {
+      senhaCadastro.type = 'text';
+      eyeCadastro.textContent = '🙈';
+    } else {
+      senhaCadastro.type = 'password';
+      eyeCadastro.textContent = '👁️';
+    }
+  });
+
+  // Evento
+  eyeEvento.addEventListener('click', () => {
+    if (senhaEvento.type === 'password') {
+      senhaEvento.type = 'text';
+      eyeEvento.textContent = '🙈';
+    } else {
+      senhaEvento.type = 'password';
+      eyeEvento.textContent = '👁️';
+    }
+  });
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
