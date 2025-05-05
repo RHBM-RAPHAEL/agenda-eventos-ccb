@@ -298,10 +298,10 @@ function mostrarLogin() {
 
 // Inicializa os eventos no carregamento da página
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('mostrarSenhaLogin').addEventListener('change', function () {
-    const senhaLogin = document.getElementById('senhaLogin');
-    senhaLogin.type = this.checked ? 'text' : 'password';
-  });
+  document.getElementById('eyeLogin').addEventListener('click', function () {
+  senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
+  eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
+});
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
