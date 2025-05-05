@@ -181,3 +181,22 @@ footer p {
     padding: 10px;
   }
 }
+.senha-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.senha-container input[type="password"],
+.senha-container input[type="text"] {
+  width: 100%;
+  padding-right: 40px; /* espaço para o olhinho */
+  box-sizing: border-box;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+}
