@@ -61,32 +61,35 @@ function salvarEvento() {
   const senha = document.getElementById('senha').value;
 
   if (!titulo || !data || !horaInicio || !horaTermino || !local || !descricao || !senha) {
-  alert('Todos os campos devem ser preenchidos!');
-  return;
-}
+    alert('Todos os campos devem ser preenchidos!');
+    return;
+  }
+
   const dataEvento = new Date(`${data}T${horaTermino}`);
   if (isNaN(dataEvento.getTime()) || dataEvento < new Date()) {
     alert('Insira uma data e hora válidas no futuro.');
     return;
   }
+
   const horaIni = new Date(`${data}T${horaInicio}`);
   const horaFim = new Date(`${data}T${horaTermino}`);
   if (horaFim <= horaIni) {
     alert('A hora de término deve ser depois da hora de início.');
     return;
   }
+
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
   set(newEventRef, {
-  title: titulo,
-  date: data,
-  timeStart: horaInicio,
-  timeEnd: horaTermino,
-  location: local,
-  description: descricao,
-  password: senha
-}).then(() => {
+    title: titulo,
+    date: data,
+    timeStart: horaInicio,
+    timeEnd: horaTermino,
+    location: local,
+    description: descricao,
+    password: senha
+  }).then(() => {
     alert('Evento salvo com sucesso!');
     limparCampos();
     mostrarEventos();
@@ -188,6 +191,12 @@ function editarEvento(id) {
     document.getElementById('descricao').value = evento.description;
     document.getElementById('senha').value = evento.password;
 
+    // Altera a visibilidade da senha
+    document.getElementById('mostrarSenhaEvento').addEventListener('change', function () {
+      const senhaEvento = document.getElementById('senha');
+      senhaEvento.type = this.checked ? 'text' : 'password';
+    });
+
     const btnSalvar = document.getElementById('btnSalvar');
 
     // Remove qualquer outro event listener anterior
@@ -209,13 +218,13 @@ function salvarEdicao(id) {
   const eventoRef = ref(db, 'events/' + id);
 
   update(eventoRef, {
-  title: titulo,
-  date: data,
-  timeStart: horaInicio,
-  timeEnd: horaTermino,
-  location: local,
-  description: descricao
-}).then(() => {
+    title: titulo,
+    date: data,
+    timeStart: horaInicio,
+    timeEnd: horaTermino,
+    location: local,
+    description: descricao
+  }).then(() => {
     alert('Evento atualizado com sucesso!');
     mostrarEventos();
     limparCampos();
@@ -270,14 +279,9 @@ function mostrarLogin() {
 
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('mostrarSenhaLogin').addEventListener('change', function () {
-  const senhaLogin = document.getElementById('senhaLogin');
-  senhaLogin.type = this.checked ? 'text' : 'password';
-});
-
-document.getElementById('mostrarSenhaEvento').addEventListener('change', function () {
-  const senhaEvento = document.getElementById('senha');
-  senhaEvento.type = this.checked ? 'text' : 'password';
-});
+    const senhaLogin = document.getElementById('senhaLogin');
+    senhaLogin.type = this.checked ? 'text' : 'password';
+  });
 
   // Verifica se o usuário está logado
   onAuthStateChanged(auth, (user) => {
