@@ -256,3 +256,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   mostrarLogin();
 });
+// Torna as funções visíveis globalmente
+window.editarEvento = editarEvento;
+window.excluirEvento = excluirEvento;
