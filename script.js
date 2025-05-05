@@ -52,6 +52,7 @@ function logoutUsuario() {
 }
 
 function salvarEvento() {
+  const horaInicio = document.getElementById('horaInicio').value;
   const titulo = document.getElementById('titulo').value;
   const data = document.getElementById('data').value;
   const horaTermino = document.getElementById('horaTermino').value;
@@ -59,28 +60,33 @@ function salvarEvento() {
   const descricao = document.getElementById('descricao').value;
   const senha = document.getElementById('senha').value;
 
-  if (!titulo || !data || !horaTermino || !local || !descricao || !senha) {
-    alert('Todos os campos devem ser preenchidos!');
-    return;
-  }
-
+  if (!titulo || !data || !horaInicio || !horaTermino || !local || !descricao || !senha) {
+  alert('Todos os campos devem ser preenchidos!');
+  return;
+}
   const dataEvento = new Date(`${data}T${horaTermino}`);
   if (isNaN(dataEvento.getTime()) || dataEvento < new Date()) {
     alert('Insira uma data e hora válidas no futuro.');
     return;
   }
-
+  const horaIni = new Date(`${data}T${horaInicio}`);
+  const horaFim = new Date(`${data}T${horaTermino}`);
+  if (horaFim <= horaIni) {
+    alert('A hora de término deve ser depois da hora de início.');
+    return;
+  }
   const eventosRef = ref(db, 'events');
   const newEventRef = push(eventosRef);
 
   set(newEventRef, {
-    title: titulo,
-    date: data,
-    timeEnd: horaTermino,
-    location: local,
-    description: descricao,
-    password: senha
-  }).then(() => {
+  title: titulo,
+  date: data,
+  timeStart: horaInicio,
+  timeEnd: horaTermino,
+  location: local,
+  description: descricao,
+  password: senha
+}).then(() => {
     alert('Evento salvo com sucesso!');
     limparCampos();
     mostrarEventos();
@@ -119,6 +125,7 @@ function mostrarEventos() {
         divEvento.innerHTML = `
           <h3>${evento.title}</h3>
           <p><strong>Data:</strong> ${evento.date}</p>
+          <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
           <p><strong>Local:</strong> ${evento.location}</p>
           <p><strong>Descrição:</strong> ${evento.description}</p>
@@ -175,6 +182,7 @@ function editarEvento(id) {
     // Preenche os campos com os dados do evento
     document.getElementById('titulo').value = evento.title;
     document.getElementById('data').value = evento.date;
+    document.getElementById('horaInicio').value = evento.timeStart || '';
     document.getElementById('horaTermino').value = evento.timeEnd;
     document.getElementById('local').value = evento.location;
     document.getElementById('descricao').value = evento.description;
@@ -193,6 +201,7 @@ function editarEvento(id) {
 function salvarEdicao(id) {
   const titulo = document.getElementById('titulo').value;
   const data = document.getElementById('data').value;
+  const horaInicio = document.getElementById('horaInicio').value;
   const horaTermino = document.getElementById('horaTermino').value;
   const local = document.getElementById('local').value;
   const descricao = document.getElementById('descricao').value;
@@ -200,12 +209,13 @@ function salvarEdicao(id) {
   const eventoRef = ref(db, 'events/' + id);
 
   update(eventoRef, {
-    title: titulo,
-    date: data,
-    timeEnd: horaTermino,
-    location: local,
-    description: descricao
-  }).then(() => {
+  title: titulo,
+  date: data,
+  timeStart: horaInicio,
+  timeEnd: horaTermino,
+  location: local,
+  description: descricao
+}).then(() => {
     alert('Evento atualizado com sucesso!');
     mostrarEventos();
     limparCampos();
