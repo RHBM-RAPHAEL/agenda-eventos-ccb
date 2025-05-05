@@ -298,44 +298,20 @@ function mostrarLogin() {
 
 // Inicializa os eventos no carregamento da página
 document.addEventListener('DOMContentLoaded', function () {
-  const senhaLogin = document.getElementById('senhaLogin');
-  const eyeLogin = document.getElementById('eyeLogin');
-  const senhaCadastro = document.getElementById('senhaCadastro');
-  const eyeCadastro = document.getElementById('eyeCadastro');
-  const senhaEvento = document.getElementById('senha');
-  const eyeEvento = document.getElementById('eyeEvento');
-
-  // Login
-  eyeLogin.addEventListener('click', () => {
-    if (senhaLogin.type === 'password') {
-      senhaLogin.type = 'text';
-      eyeLogin.textContent = '🙈'; // Ícone de macaco
-    } else {
-      senhaLogin.type = 'password';
-      eyeLogin.textContent = '👁️'; // Ícone de olho
-    }
+  // Funcionalidade para alternar a visibilidade da senha no login
+  document.getElementById('eyeLogin').addEventListener('click', () => {
+    const senhaLogin = document.getElementById('senhaLogin');
+    const eyeLogin = document.getElementById('eyeLogin');
+    senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
+    eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
   });
 
-  // Cadastro
-  eyeCadastro.addEventListener('click', () => {
-    if (senhaCadastro.type === 'password') {
-      senhaCadastro.type = 'text';
-      eyeCadastro.textContent = '🙈';
-    } else {
-      senhaCadastro.type = 'password';
-      eyeCadastro.textContent = '👁️';
-    }
-  });
-
-  // Evento
-  eyeEvento.addEventListener('click', () => {
-    if (senhaEvento.type === 'password') {
-      senhaEvento.type = 'text';
-      eyeEvento.textContent = '🙈';
-    } else {
-      senhaEvento.type = 'password';
-      eyeEvento.textContent = '👁️';
-    }
+  // Funcionalidade para alternar a visibilidade da senha no cadastro
+  document.getElementById('eyeCadastro').addEventListener('click', () => {
+    const senhaCadastro = document.getElementById('senhaCadastro');
+    const eyeCadastro = document.getElementById('eyeCadastro');
+    senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
+    eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
   });
 
   onAuthStateChanged(auth, (user) => {
