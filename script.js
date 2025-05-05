@@ -161,6 +161,21 @@ function editarEvento(id) {
     }
 
     const evento = snapshot.val();
+
+    // Solicita a senha antes de permitir a edição
+    const senha = prompt('Digite a senha para editar este evento:');
+    if (!senha) {
+      alert('Senha não fornecida!');
+      return;
+    }
+
+    // Verifica se a senha está correta
+    if (senha !== evento.password) {
+      alert('Senha incorreta!');
+      return;
+    }
+
+    // Se a senha estiver correta, preenche os campos do formulário com os dados do evento
     document.getElementById('titulo').value = evento.title;
     document.getElementById('data').value = evento.date;
     document.getElementById('horaTermino').value = evento.timeEnd;
@@ -170,6 +185,8 @@ function editarEvento(id) {
 
     const btnSalvar = document.getElementById('btnSalvar');
     btnSalvar.onclick = () => salvarEdicao(id);
+  }).catch((error) => {
+    alert('Erro ao carregar evento: ' + error.message);
   });
 }
 
