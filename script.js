@@ -122,11 +122,26 @@ function mostrarEventos() {
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
           <p><strong>Local:</strong> ${evento.location}</p>
           <p><strong>Descrição:</strong> ${evento.description}</p>
-          <button onclick="editarEvento('${eventoKey}')">Editar</button>
-          <button onclick="excluirEvento('${eventoKey}')">Excluir</button>
+          <button class="btnEditar" data-id="${eventoKey}">Editar</button>
+          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>
         `;
 
         listaEventos.appendChild(divEvento);
+      });
+
+      // Adiciona os event listeners após os eventos serem carregados
+      document.querySelectorAll('.btnEditar').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          const id = event.target.getAttribute('data-id');
+          editarEvento(id);
+        });
+      });
+
+      document.querySelectorAll('.btnExcluir').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          const id = event.target.getAttribute('data-id');
+          excluirEvento(id);
+        });
       });
     } else {
       listaEventos.innerHTML = '<p style="color: gray; font-style: italic;">Nenhum evento encontrado.</p>';
