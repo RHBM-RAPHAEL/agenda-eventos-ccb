@@ -1,305 +1,318 @@
-<!DOCTYPE html>
  <html lang="pt-br">
- <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="icon" type="image/png" href="blue-badge.png">
-   <title>Agenda CCB</title>
-   <style>
-     * {
-       margin: 0;
-       padding: 0;
-       box-sizing: border-box;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-     }
- 
-     body {
-       background: url('Foto agenda.jpg') no-repeat center center fixed;
-       background-size: cover;
-       color: #333;
-       padding: 40px;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-     }
- 
-     .logo {
-       width: 150px;
-       height: 150px;
-       border-radius: 50%;
-       border: 4px solid #4CAF50;
-       display: block;
-       margin: 0 auto 20px;
-       object-fit: cover;
-     }
- 
-     h1 {
-       font-size: 2.5rem;
-       margin-bottom: 20px;
-       color: #4CAF50;
-       text-align: center;
-     }
- 
-     .container {
-       max-width: 900px;
-       width: 100%;
-       margin: 0 auto;
-       padding: 20px;
-       background-color: rgba(255, 255, 255, 0.9);
-       border-radius: 8px;
-       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-     }
- 
-     input, button, textarea {
-       width: 100%;
-       padding: 12px;
-       margin-bottom: 15px;
-       font-size: 16px;
-       border: 1px solid #ccc;
-       border-radius: 6px;
-       transition: border 0.3s ease;
-     }
- 
-     input:focus, textarea:focus, button:focus {
-       border-color: #4CAF50;
-       outline: none;
-     }
- 
-     button {
-       background-color: #4CAF50;
-       color: white;
-       cursor: pointer;
-       font-size: 18px;
-       border: none;
-       padding: 14px;
-       border-radius: 6px;
-       transition: background-color 0.3s ease;
-     }
- 
-     button:hover {
-       background-color: #45a049;
-     }
- 
-     #listaEventos {
-       margin-top: 20px;
-       width: 100%;
-     }
- 
-     .evento {
-       background-color: #fafafa;
-       padding: 15px;
-       margin-bottom: 15px;
-       border-radius: 8px;
-       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-       border-left: 5px solid #4CAF50;
-       transition: transform 0.3s ease, box-shadow 0.3s ease;
-     }
- 
-     .evento:hover {
-       transform: translateY(-5px);
-       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-     }
- 
-     .evento h3 {
-       margin-top: 0;
-       font-size: 20px;
-       color: #333;
-     }
- 
-     .evento p {
-       font-size: 16px;
-       color: #555;
-       line-height: 1.5;
-     }
- 
-     .evento button {
-       background-color: #f44336;
-       color: white;
-       border-radius: 5px;
-       padding: 8px 12px;
-       margin-right: 8px;
-       width: auto;
-       transition: background-color 0.3s ease;
-     }
- 
-     .evento button:hover {
-       background-color: #da190b;
-     }
- 
-     footer {
-       background-color: #3100ff;
-       color: white;
-       padding: 20px;
-       text-align: center;
-       font-size: 14px;
-       margin-top: 40px;
-       border-top: 4px solid #fff;
-     }
- 
-     footer p {
-       margin: 5px 0;
-     }
- 
-     #login-container, #cadastro-container {
-       max-width: 400px;
-       margin: 0 auto;
-       background-color: rgba(255, 255, 255, 0.8);
-       padding: 20px;
-       border-radius: 8px;
-       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-       margin-bottom: 20px;
-     }
- 
-     input[type="email"], input[type="password"] {
-       margin-bottom: 10px;
-     }
- 
-     #login-container button, #cadastro-container button {
-       background-color: #4CAF50;
-     }
- 
-     #login-container p, #cadastro-container p {
-       text-align: center;
-     }
- 
-     #login-container a, #cadastro-container a {
-       color: #4CAF50;
-       text-decoration: none;
-     }
- 
-     /* Estilo do campo de senha com ícone de olho */
-     .campo-senha {
-       position: relative;
-       width: 100%;
-       max-width: 300px; /* ou qualquer valor desejado */
-       margin: 10px 0;
-     }
- 
-     .campo-senha input {
-       width: 100%;
-       padding: 12px;
-       padding-right: 30px; /* Deixa espaço para o ícone de olho */
-       border-radius: 25px; /* Para deixar o campo oval */
-       border: 1px solid #ccc;
-       font-size: 16px;
-     }
- 
-     .campo-senha .eye-icon {
-       position: absolute;
-       right: 10px;
-       top: 50%;
-       transform: translateY(-50%);
-       font-size: 18px;
-       cursor: pointer;
-       pointer-events: all;
-       user-select: none;
-     }
- 
-     @media screen and (max-width: 768px) {
-       .container {
-         padding: 15px;
-       }
- 
-       input, button, textarea {
-         padding: 10px;
-       }
- 
-       h1 {
-         font-size: 2rem;
-       }
- 
-       .evento {
-         padding: 10px;
-       }
- 
-       .logo {
-         width: 120px;
-         height: 120px;
-       }
-     }
-   </style>
- </head>
- <body>
-   <img src="logo.png" alt="Logo" class="logo">
-   <h1>Agenda de Eventos da Igreja</h1>
- 
-   <div id="login-container">
-     <h2>Login</h2>
-     <input type="email" id="emailLogin" placeholder="Email">
-     <div class="campo-senha">
-       <input type="password" id="senhaLogin" placeholder="Senha">
-       <i class="eye-icon" id="eyeLogin">👁️</i>
-     </div>
-     <button id="btnEntrar">Entrar</button>
-     <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
-   </div>
- 
-   <div id="cadastro-container" style="display:none;">
-     <h2>Cadastro</h2>
-     <input type="email" id="emailCadastro" placeholder="Email">
-     <div class="campo-senha">
-       <input type="password" id="senhaCadastro" placeholder="Senha">
-       <i class="eye-icon" id="eyeCadastro">👁️</i>
-     </div>
-     <button id="btnCadastrar">Cadastrar</button>
-     <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
-   </div>
- 
-   <div class="container" id="evento-container" style="display:none;">
-     <h2>Novo Evento</h2>
-     <input type="text" id="titulo" placeholder="Título do Evento">
-     <textarea id="descricao" placeholder="Descrição"></textarea>
-     <input type="date" id="data">
-     <label for="horaInicio">Hora de início:</label>
-     <input type="time" id="horaInicio" required>
-     <label for="horaTermino">Hora de termino:</label>
-     <input type="time" id="horaTermino" placeholder="Hora de Término">
-     <input type="text" id="local" placeholder="Local">
-     <div class="campo-senha">
-       <input type="password" id="senha" placeholder="Senha para editar/excluir">
-       <i class="eye-icon" id="eyeEvento">👁️</i>
-     </div>
- 
-     <button id="btnSalvar">Salvar Evento</button>
-     <button id="btnLogout">Sair</button>
- 
-     <div id="listaEventos"></div>
-   </div>
- 
-   <footer>
-     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
-   </footer>
- 
-   <script type="module" src="script.js"></script>
- 
-   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const senhaLogin = document.getElementById('senhaLogin');
-    const eyeLogin = document.getElementById('eyeLogin');
-
-    const senhaCadastro = document.getElementById('senhaCadastro');
-    const eyeCadastro = document.getElementById('eyeCadastro');
-
-    const senhaEvento = document.getElementById('senha');
-    const eyeEvento = document.getElementById('eyeEvento');
-
-    // Trocar o ícone de olho ao clicar
-    eyeLogin.addEventListener('click', () => {
-      senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
-      eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
-    });
-
-    eyeCadastro.addEventListener('click', () => {
-      senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
-      eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
-    });
-
-    eyeEvento.addEventListener('click', () => {
-      senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
-      eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
-    });
-  });
-</script>
-
- </body>
- </html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="blue-badge.png">
+    <title>Agenda CCB</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+  
+      body {
+        background: url('Foto agenda.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+  
+      .logo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 4px solid #4CAF50;
+        display: block;
+        margin: 0 auto 20px;
+        object-fit: cover;
+      }
+  
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #4CAF50;
+        text-align: center;
+      }
+  
+      .container {
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+  
+      input, button, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        transition: border 0.3s ease;
+      }
+  
+      input:focus, textarea:focus, button:focus {
+        border-color: #4CAF50;
+        outline: none;
+      }
+  
+      button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        border: none;
+        padding: 14px;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+      }
+  
+      button:hover {
+        background-color: #45a049;
+      }
+  
+      #listaEventos {
+        margin-top: 20px;
+        width: 100%;
+      }
+  
+      .evento {
+        background-color: #fafafa;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #4CAF50;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+  
+      .evento:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+  
+      .evento h3 {
+        margin-top: 0;
+        font-size: 20px;
+        color: #333;
+      }
+  
+      .evento p {
+        font-size: 16px;
+        color: #555;
+        line-height: 1.5;
+      }
+  
+      .evento button {
+        background-color: #f44336;
+        color: white;
+        border-radius: 5px;
+        padding: 8px 12px;
+        margin-right: 8px;
+        width: auto;
+        transition: background-color 0.3s ease;
+      }
+  
+      .evento button:hover {
+        background-color: #da190b;
+      }
+  
+      footer {
+        background-color: #3100ff;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        margin-top: 40px;
+        border-top: 4px solid #fff;
+      }
+  
+      footer p {
+        margin: 5px 0;
+      }
+  
+      #login-container, #cadastro-container {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+  
+      input[type="email"], input[type="password"] {
+        margin-bottom: 10px;
+      }
+  
+      #login-container button, #cadastro-container button {
+        background-color: #4CAF50;
+      }
+  
+      #login-container p, #cadastro-container p {
+        text-align: center;
+      }
+  
+      #login-container a, #cadastro-container a {
+        color: #4CAF50;
+        text-decoration: none;
+      }
+  
+      /* Estilo do campo de senha com ícone de olho */
+      .campo-senha {
+        position: relative;
+        width: 100%;
+        max-width: 300px; /* ou qualquer valor desejado */
+        margin: 10px 0;
+      }
+  
+      .campo-senha input {
+        width: 100%;
+        padding: 12px;
+        padding-right: 30px; /* Deixa espaço para o ícone de olho */
+        border-radius: 25px; /* Para deixar o campo oval */
+        border: 1px solid #ccc;
+        font-size: 16px;
+      }
+  
+      .campo-senha .eye-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        cursor: pointer;
+        pointer-events: all;
+        user-select: none;
+      }
+  
+      @media screen and (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+  
+        input, button, textarea {
+          padding: 10px;
+        }
+  
+        h1 {
+          font-size: 2rem;
+        }
+  
+        .evento {
+          padding: 10px;
+        }
+  
+        .logo {
+          width: 120px;
+          height: 120px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img src="logo.png" alt="Logo" class="logo">
+    <h1>Agenda de Eventos da Igreja</h1>
+  
+    <div id="login-container">
+      <h2>Login</h2>
+      <input type="email" id="emailLogin" placeholder="Email">
+      <div class="campo-senha">
+        <input type="password" id="senhaLogin" placeholder="Senha">
+        <i class="eye-icon" id="eyeLogin">👁️</i>
+      </div>
+      <button id="btnEntrar">Entrar</button>
+      <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
+    </div>
+  
+    <div id="cadastro-container" style="display:none;">
+      <h2>Cadastro</h2>
+      <input type="email" id="emailCadastro" placeholder="Email">
+      <div class="campo-senha">
+        <input type="password" id="senhaCadastro" placeholder="Senha">
+        <i class="eye-icon" id="eyeCadastro">👁️</i>
+      </div>
+      <button id="btnCadastrar">Cadastrar</button>
+      <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
+    </div>
+  
+    <div class="container" id="evento-container" style="display:none;">
+      <h2>Novo Evento</h2>
+      <input type="text" id="titulo" placeholder="Título do Evento">
+      <textarea id="descricao" placeholder="Descrição"></textarea>
+      <input type="date" id="data">
+      <label for="horaInicio">Hora de início:</label>
+      <input type="time" id="horaInicio" required>
+      <label for="horaTermino">Hora de tnício:</label>
+      <input type="time" id="horaTermino" placeholder="Hora de Término">
+      <input type="text" id="local" placeholder="Local">
+      <div class="campo-senha">
+        <input type="password" id="senha" placeholder="Senha para editar/excluir">
+        <i class="eye-icon" id="eyeEvento">👁️</i>
+      </div>
+  
+      <button id="btnSalvar">Salvar Evento</button>
+      <button id="btnLogout">Sair</button>
+  
+      <div id="listaEventos"></div>
+    </div>
+  
+    <footer>
+      <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
+    </footer>
+  
+    <script type="module" src="script.js"></script>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const senhaLogin = document.getElementById('senhaLogin');
+        const mostrarSenhaLogin = document.getElementById('mostrarSenhaLogin');
+        const eyeLogin = document.getElementById('eyeLogin');
+  
+        const senhaCadastro = document.getElementById('senhaCadastro');
+        const mostrarSenhaCadastro = document.getElementById('mostrarSenhaCadastro');
+        const eyeCadastro = document.getElementById('eyeCadastro');
+  
+        const senhaEvento = document.getElementById('senha');
+        const mostrarSenhaEvento = document.getElementById('mostrarSenhaEvento');
+        const eyeEvento = document.getElementById('eyeEvento');
+  
+        mostrarSenhaLogin.addEventListener('change', function () {
+          senhaLogin.type = this.checked ? 'text' : 'password';
+        });
+  
+        mostrarSenhaCadastro.addEventListener('change', function () {
+          senhaCadastro.type = this.checked ? 'text' : 'password';
+        });
+  
+        mostrarSenhaEvento.addEventListener('change', function () {
+          senhaEvento.type = this.checked ? 'text' : 'password';
+        });
+  
+        // Trocar o ícone de olho ao clicar
+        eyeLogin.addEventListener('click', () => {
+          senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
+          eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
+        });
+  
+        eyeCadastro.addEventListener('click', () => {
+          senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
+          eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
+        });
+  
+        eyeEvento.addEventListener('click', () => {
+          senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
+          eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
+        });
+      });
+    </script>
+  </body>
+  </html>
