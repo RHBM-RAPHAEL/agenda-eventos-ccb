@@ -314,9 +314,11 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('eyeCadastro').addEventListener('click', () => {
     alternarVisibilidadeSenha('senhaCadastro', 'eyeCadastro');
   });
+
   document.getElementById('eyeEvento').addEventListener('click', () => {
-  alternarVisibilidadeSenha('senha', 'eyeEvento');
+    alternarVisibilidadeSenha('senha', 'eyeEvento');
   });
+
   // Controle de autenticação
   onAuthStateChanged(auth, (user) => {
     if (user) {
