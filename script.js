@@ -123,6 +123,17 @@ function mostrarEventos() {
         const evento = childSnapshot.val();
         const eventoKey = childSnapshot.key;
 
+        // Verifica se o evento já passou
+        const dataEventoTermino = new Date(`${evento.date}T${evento.timeEnd}`);
+        const agora = new Date();
+        
+        if (dataEventoTermino <= agora) {
+          // Exclui o evento se ele já passou
+          excluirEvento(eventoKey);
+          return; // Não exibe o evento na interface
+        }
+
+        // Cria a interface do evento
         const divEvento = document.createElement('div');
         divEvento.classList.add('evento');
         divEvento.innerHTML = `
@@ -158,6 +169,24 @@ function mostrarEventos() {
     }
   }).catch((error) => {
     alert('Erro ao carregar eventos: ' + error.message);
+  });
+}
+
+function excluirEvento(id) {
+  const eventoRef = ref(db, 'events/' + id);
+
+  get(eventoRef).then((snapshot) => {
+    if (!snapshot.exists()) {
+      alert('Evento não encontrado.');
+      return;
+    }
+
+    remove(eventoRef).then(() => {
+      alert('Evento excluído com sucesso!');
+      mostrarEventos(); // Atualiza a lista de eventos
+    }).catch((error) => {
+      alert('Erro ao excluir evento: ' + error.message);
+    });
   });
 }
 
