@@ -218,23 +218,26 @@
   </div>
 
   <div class="container" id="evento-container" style="display:none;">
-    <h2>Novo Evento</h2>
-    <input type="text" id="titulo" placeholder="Título do Evento">
-    <textarea id="descricao" placeholder="Descrição"></textarea>
-    <input type="date" id="data">
-    <label for="horaInicio">Hora de início:</label>
-    <input type="time" id="horaInicio" required>
-    <input type="time" id="horaTermino" placeholder="Hora de Término">
-    <input type="text" id="local" placeholder="Local">
-    <input type="password" id="senha" placeholder="Senha para editar/excluir">
-    <label>
-      <input type="checkbox" id="mostrarSenhaEvento"> Mostrar senha
-    </label>
-    <button id="btnSalvar">Salvar Evento</button>
-    <button id="btnLogout">Sair</button>
+  <h2>Novo Evento</h2>
+  <input type="text" id="titulo" placeholder="Título do Evento">
+  <textarea id="descricao" placeholder="Descrição"></textarea>
+  <input type="date" id="data">
+  <label for="horaInicio">Hora de início:</label>
+  <input type="time" id="horaInicio" required>
+  <input type="time" id="horaTermino" placeholder="Hora de Término">
+  <input type="text" id="local" placeholder="Local">
+  <input type="password" id="senha" placeholder="Senha para editar/excluir">
 
-    <div id="listaEventos"></div>
-  </div>
+  <!-- Novo bloco de mostrar senha -->
+  <label>
+    <input type="checkbox" id="mostrarSenhaEvento"> Mostrar Senha
+  </label>
+
+  <button id="btnSalvar">Salvar Evento</button>
+  <button id="btnLogout">Sair</button>
+
+  <div id="listaEventos"></div>
+</div>
 
   <footer>
     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
