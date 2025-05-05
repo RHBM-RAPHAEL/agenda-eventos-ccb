@@ -1,7 +1,7 @@
 // Importa o SDK do Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getDatabase, ref, set, push, get, update, remove } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -146,26 +146,15 @@ function editarEvento(id) {
     }
 
     const evento = snapshot.val();
-    const senha = prompt('Digite a senha para editar este evento:');
-    if (!senha) {
-      alert('Senha não fornecida!');
-      return;
-    }
+    document.getElementById('titulo').value = evento.title;
+    document.getElementById('data').value = evento.date;
+    document.getElementById('horaTermino').value = evento.timeEnd;
+    document.getElementById('local').value = evento.location;
+    document.getElementById('descricao').value = evento.description;
+    document.getElementById('senha').value = evento.password;
 
-    if (senha === evento.password) {
-      // Se a senha for correta, preenche os campos de edição
-      document.getElementById('titulo').value = evento.title;
-      document.getElementById('data').value = evento.date;
-      document.getElementById('horaTermino').value = evento.timeEnd;
-      document.getElementById('local').value = evento.location;
-      document.getElementById('descricao').value = evento.description;
-      document.getElementById('senha').value = evento.password;
-
-      const btnSalvar = document.getElementById('btnSalvar');
-      btnSalvar.onclick = () => salvarEdicao(id);
-    } else {
-      alert('Senha incorreta!');
-    }
+    const btnSalvar = document.getElementById('btnSalvar');
+    btnSalvar.onclick = () => salvarEdicao(id);
   });
 }
 
@@ -238,6 +227,15 @@ function mostrarLogin() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Verifica se o usuário está logado
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      mostrarEventos(); // Exibe eventos se o usuário estiver logado
+    } else {
+      mostrarLogin(); // Exibe a tela de login se o usuário não estiver logado
+    }
+  });
+
   document.getElementById('btnEntrar').addEventListener('click', () => {
     const email = document.getElementById('emailLogin').value;
     const senha = document.getElementById('senhaLogin').value;
@@ -263,6 +261,4 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
-
-  mostrarLogin();
 });
