@@ -140,9 +140,9 @@
  
          // Exclui evento se já passou
          if (dataEventoTermino <= agora) {
-           excluirEvento(eventoKey);
-           return;
-         }
+  excluirEventoAutomaticamente(eventoKey);
+  return;
+}
  
          // Cria a interface do evento
          const divEvento = document.createElement('div');
@@ -181,7 +181,16 @@
      alert('Erro ao carregar eventos: ' + error.message);
    });
  }
- 
+function excluirEventoAutomaticamente(id) {
+  const eventoRef = ref(db, 'events/' + id);
+  remove(eventoRef)
+    .then(() => {
+      console.log('Evento expirado removido automaticamente.');
+    })
+    .catch((error) => {
+      console.error('Erro ao remover evento expirado:', error.message);
+    });
+}
  // Exclui um evento
  function excluirEvento(id) {
    const eventoRef = ref(db, 'events/' + id);
