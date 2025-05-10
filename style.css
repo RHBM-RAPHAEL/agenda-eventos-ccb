@@ -200,3 +200,23 @@ footer p {
   cursor: pointer;
   user-select: none;
 }
+.menu-secoes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.menu-secoes button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.menu-secoes button:hover {
+  background-color: #1976D2;
+}
