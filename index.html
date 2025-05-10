@@ -40,7 +40,7 @@
       text-align: center;
     }
 
-    .container, .secao {
+    .container {
       max-width: 900px;
       width: 100%;
       margin: 0 auto;
@@ -80,9 +80,25 @@
       background-color: #45a049;
     }
 
-    #listaEventos {
-      margin-top: 20px;
-      width: 100%;
+    .menu-secoes {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .menu-secoes button {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .menu-secoes button:hover {
+      background-color: #1976D2;
     }
 
     .evento {
@@ -136,6 +152,10 @@
       border-top: 4px solid #fff;
     }
 
+    footer p {
+      margin: 5px 0;
+    }
+
     #login-container, #cadastro-container {
       max-width: 400px;
       margin: 0 auto;
@@ -169,33 +189,27 @@
       transform: translateY(-50%);
       font-size: 18px;
       cursor: pointer;
+      pointer-events: all;
       user-select: none;
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .secao {
-      display: none;
-    }
-
-    .secao.active {
-      display: block;
     }
 
     @media screen and (max-width: 768px) {
       .container {
         padding: 15px;
       }
+
+      input, button, textarea {
+        padding: 10px;
+      }
+
       h1 {
         font-size: 2rem;
       }
+
       .evento {
         padding: 10px;
       }
+
       .logo {
         width: 120px;
         height: 120px;
@@ -230,15 +244,26 @@
   </div>
 
   <div class="container" id="evento-container" style="display:none;">
-    <div class="nav-buttons">
-      <button id="btnCriarEvento">Criar Evento</button>
-      <button id="btnEventos">Eventos</button>
-      <button id="btnMeusEventos">Meus Eventos</button>
-      <button id="btnLogout">Sair</button>
+    <h2>Painel de Eventos</h2>
+    <button id="btnLogout">Sair</button>
+    <div class="menu-secoes">
+      <button id="btnMostrarEventos">Eventos</button>
+      <button id="btnMostrarMeusEventos">Meus Eventos</button>
+      <button id="btnMostrarCriarEvento">Criar Evento</button>
     </div>
 
-    <div id="secao-criar" class="secao active">
-      <h2>Novo Evento</h2>
+    <div id="secaoEventos" class="secao-evento" style="display:none;">
+      <h3>Todos os Eventos</h3>
+      <div id="listaEventos"></div>
+    </div>
+
+    <div id="secaoMeusEventos" class="secao-evento" style="display:none;">
+      <h3>Meus Eventos</h3>
+      <div id="listaMeusEventos"></div>
+    </div>
+
+    <div id="secaoCriarEvento" class="secao-evento" style="display:block;">
+      <h3>Criar Novo Evento</h3>
       <input type="text" id="titulo" placeholder="Título do Evento">
       <textarea id="descricao" placeholder="Descrição"></textarea>
       <input type="date" id="data">
@@ -253,16 +278,6 @@
       </div>
       <button id="btnSalvar">Salvar Evento</button>
     </div>
-
-    <div id="secao-eventos" class="secao">
-      <h2>Eventos</h2>
-      <div id="listaEventos"></div>
-    </div>
-
-    <div id="secao-meus-eventos" class="secao">
-      <h2>Meus Eventos</h2>
-      <div id="listaMeusEventos"></div>
-    </div>
   </div>
 
   <footer>
@@ -270,5 +285,55 @@
   </footer>
 
   <script type="module" src="script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const senhaLogin = document.getElementById('senhaLogin');
+      const eyeLogin = document.getElementById('eyeLogin');
+
+      const senhaCadastro = document.getElementById('senhaCadastro');
+      const eyeCadastro = document.getElementById('eyeCadastro');
+
+      const senhaEvento = document.getElementById('senha');
+      const eyeEvento = document.getElementById('eyeEvento');
+
+      eyeLogin.addEventListener('click', () => {
+        senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
+        eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
+      });
+
+      eyeCadastro.addEventListener('click', () => {
+        senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
+        eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
+      });
+
+      eyeEvento.addEventListener('click', () => {
+        senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
+        eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
+      });
+
+      const secaoEventos = document.getElementById('secaoEventos');
+      const secaoMeusEventos = document.getElementById('secaoMeusEventos');
+      const secaoCriarEvento = document.getElementById('secaoCriarEvento');
+
+      document.getElementById('btnMostrarEventos').addEventListener('click', () => {
+        secaoEventos.style.display = 'block';
+        secaoMeusEventos.style.display = 'none';
+        secaoCriarEvento.style.display = 'none';
+      });
+
+      document.getElementById('btnMostrarMeusEventos').addEventListener('click', () => {
+        secaoEventos.style.display = 'none';
+        secaoMeusEventos.style.display = 'block';
+        secaoCriarEvento.style.display = 'none';
+      });
+
+      document.getElementById('btnMostrarCriarEvento').addEventListener('click', () => {
+        secaoEventos.style.display = 'none';
+        secaoMeusEventos.style.display = 'none';
+        secaoCriarEvento.style.display = 'block';
+      });
+    });
+  </script>
 </body>
 </html>
