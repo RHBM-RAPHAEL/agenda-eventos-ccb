@@ -117,6 +117,7 @@ function limparCampos() {
   document.getElementById('local').value = '';
   document.getElementById('descricao').value = '';
   document.getElementById('senha').value = '';
+  document.getElementById('email').value = '';
 }
 
 // Exibe os eventos na interface
