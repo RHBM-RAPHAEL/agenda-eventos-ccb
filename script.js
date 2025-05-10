@@ -98,8 +98,7 @@ function salvarEvento() {
     timeEnd: horaTermino,
     location: local,
     description: descricao,
-    password: senha,
-    emailCriador: auth.currentUser.email  // Adicionando o email do criador do evento
+    password: senha
   }).then(() => {
     alert('Evento salvo com sucesso!');
     limparCampos();
@@ -126,7 +125,7 @@ function mostrarEventos() {
   document.getElementById('evento-container').style.display = 'block';
 
   const eventosRef = ref(db, 'events');
-  
+
   get(eventosRef).then((snapshot) => {
     const listaEventos = document.getElementById('listaEventos');
     listaEventos.innerHTML = '';
@@ -145,22 +144,20 @@ function mostrarEventos() {
           return;
         }
 
-        // Verifica se o evento é do usuário logado
-        if (evento.emailCriador === auth.currentUser.email) {
-          const divEvento = document.createElement('div');
-          divEvento.classList.add('evento');
-          divEvento.innerHTML = `
-            <h3>${evento.title}</h3>
-            <p><strong>Data:</strong> ${evento.date}</p>
-            <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
-            <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
-            <p><strong>Local:</strong> ${evento.location}</p>
-            <p><strong>Descrição:</strong> ${evento.description}</p>
-            <button class="btnEditar" data-id="${eventoKey}">Editar</button>
-            <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>
-          `;
-          listaEventos.appendChild(divEvento);
-        }
+        // Cria a interface do evento
+        const divEvento = document.createElement('div');
+        divEvento.classList.add('evento');
+        divEvento.innerHTML = `
+          <h3>${evento.title}</h3>
+          <p><strong>Data:</strong> ${evento.date}</p>
+          <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
+          <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
+          <p><strong>Local:</strong> ${evento.location}</p>
+          <p><strong>Descrição:</strong> ${evento.description}</p>
+          <button class="btnEditar" data-id="${eventoKey}">Editar</button>
+          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>
+        `;
+        listaEventos.appendChild(divEvento);
       });
 
       // Event listeners para editar e excluir
@@ -185,6 +182,7 @@ function mostrarEventos() {
   });
 }
 
+// Função para excluir evento automaticamente
 function excluirEventoAutomaticamente(id) {
   const eventoRef = ref(db, 'events/' + id);
   remove(eventoRef)
@@ -253,4 +251,121 @@ function editarEvento(id) {
 
     // Preenche os campos com os dados do evento
     document.getElementById('titulo').value = evento.title;
-    document.getElementById('data');
+    document.getElementById('data').value = evento.date;
+    document.getElementById('horaInicio').value = evento.timeStart || '';
+    document.getElementById('horaTermino').value = evento.timeEnd;
+    document.getElementById('local').value = evento.location;
+    document.getElementById('descricao').value = evento.description;
+    document.getElementById('senha').value = evento.password;
+
+    const btnSalvar = document.getElementById('btnSalvar');
+
+    // Remove qualquer outro event listener anterior
+    const newBtnSalvar = btnSalvar.cloneNode(true);
+    btnSalvar.parentNode.replaceChild(newBtnSalvar, btnSalvar);
+
+    newBtnSalvar.addEventListener('click', () => salvarEdicao(id));
+  });
+}
+
+// Salva a edição do evento
+function salvarEdicao(id) {
+  const titulo = document.getElementById('titulo').value;
+  const data = document.getElementById('data').value;
+  const horaInicio = document.getElementById('horaInicio').value;
+  const horaTermino = document.getElementById('horaTermino').value;
+  const local = document.getElementById('local').value;
+  const descricao = document.getElementById('descricao').value;
+
+  const eventoRef = ref(db, 'events/' + id);
+
+  update(eventoRef, {
+    title: titulo,
+    date: data,
+    timeStart: horaInicio,
+    timeEnd: horaTermino,
+    location: local,
+    description: descricao
+  }).then(() => {
+    alert('Evento atualizado com sucesso!');
+    mostrarEventos();
+    limparCampos();
+  }).catch((error) => {
+    alert('Erro ao atualizar evento: ' + error.message);
+  });
+}
+
+// Funções de exibição de telas
+function mostrarCadastro() {
+  document.getElementById('login-container').style.display = 'none';
+  document.getElementById('cadastro-container').style.display = 'block';
+  document.getElementById('evento-container').style.display = 'none';
+}
+
+function mostrarLogin() {
+  document.getElementById('login-container').style.display = 'block';
+  document.getElementById('cadastro-container').style.display = 'none';
+  document.getElementById('evento-container').style.display = 'none';
+}
+
+// Inicializa os eventos no carregamento da página
+document.addEventListener('DOMContentLoaded', function () {
+  // Alternar visibilidade das senhas
+  function alternarVisibilidadeSenha(senhaFieldId, eyeIconId) {
+    const senha = document.getElementById(senhaFieldId);
+    const eyeIcon = document.getElementById(eyeIconId);
+    senha.type = senha.type === 'password' ? 'text' : 'password';
+    eyeIcon.textContent = senha.type === 'password' ? '👁️' : '🙈';
+  }
+
+  // Adicionar eventos de clique para alternar a visibilidade da senha
+  document.getElementById('eyeLogin').addEventListener('click', () => {
+    alternarVisibilidadeSenha('senhaLogin', 'eyeLogin');
+  });
+
+  document.getElementById('eyeCadastro').addEventListener('click', () => {
+    alternarVisibilidadeSenha('senhaCadastro', 'eyeCadastro');
+  });
+
+  document.getElementById('eyeEvento').addEventListener('click', () => {
+    alternarVisibilidadeSenha('senha', 'eyeEvento');
+  });
+
+  // Controle de autenticação
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      mostrarEventos();
+    } else {
+      mostrarLogin();
+    }
+  });
+
+  // Eventos de Login e Cadastro
+  document.getElementById('btnEntrar').addEventListener('click', () => {
+    const email = document.getElementById('emailLogin').value;
+    const senha = document.getElementById('senhaLogin').value;
+    loginUsuario(email, senha);
+  });
+
+  document.getElementById('btnCadastrar').addEventListener('click', () => {
+    const email = document.getElementById('emailCadastro').value;
+    const senha = document.getElementById('senhaCadastro').value;
+    registrarUsuario(email, senha);
+  });
+
+  document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
+
+  // Alternar entre telas de login e cadastro
+  document.getElementById('mostrarCadastro').addEventListener('click', (e) => {
+    e.preventDefault();
+    mostrarCadastro();
+  });
+
+  document.getElementById('mostrarLogin').addEventListener('click', (e) => {
+    e.preventDefault();
+    mostrarLogin();
+  });
+
+  // Salvar evento
+  document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
+});
