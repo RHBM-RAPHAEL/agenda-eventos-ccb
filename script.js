@@ -317,7 +317,6 @@
  
    document.getElementById('eyeEvento').addEventListener('click', () => {
    alternarVisibilidadeSenha('senha', 'eyeEvento');
-     alternarVisibilidadeSenha('senha', 'eyeEvento');
    });
  
    // Controle de autenticação
