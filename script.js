@@ -183,7 +183,33 @@ function mostrarEventos() {
     alert('Erro ao carregar eventos: ' + error.message);
   });
 }
+function carregarMeusEventos() {
+  const auth = getAuth();
+  const user = auth.currentUser;
 
+  if (!user) {
+    alert("Você precisa estar logado.");
+    return;
+  }
+
+  const db = getDatabase();
+  const eventosRef = ref(db, "eventos");
+
+  onValue(eventosRef, (snapshot) => {
+    const lista = document.getElementById("listaEventos");
+    lista.innerHTML = ""; // Limpa a lista atual
+
+    snapshot.forEach((childSnapshot) => {
+      const evento = childSnapshot.val();
+
+      if (evento.email === user.email) {
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${evento.titulo}</strong> - ${evento.data} - ${evento.local}`;
+        lista.appendChild(div);
+      }
+    });
+  });
+}
 // Função para excluir evento automaticamente
 function excluirEventoAutomaticamente(id) {
   const eventoRef = ref(db, 'events/' + id);
