@@ -253,4 +253,4 @@ function editarEvento(id) {
 
     // Preenche os campos com os dados do evento
     document.getElementById('titulo').value = evento.title;
-    document.getElementById('data').
+    document.getElementById('data');
