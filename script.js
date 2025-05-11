@@ -235,20 +235,19 @@ function mostrarLogin() {
 
 document.addEventListener('DOMContentLoaded', () => {
   [
-    { eyeId: 'eyeLogin', inputId: 'senhaLogin' },
-    { eyeId: 'eyeCadastro', inputId: 'senhaCadastro' },
-    { eyeId: 'eyeEvento', inputId: 'senha' }
-  ].forEach(({ eyeId, inputId }) => {
-    const icon = document.getElementById(eyeId);
-    const input = document.getElementById(inputId);
-    if (icon && input) {
-      icon.addEventListener('click', () => {
-        input.type = input.type === 'password' ? 'text' : 'password';
-        icon.textContent = input.type === 'password' ? '👁️' : '🙈';
-      });
-    }
-  });
-
+  { eyeId: 'eyeLogin', inputId: 'senhaLogin' },
+  { eyeId: 'eyeCadastro', inputId: 'senhaCadastro' },
+  { eyeId: 'eyeEvento', inputId: 'senha' }
+].forEach(({ eyeId, inputId }) => {
+  const icon = document.getElementById(eyeId);
+  const input = document.getElementById(inputId);
+  if (icon && input) {
+    icon.addEventListener('click', () => {
+      input.type = input.type === 'password' ? 'text' : 'password';
+      icon.textContent = input.type === 'password' ? '👁️' : '🙈';
+    });
+  }
+});
   onAuthStateChanged(auth, user => {
     if (user) {
       document.getElementById('login-container').style.display = 'none';
