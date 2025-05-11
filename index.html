@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="blue-badge.png" />
   <title>Agenda CCB</title>
-
   <style>
     * {
       margin: 0;
@@ -191,6 +190,22 @@
       user-select: none;
     }
 
+    .esqueci-senha {
+      text-align: center;
+      font-size: 14px;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+
+    .esqueci-senha a {
+      color: #2196F3;
+      text-decoration: none;
+    }
+
+    .esqueci-senha a:hover {
+      text-decoration: underline;
+    }
+
     @media screen and (max-width: 768px) {
       .container {
         padding: 15px;
@@ -226,6 +241,9 @@
     <div class="campo-senha">
       <input type="password" id="senhaLogin" placeholder="Senha" />
       <i class="eye-icon" id="eyeLogin">👁️</i>
+    </div>
+    <div class="esqueci-senha">
+      <a href="#" id="btnEsqueciSenha">Esqueci minha senha</a>
     </div>
     <button id="btnEntrar">Entrar</button>
     <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
