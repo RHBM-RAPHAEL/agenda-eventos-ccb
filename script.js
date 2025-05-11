@@ -99,6 +99,11 @@ function limparCampos() {
 
 // Mostrar eventos
 function mostrarEventos() {
+  // Esconde login e cadastro
+  document.getElementById('login-container').style.display = 'none';
+  document.getElementById('cadastro-container').style.display = 'none';
+
+  // Mostra container principal
   document.getElementById('evento-container').style.display = 'block';
   document.getElementById('secaoEventos').style.display = 'block';
   document.getElementById('secaoCriarEvento').style.display = 'none';
@@ -130,10 +135,10 @@ function mostrarEventos() {
       lista.appendChild(div);
     });
 
+    // Botões editar e excluir
     document.querySelectorAll('.btnEditar').forEach(btn => {
       btn.onclick = () => editarEvento(btn.dataset.id);
     });
-
     document.querySelectorAll('.btnExcluir').forEach(btn => {
       btn.onclick = () => excluirEvento(btn.dataset.id);
     });
