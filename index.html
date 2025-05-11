@@ -284,56 +284,6 @@
     <p>&copy; 2025 Agenda CCB. Todos os direitos reservados.</p>
   </footer>
 
-  <script type="module" src="script.js"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const senhaLogin = document.getElementById('senhaLogin');
-      const eyeLogin = document.getElementById('eyeLogin');
-
-      const senhaCadastro = document.getElementById('senhaCadastro');
-      const eyeCadastro = document.getElementById('eyeCadastro');
-
-      const senhaEvento = document.getElementById('senha');
-      const eyeEvento = document.getElementById('eyeEvento');
-
-      eyeLogin.addEventListener('click', () => {
-        senhaLogin.type = senhaLogin.type === 'password' ? 'text' : 'password';
-        eyeLogin.textContent = senhaLogin.type === 'password' ? '👁️' : '🙈';
-      });
-
-      eyeCadastro.addEventListener('click', () => {
-        senhaCadastro.type = senhaCadastro.type === 'password' ? 'text' : 'password';
-        eyeCadastro.textContent = senhaCadastro.type === 'password' ? '👁️' : '🙈';
-      });
-
-      eyeEvento.addEventListener('click', () => {
-        senhaEvento.type = senhaEvento.type === 'password' ? 'text' : 'password';
-        eyeEvento.textContent = senhaEvento.type === 'password' ? '👁️' : '🙈';
-      });
-
-      const secaoEventos = document.getElementById('secaoEventos');
-      const secaoMeusEventos = document.getElementById('secaoMeusEventos');
-      const secaoCriarEvento = document.getElementById('secaoCriarEvento');
-
-      document.getElementById('btnMostrarEventos').addEventListener('click', () => {
-        secaoEventos.style.display = 'block';
-        secaoMeusEventos.style.display = 'none';
-        secaoCriarEvento.style.display = 'none';
-      });
-
-      document.getElementById('btnMostrarMeusEventos').addEventListener('click', () => {
-        secaoEventos.style.display = 'none';
-        secaoMeusEventos.style.display = 'block';
-        secaoCriarEvento.style.display = 'none';
-      });
-
-      document.getElementById('btnMostrarCriarEvento').addEventListener('click', () => {
-        secaoEventos.style.display = 'none';
-        secaoMeusEventos.style.display = 'none';
-        secaoCriarEvento.style.display = 'block';
-      });
-    });
-  </script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
