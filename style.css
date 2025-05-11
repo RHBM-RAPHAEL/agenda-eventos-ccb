@@ -1,3 +1,4 @@
+/* Reset e base */
 * {
   margin: 0;
   padding: 0;
@@ -15,6 +16,8 @@ body {
   align-items: center;
   min-height: 100vh;
 }
+
+/* Cabeçalho */
 h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -23,6 +26,7 @@ h1 {
   font-weight: bold;
 }
 
+/* Container geral */
 .container {
   max-width: 900px;
   width: 100%;
@@ -33,7 +37,10 @@ h1 {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-input, button, textarea {
+/* Campos e botões */
+input,
+button,
+textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
@@ -43,7 +50,9 @@ input, button, textarea {
   transition: border 0.3s ease;
 }
 
-input:focus, textarea:focus, button:focus {
+input:focus,
+textarea:focus,
+button:focus {
   border-color: #4CAF50;
   outline: none;
 }
@@ -63,12 +72,14 @@ button:hover {
   background-color: #45a049;
 }
 
+/* Lista de eventos */
 #listaEventos {
   display: block;
   margin-top: 20px;
   width: 100%;
 }
 
+/* Cartão do evento */
 .evento {
   background-color: #fafafa;
   padding: 15px;
@@ -111,6 +122,7 @@ button:hover {
   background-color: #da190b;
 }
 
+/* Rodapé */
 footer {
   background-color: #3100ff;
   color: white;
@@ -125,7 +137,7 @@ footer p {
   margin: 5px 0;
 }
 
-/* Campo de senha com olho */
+/* Campo de senha com ícone */
 .campo-senha {
   position: relative;
   width: 100%;
@@ -180,7 +192,9 @@ footer p {
     padding: 15px;
   }
 
-  input, button, textarea {
+  input,
+  button,
+  textarea {
     padding: 10px;
   }
 
