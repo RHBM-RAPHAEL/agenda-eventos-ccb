@@ -97,7 +97,6 @@ if (!user) {
 }
 
 const email = user.email; // Pega o e-mail do usuário logado
-
 const eventosRef = ref(db, 'events');
 const newEventRef = push(eventosRef);
 
@@ -110,7 +109,7 @@ set(newEventRef, {
   description: descricao,
   password: senha,
   email: email // ✅ adiciona o e-mail ao evento
-}).then(() => {
+    }).then(() => {
   alert('Evento salvo com sucesso!');
   limparCampos();
   mostrarEventos();
