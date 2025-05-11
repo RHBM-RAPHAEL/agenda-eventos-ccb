@@ -32,9 +32,9 @@ h1 {
   width: 100%;
   margin: 0 auto 40px;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.92);
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Campos e botões */
@@ -47,7 +47,7 @@ textarea {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  transition: border-color 0.3s ease;
+  transition: border 0.3s ease;
 }
 
 input:focus,
@@ -74,51 +74,50 @@ button:hover {
 
 /* Lista de eventos */
 #listaEventos {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: block;
   margin-top: 20px;
   width: 100%;
 }
 
 /* Cartão do evento */
 .evento {
-  background-color: #fff;
-  padding: 18px;
-  border-radius: 10px;
-  border-left: 6px solid #4CAF50;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fafafa;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border-left: 5px solid #4CAF50;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .evento:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .evento h3 {
   margin-top: 0;
-  font-size: 22px;
+  font-size: 20px;
   color: #333;
-  margin-bottom: 8px;
 }
 
 .evento p {
   font-size: 16px;
   color: #555;
-  line-height: 1.6;
-  margin-bottom: 4px;
+  line-height: 1.5;
 }
 
 .evento button {
   background-color: #f44336;
   color: white;
-  padding: 8px 14px;
-  margin-top: 10px;
-  margin-right: 10px;
+  padding: 6px 10px;
+  font-size: 14px;
+  margin-top: 8px;
+  margin-right: 6px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  width: auto;
   transition: background-color 0.3s ease;
 }
 
@@ -135,6 +134,10 @@ footer {
   font-size: 14px;
   border-top: 4px solid #fff;
   margin-top: 40px;
+}
+
+footer p {
+  margin: 5px 0;
 }
 
 /* Campo de senha com ícone */
@@ -213,6 +216,6 @@ footer {
   }
 
   .evento {
-    padding: 12px;
+    padding: 10px;
   }
 }
