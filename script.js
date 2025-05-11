@@ -62,7 +62,6 @@ function salvarEvento() {
   const local = document.getElementById('local').value;
   const descricao = document.getElementById('descricao').value;
   const senha = document.getElementById('senha').value;
-  const email = auth.currentUser.email;
 
   // Validação dos campos
   if (!titulo || !data || !horaInicio || !horaTermino || !local || !descricao || !senha) {
