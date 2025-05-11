@@ -1,8 +1,7 @@
-// Importa o SDK do Firebase 
+// Importa o SDK do Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import { getDatabase, ref, set, push, get, update, remove } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+import { getDatabase, ref, set, push, get, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -21,7 +20,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
-// Funções de registro e login de usuário
+// Registrar usuário
 function registrarUsuario(email, senha) {
   createUserWithEmailAndPassword(auth, email, senha)
     .then(() => {
@@ -33,6 +32,7 @@ function registrarUsuario(email, senha) {
     });
 }
 
+// Login
 function loginUsuario(email, senha) {
   signInWithEmailAndPassword(auth, email, senha)
     .then(() => {
@@ -44,300 +44,172 @@ function loginUsuario(email, senha) {
     });
 }
 
+// Logout
 function logoutUsuario() {
-  signOut(auth).then(() => {
-    alert('Usuário deslogado com sucesso!');
-    mostrarLogin();
-  }).catch((error) => {
-    alert('Erro ao fazer logout: ' + error.message);
+  signOut(auth)
+    .then(() => {
+      alert('Usuário deslogado com sucesso!');
+      mostrarLogin();
+    })
+    .catch((error) => {
+      alert('Erro ao fazer logout: ' + error.message);
+    });
+}
+
+// Salvar evento
+function salvarEvento() {
+  const user = auth.currentUser;
+  if (!user) return alert('Usuário não autenticado!');
+
+  const evento = {
+    title: document.getElementById('titulo').value,
+    date: document.getElementById('data').value,
+    timeStart: document.getElementById('horaInicio').value,
+    timeEnd: document.getElementById('horaTermino').value,
+    location: document.getElementById('local').value,
+    description: document.getElementById('descricao').value,
+    password: document.getElementById('senha').value,
+    userId: user.uid
+  };
+
+  for (let campo in evento) {
+    if (!evento[campo]) return alert('Preencha todos os campos.');
+  }
+
+  const inicio = new Date(`${evento.date}T${evento.timeStart}`);
+  const fim = new Date(`${evento.date}T${evento.timeEnd}`);
+
+  if (fim <= inicio || fim <= new Date()) {
+    return alert('Horários inválidos ou evento no passado.');
+  }
+
+  push(ref(db, 'events'), evento).then(() => {
+    alert('Evento salvo com sucesso!');
+    limparCampos();
+    mostrarEventos();
+  }).catch(err => alert('Erro ao salvar: ' + err.message));
+}
+
+function limparCampos() {
+  ['titulo', 'data', 'horaInicio', 'horaTermino', 'local', 'descricao', 'senha'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
   });
 }
 
-// Funções de manipulação de eventos
-function salvarEvento() {
-  const horaInicio = document.getElementById('horaInicio').value;
-  const titulo = document.getElementById('titulo').value;
-  const data = document.getElementById('data').value;
-  const horaTermino = document.getElementById('horaTermino').value;
-  const local = document.getElementById('local').value;
-  const descricao = document.getElementById('descricao').value;
-  const senha = document.getElementById('senha').value;
-
-  // Validação dos campos
-  if (!titulo || !data || !horaInicio || !horaTermino || !local || !descricao || !senha) {
-    alert('Todos os campos devem ser preenchidos!');
-    return;
-  }
-
-  const horaIni = new Date(`${data}T${horaInicio}`);
-  const horaFim = new Date(`${data}T${horaTermino}`);
-
-  // Validações de hora
-  if (isNaN(horaIni.getTime()) || isNaN(horaFim.getTime())) {
-    alert('Insira uma data e hora válidas.');
-    return;
-  }
-
-  if (horaFim <= horaIni) {
-    alert('A hora de término deve ser depois da hora de início.');
-    return;
-  }
-
-  // Verifica se a data é no futuro
-  if (horaFim <= new Date()) {
-    alert('A data do evento deve ser no futuro.');
-    return;
-  }
-
-  // Verifica se há um usuário logado
-const user = auth.currentUser;
-if (!user) {
-  alert('Usuário não autenticado!');
-  return;
-}
-
-const email = user.email; // Pega o e-mail do usuário logado
-const eventosRef = ref(db, 'events');
-const newEventRef = push(eventosRef);
-
-set(newEventRef, {
-  title: titulo,
-  date: data,
-  timeStart: horaInicio,
-  timeEnd: horaTermino,
-  location: local,
-  description: descricao,
-  password: senha,
-  email: email // ✅ adiciona o e-mail ao evento
-    }).then(() => {
-  alert('Evento salvo com sucesso!');
-  limparCampos();
-  mostrarEventos();
-}).catch((error) => {
-  alert('Erro ao salvar evento: ' + error.message);
-});
-}
-
-// Limpa os campos do formulário
-function limparCampos() {
-  document.getElementById('titulo').value = '';
-  document.getElementById('data').value = '';
-  document.getElementById('horaTermino').value = '';
-  document.getElementById('local').value = '';
-  document.getElementById('descricao').value = '';
-  document.getElementById('senha').value = '';
-  document.getElementById('email').value = '';
-}
-
-// Exibe os eventos na interface
+// Mostrar eventos
 function mostrarEventos() {
-  document.getElementById('login-container').style.display = 'none';
-  document.getElementById('cadastro-container').style.display = 'none';
   document.getElementById('evento-container').style.display = 'block';
-  // Exibe apenas a seção de "Todos os Eventos"
   document.getElementById('secaoEventos').style.display = 'block';
   document.getElementById('secaoCriarEvento').style.display = 'none';
   document.getElementById('secaoMeusEventos').style.display = 'none';
 
-
   const eventosRef = ref(db, 'events');
+  get(eventosRef).then(snapshot => {
+    const lista = document.getElementById('listaEventos');
+    lista.innerHTML = '';
+    snapshot.forEach(child => {
+      const evento = child.val();
+      const key = child.key;
+      const fim = new Date(`${evento.date}T${evento.timeEnd}`);
+      if (fim <= new Date()) return excluirEventoAutomaticamente(key);
 
-  get(eventosRef).then((snapshot) => {
-    const listaEventos = document.getElementById('listaEventos');
-    listaEventos.innerHTML = '';
+      const div = document.createElement('div');
+      div.className = 'evento';
+      div.innerHTML = `
+        <h3>${evento.title}</h3>
+        <p><strong>Data:</strong> ${evento.date}</p>
+        <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
+        <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
+        <p><strong>Local:</strong> ${evento.location}</p>
+        <p><strong>Descrição:</strong> ${evento.description}</p>
+        ${evento.userId === auth.currentUser.uid ? `
+          <button class="btnEditar" data-id="${key}">Editar</button>
+          <button class="btnExcluir" data-id="${key}">Excluir</button>` : ''}
+      `;
+      lista.appendChild(div);
+    });
 
-    if (snapshot.exists()) {
-      snapshot.forEach((childSnapshot) => {
-        const evento = childSnapshot.val();
-        const eventoKey = childSnapshot.key;
+    document.querySelectorAll('.btnEditar').forEach(btn => {
+      btn.onclick = () => editarEvento(btn.dataset.id);
+    });
 
-        const dataEventoTermino = new Date(`${evento.date}T${evento.timeEnd}`);
-        const agora = new Date();
-
-        // Exclui evento se já passou
-        if (dataEventoTermino <= agora) {
-          excluirEventoAutomaticamente(eventoKey);
-          return;
-        }
-
-        // Cria a interface do evento
-        const divEvento = document.createElement('div');
-        divEvento.classList.add('evento');
-        divEvento.innerHTML = `
-          <h3>${evento.title}</h3>
-          <p><strong>Data:</strong> ${evento.date}</p>
-          <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
-          <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
-          <p><strong>Local:</strong> ${evento.location}</p>
-          <p><strong>Descrição:</strong> ${evento.description}</p>
-          <button class="btnEditar" data-id="${eventoKey}">Editar</button>
-          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>
-        `;
-        listaEventos.appendChild(divEvento);
-      });
-
-      // Event listeners para editar e excluir
-      document.querySelectorAll('.btnEditar').forEach((button) => {
-        button.addEventListener('click', (event) => {
-          const id = event.target.getAttribute('data-id');
-          editarEvento(id);
-        });
-      });
-
-      document.querySelectorAll('.btnExcluir').forEach((button) => {
-        button.addEventListener('click', (event) => {
-          const id = event.target.getAttribute('data-id');
-          excluirEvento(id);
-        });
-      });
-    } else {
-      listaEventos.innerHTML = '<p style="color: gray; font-style: italic;">Nenhum evento encontrado.</p>';
-    }
-  }).catch((error) => {
-    alert('Erro ao carregar eventos: ' + error.message);
+    document.querySelectorAll('.btnExcluir').forEach(btn => {
+      btn.onclick = () => excluirEvento(btn.dataset.id);
+    });
   });
 }
+
+// Mostrar eventos do usuário
 function carregarMeusEventos() {
-  const auth = getAuth();
-  const user = auth.currentUser;
-
-  if (!user) {
-    alert("Você precisa estar logado.");
-    return;
-  }
-
-  const db = getDatabase();
-  const eventosRef = ref(db, "eventos");
-
-  onValue(eventosRef, (snapshot) => {
-    const lista = document.getElementById("listaEventos");
-    lista.innerHTML = ""; // Limpa a lista atual
-
-    snapshot.forEach((childSnapshot) => {
-      const evento = childSnapshot.val();
-
-      if (evento.email === user.email) {
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>${evento.titulo}</strong> - ${evento.data} - ${evento.local}`;
+  const lista = document.getElementById('listaMeusEventos');
+  lista.innerHTML = '';
+  onValue(ref(db, 'events'), snapshot => {
+    snapshot.forEach(child => {
+      const ev = child.val();
+      if (ev.userId === auth.currentUser.uid) {
+        const div = document.createElement('div');
+        div.innerHTML = `<strong>${ev.title}</strong> - ${ev.date} - ${ev.location}`;
         lista.appendChild(div);
       }
     });
   });
+  document.getElementById('secaoEventos').style.display = 'none';
+  document.getElementById('secaoCriarEvento').style.display = 'none';
+  document.getElementById('secaoMeusEventos').style.display = 'block';
 }
-// Função para excluir evento automaticamente
+
 function excluirEventoAutomaticamente(id) {
-  const eventoRef = ref(db, 'events/' + id);
-  remove(eventoRef)
-    .then(() => {
-      console.log('Evento expirado removido automaticamente.');
-    })
-    .catch((error) => {
-      console.error('Erro ao remover evento expirado:', error.message);
-    });
+  remove(ref(db, 'events/' + id));
 }
 
-// Exclui um evento
 function excluirEvento(id) {
-  const eventoRef = ref(db, 'events/' + id);
-
   const senha = prompt('Digite a senha para excluir este evento:');
-  if (!senha) {
-    alert('Senha não fornecida!');
-    return;
-  }
-
-  get(eventoRef).then((snapshot) => {
-    if (!snapshot.exists()) {
-      alert('Evento não encontrado.');
-      return;
-    }
-
-    const evento = snapshot.val();
-
-    if (senha === evento.password) {
-      if (confirm('Tem certeza que deseja excluir este evento?')) {
-        remove(eventoRef).then(() => {
-          alert('Evento excluído com sucesso!');
-          mostrarEventos();
-        }).catch((error) => {
-          alert('Erro ao excluir evento: ' + error.message);
-        });
-      }
-    } else {
-      alert('Senha incorreta!');
-    }
+  const eventoRef = ref(db, 'events/' + id);
+  get(eventoRef).then(snapshot => {
+    const ev = snapshot.val();
+    if (senha === ev.password) remove(eventoRef);
+    else alert('Senha incorreta.');
   });
 }
 
-// Edita um evento
 function editarEvento(id) {
-  const eventoRef = ref(db, 'events/' + id);
+  const refEvento = ref(db, 'events/' + id);
+  get(refEvento).then(snapshot => {
+    const ev = snapshot.val();
+    const senha = prompt('Digite a senha para editar:');
+    if (senha !== ev.password) return alert('Senha incorreta.');
+    document.getElementById('titulo').value = ev.title;
+    document.getElementById('data').value = ev.date;
+    document.getElementById('horaInicio').value = ev.timeStart;
+    document.getElementById('horaTermino').value = ev.timeEnd;
+    document.getElementById('local').value = ev.location;
+    document.getElementById('descricao').value = ev.description;
+    document.getElementById('senha').value = ev.password;
 
-  get(eventoRef).then((snapshot) => {
-    if (!snapshot.exists()) {
-      alert('Evento não encontrado.');
-      return;
-    }
-
-    const evento = snapshot.val();
-    const senhaDigitada = prompt('Digite a senha para editar este evento:');
-    if (!senhaDigitada) {
-      alert('Senha não fornecida!');
-      return;
-    }
-
-    if (senhaDigitada !== evento.password) {
-      alert('Senha incorreta!');
-      return;
-    }
-
-    // Preenche os campos com os dados do evento
-    document.getElementById('titulo').value = evento.title;
-    document.getElementById('data').value = evento.date;
-    document.getElementById('horaInicio').value = evento.timeStart || '';
-    document.getElementById('horaTermino').value = evento.timeEnd;
-    document.getElementById('local').value = evento.location;
-    document.getElementById('descricao').value = evento.description;
-    document.getElementById('senha').value = evento.password;
-
-    const btnSalvar = document.getElementById('btnSalvar');
-
-    // Remove qualquer outro event listener anterior
-    const newBtnSalvar = btnSalvar.cloneNode(true);
-    btnSalvar.parentNode.replaceChild(newBtnSalvar, btnSalvar);
-
-    newBtnSalvar.addEventListener('click', () => salvarEdicao(id));
+    const btn = document.getElementById('btnSalvar');
+    const novo = btn.cloneNode(true);
+    btn.replaceWith(novo);
+    novo.addEventListener('click', () => salvarEdicao(id));
   });
 }
 
-// Salva a edição do evento
 function salvarEdicao(id) {
-  const titulo = document.getElementById('titulo').value;
-  const data = document.getElementById('data').value;
-  const horaInicio = document.getElementById('horaInicio').value;
-  const horaTermino = document.getElementById('horaTermino').value;
-  const local = document.getElementById('local').value;
-  const descricao = document.getElementById('descricao').value;
-
   const eventoRef = ref(db, 'events/' + id);
-
   update(eventoRef, {
-    title: titulo,
-    date: data,
-    timeStart: horaInicio,
-    timeEnd: horaTermino,
-    location: local,
-    description: descricao
+    title: document.getElementById('titulo').value,
+    date: document.getElementById('data').value,
+    timeStart: document.getElementById('horaInicio').value,
+    timeEnd: document.getElementById('horaTermino').value,
+    location: document.getElementById('local').value,
+    description: document.getElementById('descricao').value
   }).then(() => {
-    alert('Evento atualizado com sucesso!');
-    mostrarEventos();
+    alert('Evento atualizado!');
     limparCampos();
-  }).catch((error) => {
-    alert('Erro ao atualizar evento: ' + error.message);
+    mostrarEventos();
   });
 }
 
-// Funções de exibição de telas
 function mostrarCadastro() {
   document.getElementById('login-container').style.display = 'none';
   document.getElementById('cadastro-container').style.display = 'block';
@@ -350,64 +222,38 @@ function mostrarLogin() {
   document.getElementById('evento-container').style.display = 'none';
 }
 
-// Inicializa os eventos no carregamento da página
-document.addEventListener('DOMContentLoaded', function () {
-  // Alternar visibilidade das senhas
-  function alternarVisibilidadeSenha(senhaFieldId, eyeIconId) {
-    const senha = document.getElementById(senhaFieldId);
-    const eyeIcon = document.getElementById(eyeIconId);
-    senha.type = senha.type === 'password' ? 'text' : 'password';
-    eyeIcon.textContent = senha.type === 'password' ? '👁️' : '🙈';
-  }
-
-  // Adicionar eventos de clique para alternar a visibilidade da senha
-  document.getElementById('eyeLogin').addEventListener('click', () => {
-    alternarVisibilidadeSenha('senhaLogin', 'eyeLogin');
-  });
-
-  document.getElementById('eyeCadastro').addEventListener('click', () => {
-    alternarVisibilidadeSenha('senhaCadastro', 'eyeCadastro');
-  });
-
-  document.getElementById('eyeEvento').addEventListener('click', () => {
-    alternarVisibilidadeSenha('senha', 'eyeEvento');
-  });
-
-  // Controle de autenticação
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      mostrarEventos();
-    } else {
-      mostrarLogin();
+document.addEventListener('DOMContentLoaded', () => {
+  ['eyeLogin', 'eyeCadastro', 'eyeEvento'].forEach(id => {
+    const icon = document.getElementById(id);
+    if (icon) {
+      icon.addEventListener('click', () => {
+        const input = icon.previousElementSibling;
+        input.type = input.type === 'password' ? 'text' : 'password';
+        icon.textContent = input.type === 'password' ? '👁️' : '🙈';
+      });
     }
   });
 
-  // Eventos de Login e Cadastro
+  onAuthStateChanged(auth, user => {
+    if (user) mostrarEventos();
+    else mostrarLogin();
+  });
+
   document.getElementById('btnEntrar').addEventListener('click', () => {
-    const email = document.getElementById('emailLogin').value;
-    const senha = document.getElementById('senhaLogin').value;
-    loginUsuario(email, senha);
+    loginUsuario(document.getElementById('emailLogin').value, document.getElementById('senhaLogin').value);
   });
 
   document.getElementById('btnCadastrar').addEventListener('click', () => {
-    const email = document.getElementById('emailCadastro').value;
-    const senha = document.getElementById('senhaCadastro').value;
-    registrarUsuario(email, senha);
+    registrarUsuario(document.getElementById('emailCadastro').value, document.getElementById('senhaCadastro').value);
   });
 
   document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
-
-  // Alternar entre telas de login e cadastro
-  document.getElementById('mostrarCadastro').addEventListener('click', (e) => {
-    e.preventDefault();
-    mostrarCadastro();
-  });
-
-  document.getElementById('mostrarLogin').addEventListener('click', (e) => {
-    e.preventDefault();
-    mostrarLogin();
-  });
-
-  // Salvar evento
   document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
+  document.getElementById('btnMostrarMeusEventos').addEventListener('click', carregarMeusEventos);
+  document.getElementById('btnMostrarCriarEvento').addEventListener('click', () => {
+    document.getElementById('secaoEventos').style.display = 'none';
+    document.getElementById('secaoMeusEventos').style.display = 'none';
+    document.getElementById('secaoCriarEvento').style.display = 'block';
+  });
+  document.getElementById('btnMostrarEventos').addEventListener('click', mostrarEventos);
 });
