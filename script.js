@@ -115,6 +115,10 @@ function limparCampos() {
   btn.replaceWith(novoBtn);
   novoBtn.addEventListener('click', salvarEvento);
 }
+function transformarLinks(texto) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return texto.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
+}
 
 function mostrarEventos() {
   document.getElementById('evento-container').style.display = 'block';
@@ -139,7 +143,7 @@ function mostrarEventos() {
         <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
         <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
         <p><strong>Local:</strong> ${evento.location}</p>
-        <p><strong>Descrição:</strong> ${evento.description}</p>`;
+        <p><strong>Descrição:</strong> ${transformarLinks(evento.description)}</p>`;
       lista.appendChild(div);
     });
   });
