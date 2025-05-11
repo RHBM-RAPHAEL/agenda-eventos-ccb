@@ -260,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('evento-container').style.display = 'none';
     }
   });
-}
   document.getElementById('btnEntrar').addEventListener('click', () => {
     loginUsuario(document.getElementById('emailLogin').value, document.getElementById('senhaLogin').value);
   });
