@@ -1,9 +1,7 @@
-
 // Importa o SDK do Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getDatabase, ref, set, push, get, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-import { sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -29,54 +27,38 @@ async function gerarHash(texto) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Função de redefinir senha
 function redefinirSenha(email) {
-  if (!email) {
-    return alert('Por favor, insira o e-mail para redefinir a senha.');
-  }
-
+  if (!email) return alert('Por favor, insira o e-mail para redefinir a senha.');
   sendPasswordResetEmail(auth, email)
-    .then(() => {
-      alert('Um e-mail foi enviado para redefinir sua senha.');
-    })
-    .catch((error) => {
-      alert('Erro ao enviar redefinição de senha: ' + error.message);
-    });
+    .then(() => alert('Um e-mail foi enviado para redefinir sua senha.'))
+    .catch((error) => alert('Erro ao enviar redefinição de senha: ' + error.message));
 }
-// Registrar usuário
+
 function registrarUsuario(email, senha) {
   createUserWithEmailAndPassword(auth, email, senha)
     .then(() => {
       alert('Usuário registrado com sucesso!');
       mostrarLogin();
     })
-    .catch((error) => {
-      alert('Erro ao registrar usuário: ' + error.message);
-    });
+    .catch((error) => alert('Erro ao registrar usuário: ' + error.message));
 }
 
-// Login
 function loginUsuario(email, senha) {
   signInWithEmailAndPassword(auth, email, senha)
     .then(() => {
       alert('Usuário logado com sucesso!');
       mostrarEventos();
     })
-    .catch((error) => {
-      alert('Erro ao fazer login: ' + error.message);
-    });
+    .catch((error) => alert('Erro ao fazer login: ' + error.message));
 }
 
-// Logout
 function logoutUsuario() {
   signOut(auth)
     .then(() => {
       alert('Usuário deslogado com sucesso!');
       mostrarLogin();
     })
-    .catch((error) => {
-      alert('Erro ao fazer logout: ' + error.message);
-    });
+    .catch((error) => alert('Erro ao fazer logout: ' + error.message));
 }
 
 async function salvarEvento() {
@@ -100,15 +82,15 @@ async function salvarEvento() {
 
   const inicio = new Date(`${evento.date}T${evento.timeStart}`);
   const fim = new Date(`${evento.date}T${evento.timeEnd}`);
-  if (fim <= inicio || fim <= new Date()) {
-    return alert('Horários inválidos ou evento no passado.');
-  }
+  if (fim <= inicio || fim <= new Date()) return alert('Horários inválidos ou evento no passado.');
 
-  push(ref(db, 'events'), evento).then(() => {
-    alert('Evento salvo com sucesso!');
-    limparCampos();
-    mostrarEventos();
-  }).catch(err => alert('Erro ao salvar: ' + err.message));
+  push(ref(db, 'events'), evento)
+    .then(() => {
+      alert('Evento salvo com sucesso!');
+      limparCampos();
+      mostrarEventos();
+    })
+    .catch(err => alert('Erro ao salvar: ' + err.message));
 }
 
 function limparCampos() {
@@ -116,15 +98,14 @@ function limparCampos() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
-
-  // Garante que o botão de salvar novo evento funcione corretamente após uma edição
   const btn = document.getElementById('btnSalvar');
   const novoBtn = btn.cloneNode(true);
   btn.replaceWith(novoBtn);
   novoBtn.addEventListener('click', salvarEvento);
 }
+
 function transformarLinks(texto) {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urlRegex = /(https?:\/\/[\w.-]+[^\s]*)/g;
   return texto.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
 }
 
@@ -166,7 +147,6 @@ function carregarMeusEventos() {
   document.getElementById('secaoMeusEventos').style.display = 'block';
 
   const lista = document.getElementById('listaMeusEventos');
-  lista.innerHTML = '';
   onValue(ref(db, 'events'), snapshot => {
     lista.innerHTML = '';
     snapshot.forEach(child => {
@@ -204,43 +184,33 @@ function excluirEventoAutomaticamente(id) {
 async function excluirEvento(id) {
   const senha = prompt('Digite a senha para excluir este evento:');
   const eventoRef = ref(db, 'events/' + id);
-  
-  try {
-    const snapshot = await get(eventoRef);
-    const ev = snapshot.val();
-    const senhaHash = await gerarHash(senha);
-    
-    if (senhaHash === ev.password) {
-      await remove(eventoRef);
-      alert('Evento excluído com sucesso.');
-    } else {
-      alert('Senha incorreta.');
-    }
-  } catch (error) {
-    console.error('Erro ao excluir evento:', error);
-  }
+  const snapshot = await get(eventoRef);
+  const ev = snapshot.val();
+  const senhaHash = await gerarHash(senha);
+  if (senhaHash === ev.password) remove(eventoRef);
+  else alert('Senha incorreta.');
 }
 
 async function editarEvento(id) {
   const refEvento = ref(db, 'events/' + id);
-  get(refEvento).then(snapshot => {
-    const ev = snapshot.val();
-    const senha = prompt('Digite a senha para editar:');
-    const senhaHash = await gerarHash(senha);
-    if (senhaHash === ev.password) return alert('Senha incorreta.');
-    document.getElementById('titulo').value = ev.title;
-    document.getElementById('data').value = ev.date;
-    document.getElementById('horaInicio').value = ev.timeStart;
-    document.getElementById('horaTermino').value = ev.timeEnd;
-    document.getElementById('local').value = ev.location;
-    document.getElementById('descricao').value = ev.description;
-    document.getElementById('senha').value = ev.password;
+  const snapshot = await get(refEvento);
+  const ev = snapshot.val();
+  const senha = prompt('Digite a senha para editar:');
+  const senhaHash = await gerarHash(senha);
+  if (senhaHash !== ev.password) return alert('Senha incorreta.');
 
-    const btn = document.getElementById('btnSalvar');
-    const novo = btn.cloneNode(true);
-    btn.replaceWith(novo);
-    novo.addEventListener('click', () => salvarEdicao(id));
-  });
+  document.getElementById('titulo').value = ev.title;
+  document.getElementById('data').value = ev.date;
+  document.getElementById('horaInicio').value = ev.timeStart;
+  document.getElementById('horaTermino').value = ev.timeEnd;
+  document.getElementById('local').value = ev.location;
+  document.getElementById('descricao').value = ev.description;
+  document.getElementById('senha').value = '';
+
+  const btn = document.getElementById('btnSalvar');
+  const novo = btn.cloneNode(true);
+  btn.replaceWith(novo);
+  novo.addEventListener('click', () => salvarEdicao(id));
 }
 
 function salvarEdicao(id) {
@@ -271,7 +241,6 @@ function mostrarLogin() {
   document.getElementById('evento-container').style.display = 'none';
 }
 
-// Tudo dentro de DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   [
     { eyeId: 'eyeLogin', inputId: 'senhaLogin' },
@@ -295,13 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('evento-container').style.display = 'block';
       mostrarEventos();
     } else {
-      document.getElementById('login-container').style.display = 'block';
-      document.getElementById('cadastro-container').style.display = 'none';
-      document.getElementById('evento-container').style.display = 'none';
+      mostrarLogin();
     }
   });
 
-  // Botões
   document.getElementById('btnEntrar').addEventListener('click', () => {
     loginUsuario(
       document.getElementById('emailLogin').value,
@@ -334,9 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
     mostrarLogin();
   });
   document.getElementById('btnRedefinirSenha').addEventListener('click', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('emailLogin').value;
-  if (!email) return alert('Por favor, insira seu email para redefinir a senha.');
-  redefinirSenha(email);
+    e.preventDefault();
+    const email = document.getElementById('emailLogin').value;
+    if (!email) return alert('Por favor, insira seu email para redefinir a senha.');
+    redefinirSenha(email);
+  });
 });
-}); // ✅ ESTA é a chave que fecha o DOMContentLoaded
