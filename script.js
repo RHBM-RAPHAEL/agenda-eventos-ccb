@@ -223,10 +223,16 @@ function salvarEdicao(id) {
     location: document.getElementById('local').value,
     description: document.getElementById('descricao').value
   }).then(() => {
-    alert('Evento atualizado!');
-    limparCampos();
-    mostrarEventos();
-  });
+  alert('Evento atualizado!');
+  limparCampos();
+  mostrarEventos();
+
+  // 🔁 Restaurar botão para salvar novo evento
+  const novoBtn = document.getElementById('btnSalvar');
+  const btnOriginal = novoBtn.cloneNode(true);
+  novoBtn.replaceWith(btnOriginal);
+  btnOriginal.addEventListener('click', salvarEvento);
+});
 }
 
 function mostrarCadastro() {
