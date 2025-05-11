@@ -147,21 +147,50 @@ function mostrarEventos() {
 
 // Mostrar eventos do usuário
 function carregarMeusEventos() {
-  const lista = document.getElementById('listaMeusEventos');
-  lista.innerHTML = '';
-  onValue(ref(db, 'events'), snapshot => {
-    snapshot.forEach(child => {
-      const ev = child.val();
-      if (ev.userId === auth.currentUser.uid) {
-        const div = document.createElement('div');
-        div.innerHTML = `<strong>${ev.title}</strong> - ${ev.date} - ${ev.location}`;
-        lista.appendChild(div);
-      }
-    });
-  });
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Você precisa estar logado.");
+    return;
+  }
+
   document.getElementById('secaoEventos').style.display = 'none';
   document.getElementById('secaoCriarEvento').style.display = 'none';
   document.getElementById('secaoMeusEventos').style.display = 'block';
+
+  const lista = document.getElementById('listaMeusEventos');
+  lista.innerHTML = '';
+
+  onValue(ref(db, 'events'), (snapshot) => {
+    lista.innerHTML = '';
+    snapshot.forEach((child) => {
+      const evento = child.val();
+      const eventoKey = child.key;
+
+      if (evento.userId === user.uid) {
+        const div = document.createElement('div');
+        div.className = 'evento';
+        div.innerHTML = `
+          <h3>${evento.title}</h3>
+          <p><strong>Data:</strong> ${evento.date}</p>
+          <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
+          <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
+          <p><strong>Local:</strong> ${evento.location}</p>
+          <p><strong>Descrição:</strong> ${evento.description}</p>
+          <button class="btnEditar" data-id="${eventoKey}">Editar</button>
+          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>
+        `;
+        lista.appendChild(div);
+      }
+    });
+
+    document.querySelectorAll('#listaMeusEventos .btnEditar').forEach((btn) => {
+      btn.onclick = () => editarEvento(btn.dataset.id);
+    });
+
+    document.querySelectorAll('#listaMeusEventos .btnExcluir').forEach((btn) => {
+      btn.onclick = () => excluirEvento(btn.dataset.id);
+    });
+  });
 }
 
 function excluirEventoAutomaticamente(id) {
