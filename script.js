@@ -233,21 +233,23 @@ function mostrarLogin() {
   document.getElementById('evento-container').style.display = 'none';
 }
 
+// Tudo dentro de DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   [
-  { eyeId: 'eyeLogin', inputId: 'senhaLogin' },
-  { eyeId: 'eyeCadastro', inputId: 'senhaCadastro' },
-  { eyeId: 'eyeEvento', inputId: 'senha' }
-].forEach(({ eyeId, inputId }) => {
-  const icon = document.getElementById(eyeId);
-  const input = document.getElementById(inputId);
-  if (icon && input) {
-    icon.addEventListener('click', () => {
-      input.type = input.type === 'password' ? 'text' : 'password';
-      icon.textContent = input.type === 'password' ? '👁️' : '🙈';
-    });
-  }
-});
+    { eyeId: 'eyeLogin', inputId: 'senhaLogin' },
+    { eyeId: 'eyeCadastro', inputId: 'senhaCadastro' },
+    { eyeId: 'eyeEvento', inputId: 'senha' }
+  ].forEach(({ eyeId, inputId }) => {
+    const icon = document.getElementById(eyeId);
+    const input = document.getElementById(inputId);
+    if (icon && input) {
+      icon.addEventListener('click', () => {
+        input.type = input.type === 'password' ? 'text' : 'password';
+        icon.textContent = input.type === 'password' ? '👁️' : '🙈';
+      });
+    }
+  });
+
   onAuthStateChanged(auth, user => {
     if (user) {
       document.getElementById('login-container').style.display = 'none';
@@ -261,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Botões
   document.getElementById('btnEntrar').addEventListener('click', () => {
     loginUsuario(
       document.getElementById('emailLogin').value,
@@ -276,28 +279,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
-
   document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
-
   document.getElementById('btnMostrarMeusEventos').addEventListener('click', carregarMeusEventos);
-
   document.getElementById('btnMostrarCriarEvento').addEventListener('click', () => {
     document.getElementById('secaoEventos').style.display = 'none';
     document.getElementById('secaoMeusEventos').style.display = 'none';
     document.getElementById('secaoCriarEvento').style.display = 'block';
   });
-
   document.getElementById('btnMostrarEventos').addEventListener('click', mostrarEventos);
-
-  // Botão de mudar para tela de cadastro
   document.getElementById('mostrarCadastro').addEventListener('click', (e) => {
     e.preventDefault();
     mostrarCadastro();
   });
-
-  // Botão de voltar ao login
   document.getElementById('mostrarLogin').addEventListener('click', (e) => {
     e.preventDefault();
     mostrarLogin();
   });
-});
+}); // ✅ ESTA é a chave que fecha o DOMContentLoaded
