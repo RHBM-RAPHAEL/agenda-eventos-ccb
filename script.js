@@ -3,6 +3,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getDatabase, ref, set, push, get, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+import { sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -20,6 +21,20 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
+// Função de redefinir senha
+function redefinirSenha(email) {
+  if (!email) {
+    return alert('Por favor, insira o e-mail para redefinir a senha.');
+  }
+
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      alert('Um e-mail foi enviado para redefinir sua senha.');
+    })
+    .catch((error) => {
+      alert('Erro ao enviar redefinição de senha: ' + error.message);
+    });
+}
 // Registrar usuário
 function registrarUsuario(email, senha) {
   createUserWithEmailAndPassword(auth, email, senha)
@@ -295,4 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     mostrarLogin();
   });
+  document.getElementById('btnRedefinirSenha').addEventListener('click', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('emailLogin').value;
+  if (!email) return alert('Por favor, insira seu email para redefinir a senha.');
+  redefinirSenha(email);
+});
 }); // ✅ ESTA é a chave que fecha o DOMContentLoaded
