@@ -207,8 +207,8 @@ async function excluirEvento(id) {
   get(eventoRef).then(snapshot => {
     const ev = snapshot.val();
     const senhaHash = await gerarHash(senha);
-    if (senhaHash === ev.password) remove(eventoRef);
-    else alert('Senha incorreta.');
+    if (senhaHash === ev.password){ remove(eventoRef)
+                                  }{else alert('Senha incorreta.');
   });
 }
 
