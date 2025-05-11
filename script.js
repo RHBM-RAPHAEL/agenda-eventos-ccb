@@ -21,6 +21,14 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
+async function gerarHash(texto) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(texto);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 // Função de redefinir senha
 function redefinirSenha(email) {
   if (!email) {
@@ -71,7 +79,7 @@ function logoutUsuario() {
     });
 }
 
-function salvarEvento() {
+async function salvarEvento() {
   const user = auth.currentUser;
   if (!user) return alert('Usuário não autenticado!');
 
@@ -82,7 +90,7 @@ function salvarEvento() {
     timeEnd: document.getElementById('horaTermino').value,
     location: document.getElementById('local').value,
     description: document.getElementById('descricao').value,
-    password: document.getElementById('senha').value,
+    password: await gerarHash(document.getElementById('senha').value),
     userId: user.uid
   };
 
@@ -193,22 +201,24 @@ function excluirEventoAutomaticamente(id) {
   remove(ref(db, 'events/' + id));
 }
 
-function excluirEvento(id) {
+async function excluirEvento(id) {
   const senha = prompt('Digite a senha para excluir este evento:');
   const eventoRef = ref(db, 'events/' + id);
   get(eventoRef).then(snapshot => {
     const ev = snapshot.val();
-    if (senha === ev.password) remove(eventoRef);
+    const senhaHash = await gerarHash(senha);
+    if (senhaHash === ev.password) remove(eventoRef);
     else alert('Senha incorreta.');
   });
 }
 
-function editarEvento(id) {
+async function editarEvento(id) {
   const refEvento = ref(db, 'events/' + id);
   get(refEvento).then(snapshot => {
     const ev = snapshot.val();
     const senha = prompt('Digite a senha para editar:');
-    if (senha !== ev.password) return alert('Senha incorreta.');
+    const senhaHash = await gerarHash(senha);
+    if (senhaHash === ev.password) return alert('Senha incorreta.');
     document.getElementById('titulo').value = ev.title;
     document.getElementById('data').value = ev.date;
     document.getElementById('horaInicio').value = ev.timeStart;
