@@ -99,11 +99,6 @@ function limparCampos() {
 
 // Mostrar eventos
 function mostrarEventos() {
-  // Esconde login e cadastro
-  document.getElementById('login-container').style.display = 'none';
-  document.getElementById('cadastro-container').style.display = 'none';
-
-  // Mostra container principal
   document.getElementById('evento-container').style.display = 'block';
   document.getElementById('secaoEventos').style.display = 'block';
   document.getElementById('secaoCriarEvento').style.display = 'none';
@@ -113,6 +108,7 @@ function mostrarEventos() {
   get(eventosRef).then(snapshot => {
     const lista = document.getElementById('listaEventos');
     lista.innerHTML = '';
+
     snapshot.forEach(child => {
       const evento = child.val();
       const key = child.key;
@@ -128,19 +124,8 @@ function mostrarEventos() {
         <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
         <p><strong>Local:</strong> ${evento.location}</p>
         <p><strong>Descrição:</strong> ${evento.description}</p>
-        ${evento.userId === auth.currentUser.uid ? `
-          <button class="btnEditar" data-id="${key}">Editar</button>
-          <button class="btnExcluir" data-id="${key}">Excluir</button>` : ''}
       `;
       lista.appendChild(div);
-    });
-
-    // Botões editar e excluir
-    document.querySelectorAll('.btnEditar').forEach(btn => {
-      btn.onclick = () => editarEvento(btn.dataset.id);
-    });
-    document.querySelectorAll('.btnExcluir').forEach(btn => {
-      btn.onclick = () => excluirEvento(btn.dataset.id);
     });
   });
 }
