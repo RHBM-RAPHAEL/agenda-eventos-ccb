@@ -204,12 +204,21 @@ function excluirEventoAutomaticamente(id) {
 async function excluirEvento(id) {
   const senha = prompt('Digite a senha para excluir este evento:');
   const eventoRef = ref(db, 'events/' + id);
-  get(eventoRef).then(snapshot => {
+  
+  try {
+    const snapshot = await get(eventoRef);
     const ev = snapshot.val();
     const senhaHash = await gerarHash(senha);
-    if (senhaHash === ev.password){ remove(eventoRef)
-                                  }{else alert('Senha incorreta.');
-  });
+    
+    if (senhaHash === ev.password) {
+      await remove(eventoRef);
+      alert('Evento excluído com sucesso.');
+    } else {
+      alert('Senha incorreta.');
+    }
+  } catch (error) {
+    console.error('Erro ao excluir evento:', error);
+  }
 }
 
 async function editarEvento(id) {
