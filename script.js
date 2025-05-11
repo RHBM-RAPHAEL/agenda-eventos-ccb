@@ -248,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-}
   onAuthStateChanged(auth, user => {
     if (user) {
       document.getElementById('login-container').style.display = 'none';
