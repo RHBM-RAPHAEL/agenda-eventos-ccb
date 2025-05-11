@@ -254,9 +254,25 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   onAuthStateChanged(auth, user => {
-    if (user) mostrarEventos();
-    else mostrarLogin();
-  });
+  if (user) {
+    // Oculta login e cadastro
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('cadastro-container').style.display = 'none';
+
+    // Mostra painel de eventos
+    document.getElementById('evento-container').style.display = 'block';
+    
+    // Mostra seção de eventos por padrão
+    mostrarEventos();
+  } else {
+    // Mostra login
+    document.getElementById('login-container').style.display = 'block';
+
+    // Oculta cadastro e eventos
+    document.getElementById('cadastro-container').style.display = 'none';
+    document.getElementById('evento-container').style.display = 'none';
+  }
+});
 
   document.getElementById('btnEntrar').addEventListener('click', () => {
     loginUsuario(document.getElementById('emailLogin').value, document.getElementById('senhaLogin').value);
