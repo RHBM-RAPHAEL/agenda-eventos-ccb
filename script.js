@@ -117,7 +117,7 @@ function mostrarEventos() {
       const fim = new Date(`${evento.date}T${evento.timeEnd}`);
       if (fim <= new Date()) return excluirEventoAutomaticamente(key);
       const div = document.createElement('div');
-      div.className = 'evento';
+      div.className = 'events';
       div.innerHTML = `
         <h3>${evento.title}</h3>
         <p><strong>Data:</strong> ${evento.date}</p>
@@ -147,7 +147,7 @@ function carregarMeusEventos() {
       const eventoKey = child.key;
       if (evento.userId === user.uid) {
         const div = document.createElement('div');
-        div.className = 'evento';
+        div.className = 'events';
         div.innerHTML = `
           <h3>${evento.title}</h3>
           <p><strong>Data:</strong> ${evento.date}</p>
