@@ -1,3 +1,4 @@
+/* RESET E FONTES */
 * {
   margin: 0;
   padding: 0;
@@ -5,6 +6,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* FUNDO GERAL */
 body {
   background: url('Foto agenda.jpg') no-repeat center center fixed;
   background-size: cover;
@@ -16,6 +18,7 @@ body {
   min-height: 100vh;
 }
 
+/* TÍTULO */
 h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -24,17 +27,18 @@ h1 {
   font-weight: bold;
 }
 
+/* CONTAINER GERAL */
 .container {
   max-width: 900px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0 auto 40px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
 }
 
+/* CAMPOS E BOTÕES */
 input, button, textarea {
   width: 100%;
   padding: 12px;
@@ -65,12 +69,14 @@ button:hover {
   background-color: #45a049;
 }
 
+/* LISTAGEM DE EVENTOS */
 #listaEventos {
   display: block;
   margin-top: 20px;
   width: 100%;
 }
 
+/* EVENTO INDIVIDUAL */
 .evento {
   background-color: #fafafa;
   padding: 15px;
@@ -103,6 +109,7 @@ button:hover {
   color: white;
   border-radius: 5px;
   padding: 8px 12px;
+  margin-top: 10px;
   margin-right: 8px;
   width: auto;
   transition: background-color 0.3s ease;
@@ -112,6 +119,7 @@ button:hover {
   background-color: #da190b;
 }
 
+/* RODAPÉ */
 footer {
   background-color: #3100ff;
   color: white;
@@ -126,19 +134,19 @@ footer p {
   margin: 5px 0;
 }
 
-/* Estilo do campo de senha com ícone de olho */
+/* CAMPOS DE SENHA COM OLHO */
 .campo-senha {
   position: relative;
   width: 100%;
-  max-width: 300px; /* ou qualquer valor desejado */
-  margin: 10px 0;
+  max-width: 100%;
+  margin: 15px 0;
 }
 
 .campo-senha input {
   width: 100%;
   padding: 12px;
-  padding-right: 30px; /* Deixa espaço para o ícone de olho */
-  border-radius: 25px; /* Para deixar o campo oval */
+  padding-right: 30px;
+  border-radius: 25px;
   border: 1px solid #ccc;
   font-size: 16px;
 }
@@ -154,6 +162,29 @@ footer p {
   user-select: none;
 }
 
+/* MENU DE NAVEGAÇÃO */
+.menu-secoes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.menu-secoes button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.menu-secoes button:hover {
+  background-color: #1976D2;
+}
+
+/* RESPONSIVIDADE */
 @media screen and (max-width: 768px) {
   .container {
     padding: 15px;
@@ -180,43 +211,4 @@ footer p {
   .evento {
     padding: 10px;
   }
-}
-.senha-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.senha-container input[type="password"],
-.senha-container input[type="text"] {
-  width: 100%;
-  padding-right: 40px; /* espaço para o olhinho */
-  box-sizing: border-box;
-}
-.evento button {
-  margin-top: 10px;
-}
-.menu-secoes {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.menu-secoes button {
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.menu-secoes button:hover {
-  background-color: #1976D2;
-}
-.campo-senha {
-  margin: 15px 0;
-  max-width: 100%; /* Melhor para responsividade */
 }
