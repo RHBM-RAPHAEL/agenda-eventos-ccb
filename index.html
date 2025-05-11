@@ -145,8 +145,8 @@
     }
 
     footer {
-      background-color: #3100ff;
-      color: white;
+      background-color: #f2f2f2;
+      color: #333;
       padding: 20px;
       text-align: center;
       font-size: 14px;
@@ -237,25 +237,25 @@
 
   <div id="login-container">
     <h2>Login</h2>
-    <input type="email" id="emailLogin" placeholder="Email" />
+    <input type="email" id="emailLogin" placeholder="E-mail" />
     <div class="campo-senha">
       <input type="password" id="senhaLogin" placeholder="Senha" />
       <i class="eye-icon" id="eyeLogin">👁️</i>
     </div>
     <button id="btnEntrar">Entrar</button>
     <p><a href="#" id="btnRedefinirSenha" style="font-size: 14px;">Esqueceu a senha?</a></p>
-    <p>Não tem conta? <a href="#" id="mostrarCadastro">Cadastre-se</a></p>
+    <p>Ainda não tem uma conta? <a href="#" id="mostrarCadastro">Cadastre-se aqui</a></p>
   </div>
 
   <div id="cadastro-container" style="display:none;">
     <h2>Cadastro</h2>
-    <input type="email" id="emailCadastro" placeholder="Email" />
+    <input type="email" id="emailCadastro" placeholder="E-mail" />
     <div class="campo-senha">
       <input type="password" id="senhaCadastro" placeholder="Senha" />
       <i class="eye-icon" id="eyeCadastro">👁️</i>
     </div>
     <button id="btnCadastrar">Cadastrar</button>
-    <p>Já tem conta? <a href="#" id="mostrarLogin">Entrar</a></p>
+    <p>Já possui uma conta? <a href="#" id="mostrarLogin">Acesse sua conta</a></p>
   </div>
 
   <div class="container" id="evento-container" style="display:none;">
@@ -274,7 +274,7 @@
 
     <div id="secaoMeusEventos" class="secao-evento" style="display:block;">
       <h2>Meus Eventos</h2>
-      <h2>_______________</h2>
+      <hr />
       <div id="listaMeusEventos"></div>
     </div>
 
@@ -296,12 +296,12 @@
     </div>
   </div>
 
-  <footer style="background-color: #f2f2f2; padding: 20px; text-align: center; font-size: 14px;">
-        <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
-        <p><strong>Agenda CCB</strong> é um projeto desenvolvido como atividade extensionista do curso de Engenharia de Software.</p>
-        <p>O objetivo é divulgar eventos Religiosos locais, como: Reuniões de adoração, apresentações e encontros comunitários.</p>
-        <p>Esta página foi criada por Raphael Henrique, com o uso de tecnologias web como HTML, CSS e JavaScript.</p>
-        <p>Projeto acadêmico - 2025</p>
+  <footer>
+    <p>&copy; 2025 Agenda CCB | Raphael Henrique</p>
+    <p><strong>Agenda CCB</strong> é um projeto desenvolvido como atividade extensionista do curso de Engenharia de Software.</p>
+    <p>O objetivo é divulgar eventos religiosos locais, como reuniões de adoração, apresentações e encontros comunitários.</p>
+    <p>Esta página foi criada por Raphael Henrique utilizando tecnologias web como HTML, CSS e JavaScript.</p>
+    <p>Projeto acadêmico – 2025</p>
   </footer>
 
   <script type="module" src="script.js"></script>
