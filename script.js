@@ -134,6 +134,11 @@ function mostrarEventos() {
   document.getElementById('login-container').style.display = 'none';
   document.getElementById('cadastro-container').style.display = 'none';
   document.getElementById('evento-container').style.display = 'block';
+  // Exibe apenas a seção de "Todos os Eventos"
+  document.getElementById('secaoEventos').style.display = 'block';
+  document.getElementById('secaoCriarEvento').style.display = 'none';
+  document.getElementById('secaoMeusEventos').style.display = 'none';
+
 
   const eventosRef = ref(db, 'events');
 
