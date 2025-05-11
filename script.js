@@ -117,7 +117,7 @@ function mostrarEventos() {
       const fim = new Date(`${evento.date}T${evento.timeEnd}`);
       if (fim <= new Date()) return excluirEventoAutomaticamente(key);
       const div = document.createElement('div');
-      div.className = 'events';
+      div.className = 'evento';
       div.innerHTML = `
         <h3>${evento.title}</h3>
         <p><strong>Data:</strong> ${evento.date}</p>
