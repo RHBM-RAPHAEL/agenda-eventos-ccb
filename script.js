@@ -90,24 +90,34 @@ function salvarEvento() {
     return;
   }
 
-  const eventosRef = ref(db, 'events');
-  const newEventRef = push(eventosRef);
+  // Verifica se há um usuário logado
+const user = auth.currentUser;
+if (!user) {
+  alert('Usuário não autenticado!');
+  return;
+}
 
-  set(newEventRef, {
-    title: titulo,
-    date: data,
-    timeStart: horaInicio,
-    timeEnd: horaTermino,
-    location: local,
-    description: descricao,
-    password: senha
-  }).then(() => {
-    alert('Evento salvo com sucesso!');
-    limparCampos();
-    mostrarEventos();
-  }).catch((error) => {
-    alert('Erro ao salvar evento: ' + error.message);
-  });
+const email = user.email; // Pega o e-mail do usuário logado
+
+const eventosRef = ref(db, 'events');
+const newEventRef = push(eventosRef);
+
+set(newEventRef, {
+  title: titulo,
+  date: data,
+  timeStart: horaInicio,
+  timeEnd: horaTermino,
+  location: local,
+  description: descricao,
+  password: senha,
+  email: email // ✅ adiciona o e-mail ao evento
+}).then(() => {
+  alert('Evento salvo com sucesso!');
+  limparCampos();
+  mostrarEventos();
+}).catch((error) => {
+  alert('Erro ao salvar evento: ' + error.message);
+});
 }
 
 // Limpa os campos do formulário
