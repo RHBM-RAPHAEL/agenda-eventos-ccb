@@ -1,3 +1,4 @@
+
 // Importa o SDK do Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getDatabase, ref, set, push, get, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
@@ -15,7 +16,6 @@ const firebaseConfig = {
   measurementId: "G-PDTYLHH85J"
 };
 
-// Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
@@ -56,7 +56,6 @@ function logoutUsuario() {
     });
 }
 
-// Salvar evento
 function salvarEvento() {
   const user = auth.currentUser;
   if (!user) return alert('Usuário não autenticado!');
@@ -78,7 +77,6 @@ function salvarEvento() {
 
   const inicio = new Date(`${evento.date}T${evento.timeStart}`);
   const fim = new Date(`${evento.date}T${evento.timeEnd}`);
-
   if (fim <= inicio || fim <= new Date()) {
     return alert('Horários inválidos ou evento no passado.');
   }
@@ -95,9 +93,14 @@ function limparCampos() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+
+  // Garante que o botão de salvar novo evento funcione corretamente após uma edição
+  const btn = document.getElementById('btnSalvar');
+  const novoBtn = btn.cloneNode(true);
+  btn.replaceWith(novoBtn);
+  novoBtn.addEventListener('click', salvarEvento);
 }
 
-// Mostrar eventos
 function mostrarEventos() {
   document.getElementById('evento-container').style.display = 'block';
   document.getElementById('secaoEventos').style.display = 'block';
@@ -108,13 +111,11 @@ function mostrarEventos() {
   get(eventosRef).then(snapshot => {
     const lista = document.getElementById('listaEventos');
     lista.innerHTML = '';
-
     snapshot.forEach(child => {
       const evento = child.val();
       const key = child.key;
       const fim = new Date(`${evento.date}T${evento.timeEnd}`);
       if (fim <= new Date()) return excluirEventoAutomaticamente(key);
-
       const div = document.createElement('div');
       div.className = 'evento';
       div.innerHTML = `
@@ -123,20 +124,15 @@ function mostrarEventos() {
         <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
         <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
         <p><strong>Local:</strong> ${evento.location}</p>
-        <p><strong>Descrição:</strong> ${evento.description}</p>
-      `;
+        <p><strong>Descrição:</strong> ${evento.description}</p>`;
       lista.appendChild(div);
     });
   });
 }
 
-// Mostrar eventos do usuário
 function carregarMeusEventos() {
   const user = auth.currentUser;
-  if (!user) {
-    alert("Você precisa estar logado.");
-    return;
-  }
+  if (!user) return alert("Você precisa estar logado.");
 
   document.getElementById('secaoEventos').style.display = 'none';
   document.getElementById('secaoCriarEvento').style.display = 'none';
@@ -144,13 +140,11 @@ function carregarMeusEventos() {
 
   const lista = document.getElementById('listaMeusEventos');
   lista.innerHTML = '';
-
-  onValue(ref(db, 'events'), (snapshot) => {
+  onValue(ref(db, 'events'), snapshot => {
     lista.innerHTML = '';
-    snapshot.forEach((child) => {
+    snapshot.forEach(child => {
       const evento = child.val();
       const eventoKey = child.key;
-
       if (evento.userId === user.uid) {
         const div = document.createElement('div');
         div.className = 'evento';
@@ -162,17 +156,15 @@ function carregarMeusEventos() {
           <p><strong>Local:</strong> ${evento.location}</p>
           <p><strong>Descrição:</strong> ${evento.description}</p>
           <button class="btnEditar" data-id="${eventoKey}">Editar</button>
-          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>
-        `;
+          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>`;
         lista.appendChild(div);
       }
     });
 
-    document.querySelectorAll('#listaMeusEventos .btnEditar').forEach((btn) => {
+    document.querySelectorAll('#listaMeusEventos .btnEditar').forEach(btn => {
       btn.onclick = () => editarEvento(btn.dataset.id);
     });
-
-    document.querySelectorAll('#listaMeusEventos .btnExcluir').forEach((btn) => {
+    document.querySelectorAll('#listaMeusEventos .btnExcluir').forEach(btn => {
       btn.onclick = () => excluirEvento(btn.dataset.id);
     });
   });
@@ -223,16 +215,10 @@ function salvarEdicao(id) {
     location: document.getElementById('local').value,
     description: document.getElementById('descricao').value
   }).then(() => {
-  alert('Evento atualizado!');
-  limparCampos();
-  mostrarEventos();
-
-  // 🔁 Restaurar botão para salvar novo evento
-  const novoBtn = document.getElementById('btnSalvar');
-  const btnOriginal = novoBtn.cloneNode(true);
-  novoBtn.replaceWith(btnOriginal);
-  btnOriginal.addEventListener('click', salvarEvento);
-});
+    alert('Evento atualizado!');
+    limparCampos();
+    mostrarEventos();
+  });
 }
 
 function mostrarCadastro() {
@@ -260,34 +246,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   onAuthStateChanged(auth, user => {
-  if (user) {
-    // Oculta login e cadastro
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('cadastro-container').style.display = 'none';
-
-    // Mostra painel de eventos
-    document.getElementById('evento-container').style.display = 'block';
-    
-    // Mostra seção de eventos por padrão
-    mostrarEventos();
-  } else {
-    // Mostra login
-    document.getElementById('login-container').style.display = 'block';
-
-    // Oculta cadastro e eventos
-    document.getElementById('cadastro-container').style.display = 'none';
-    document.getElementById('evento-container').style.display = 'none';
-  }
-});
+    if (user) {
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('cadastro-container').style.display = 'none';
+      document.getElementById('evento-container').style.display = 'block';
+      mostrarEventos();
+    } else {
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('cadastro-container').style.display = 'none';
+      document.getElementById('evento-container').style.display = 'none';
+    }
+  });
 
   document.getElementById('btnEntrar').addEventListener('click', () => {
     loginUsuario(document.getElementById('emailLogin').value, document.getElementById('senhaLogin').value);
   });
-
   document.getElementById('btnCadastrar').addEventListener('click', () => {
     registrarUsuario(document.getElementById('emailCadastro').value, document.getElementById('senhaCadastro').value);
   });
-
   document.getElementById('btnLogout').addEventListener('click', logoutUsuario);
   document.getElementById('btnSalvar').addEventListener('click', salvarEvento);
   document.getElementById('btnMostrarMeusEventos').addEventListener('click', carregarMeusEventos);
