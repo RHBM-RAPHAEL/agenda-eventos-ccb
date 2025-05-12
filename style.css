@@ -214,6 +214,10 @@ footer p {
     margin: 0 auto 20px;
     object-fit: cover;
   }
+.evento p a {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
   .evento {
     padding: 10px;
