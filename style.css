@@ -188,6 +188,13 @@ footer p {
 .menu-secoes button:hover {
   background-color: #1976D2;
 }
+/* Quebra de linha para links longos */
+.evento p a {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+}
 
 /* Responsivo */
 @media screen and (max-width: 768px) {
@@ -214,12 +221,3 @@ footer p {
     margin: 0 auto 20px;
     object-fit: cover;
   }
-.evento p a {
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-
-  .evento {
-    padding: 10px;
-  }
-}
