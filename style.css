@@ -17,7 +17,6 @@ body {
   min-height: 100vh;
 }
 
-/* Cabeçalho */
 h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -26,33 +25,27 @@ h1 {
   font-weight: bold;
 }
 
-/* Container geral */
 .container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto 40px;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Campos e botões */
-input,
-button,
-textarea {
+input, button, textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  transition: border 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-input:focus,
-textarea:focus,
-button:focus {
+input:focus, textarea:focus, button:focus {
   border-color: #4CAF50;
   outline: none;
 }
@@ -65,21 +58,18 @@ button {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: #45a049;
 }
 
-/* Lista de eventos */
 #listaEventos {
   display: block;
   margin-top: 20px;
   width: 100%;
 }
 
-/* Cartão do evento */
 .evento {
   background-color: #fafafa;
   padding: 15px;
@@ -87,7 +77,8 @@ button:hover {
   border-radius: 8px;
   border-left: 5px solid #4CAF50;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+  word-wrap: break-word;
 }
 
 .evento:hover {
@@ -105,6 +96,16 @@ button:hover {
   font-size: 16px;
   color: #555;
   line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.evento p a {
+  color: #1a0dab;
+  text-decoration: underline;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .evento button {
@@ -118,14 +119,12 @@ button:hover {
   border-radius: 4px;
   cursor: pointer;
   width: auto;
-  transition: background-color 0.3s ease;
 }
 
 .evento button:hover {
   background-color: #d32f2f;
 }
 
-/* Rodapé */
 footer {
   background-color: #3100ff;
   color: white;
@@ -140,7 +139,6 @@ footer p {
   margin: 5px 0;
 }
 
-/* Campo de senha com ícone */
 .campo-senha {
   position: relative;
   width: 100%;
@@ -167,12 +165,12 @@ footer p {
   user-select: none;
 }
 
-/* Menu de navegação */
 .menu-secoes {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin: 20px 0;
+  flex-wrap: wrap;
 }
 
 .menu-secoes button {
@@ -182,29 +180,22 @@ footer p {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .menu-secoes button:hover {
   background-color: #1976D2;
 }
-/* Quebra de linha para links longos */
-.evento p a {
-  word-break: break-word;
-  overflow-wrap: break-word;
-  display: inline-block;
-  max-width: 100%;
-}
 
-/* Responsivo */
 @media screen and (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
   .container {
     padding: 15px;
   }
 
-  input,
-  button,
-  textarea {
+  input, button, textarea {
     padding: 10px;
   }
 
@@ -221,3 +212,8 @@ footer p {
     margin: 0 auto 20px;
     object-fit: cover;
   }
+
+  .evento {
+    padding: 10px;
+  }
+}
