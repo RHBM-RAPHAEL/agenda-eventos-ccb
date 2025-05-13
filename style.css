@@ -184,12 +184,6 @@ footer p {
 .menu-secoes button:hover {
   background-color: #1976D2;
 }
-}
-.img-ajustada {
-  max-width: 100px;
-  height: auto;
-  display: block;
-}
 @media screen and (max-width: 768px) {
   body {
     padding: 20px;
