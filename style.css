@@ -5,6 +5,11 @@
   box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+.img-ajustada {
+  max-width: 100px;
+  height: auto;
+  display: block;
+}
 
 body {
   background: url('foto agenda.jpg') no-repeat center center fixed;
