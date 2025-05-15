@@ -128,13 +128,17 @@ function mostrarEventos() {
       div.className = 'evento';
       const [ano, mes, dia] = evento.date.split('-');
       const dataFormatada = `${dia}/${mes}/${ano}`;
+      const descricaoComLinks = transformarLinks(evento.description);
+      const localComLinks = transformarLinks(evento.location);
+
       div.innerHTML = `
         <h3>${evento.title}</h3>
         <p><strong>Data:</strong> ${dataFormatada}</p>
         <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
         <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
-        <p><strong>Local:</strong> ${transformarLinks(evento.location)}</p>
-        <p><strong>Descrição:</strong> ${transformarLinks(evento.description)}</p>`;
+        <p><strong>Local:</strong> ${localComLinks}</p>
+        <p><strong>Descrição:</strong> ${descricaoComLinks}</p>`;
+
       lista.appendChild(div);
     });
   });
@@ -160,15 +164,17 @@ function carregarMeusEventos() {
         const [ano, mes, dia] = evento.date.split('-');
         const dataFormatada = `${dia}/${mes}/${ano}`;
 
+        const descricaoComLinks = transformarLinks(evento.description);
+        const localComLinks = transformarLinks(evento.location);
+
         div.innerHTML = `
           <h3>${evento.title}</h3>
           <p><strong>Data:</strong> ${dataFormatada}</p>
           <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
-          <p><strong>Local:</strong> ${transformarLinks(evento.location)}</p>
-          <p><strong>Descrição:</strong> ${transformarLinks(evento.description)}</p>
-          <button class="btnEditar" data-id="${eventoKey}">Editar</button>
-          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>`;
+          <p><strong>Local:</strong> ${localComLinks}</p>
+          <p><strong>Descrição:</strong> ${descricaoComLinks}</p>`;
+
 
         lista.appendChild(div);
       }
