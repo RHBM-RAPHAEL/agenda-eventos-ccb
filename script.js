@@ -207,9 +207,13 @@ async function editarEvento(id) {
   const refEvento = ref(db, 'events/' + id);
   const snapshot = await get(refEvento);
   const ev = snapshot.val();
+
   const senha = prompt('Digite a senha para editar:');
   const senhaHash = await gerarHash(senha);
-  if (senhaHash !== ev.password) return alert('Senha incorreta.');
+
+  if (senhaHash !== ev.password) {
+    return alert('Senha incorreta.');
+  }
 
   document.getElementById('titulo').value = ev.title;
   document.getElementById('data').value = ev.date;
@@ -219,6 +223,12 @@ async function editarEvento(id) {
   document.getElementById('descricao').value = ev.description;
   document.getElementById('senha').value = '';
 
+  // 👉 Redireciona para a aba "Criar Evento"
+  document.getElementById('secaoEventos').style.display = 'none';
+  document.getElementById('secaoMeusEventos').style.display = 'none';
+  document.getElementById('secaoCriarEvento').style.display = 'block';
+
+  // Substitui o botão salvar
   const btn = document.getElementById('btnSalvar');
   const novo = btn.cloneNode(true);
   btn.replaceWith(novo);
