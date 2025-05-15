@@ -11,6 +11,13 @@
   display: inline-block;
   max-width: 100%;
 }
+.evento p a {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+  white-space: normal;
+}
 
 body {
   background: url('foto agenda.jpg') no-repeat center center fixed;
