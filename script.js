@@ -133,7 +133,7 @@ function mostrarEventos() {
         <p><strong>Data:</strong> ${dataFormatada}</p>
         <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
         <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
-        <p><strong>Local:</strong> ${evento.location}</p>
+        <p><strong>Local:</strong> ${transformarLinks(evento.location)}</p>
         <p><strong>Descrição:</strong> ${transformarLinks(evento.description)}</p>`;
       lista.appendChild(div);
     });
@@ -165,8 +165,8 @@ function carregarMeusEventos() {
           <p><strong>Data:</strong> ${dataFormatada}</p>
           <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
-          <p><strong>Local:</strong> ${evento.location}</p>
-          <p><strong>Descrição:</strong> ${evento.description}</p>
+          <p><strong>Local:</strong> ${transformarLinks(evento.location)}</p>
+          <p><strong>Descrição:</strong> ${transformarLinks(evento.description)}</p>
           <button class="btnEditar" data-id="${eventoKey}">Editar</button>
           <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>`;
 
