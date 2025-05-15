@@ -126,9 +126,11 @@ function mostrarEventos() {
       if (fim <= new Date()) return excluirEventoAutomaticamente(key);
       const div = document.createElement('div');
       div.className = 'evento';
+      const [ano, mes, dia] = evento.date.split('-');
+      const dataFormatada = `${dia}/${mes}/${ano}`;
       div.innerHTML = `
         <h3>${evento.title}</h3>
-        <p><strong>Data:</strong> ${evento.date}</p>
+        <p><strong>Data:</strong> ${dataFormatada}</p>
         <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
         <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
         <p><strong>Local:</strong> ${evento.location}</p>
@@ -155,15 +157,19 @@ function carregarMeusEventos() {
       if (evento.userId === user.uid) {
         const div = document.createElement('div');
         div.className = 'events';
+        const [ano, mes, dia] = evento.date.split('-');
+        const dataFormatada = `${dia}/${mes}/${ano}`;
+
         div.innerHTML = `
           <h3>${evento.title}</h3>
-          <p><strong>Data:</strong> ${evento.date}</p>
+          <p><strong>Data:</strong> ${dataFormatada}</p>
           <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
           <p><strong>Local:</strong> ${evento.location}</p>
           <p><strong>Descrição:</strong> ${evento.description}</p>
           <button class="btnEditar" data-id="${eventoKey}">Editar</button>
           <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>`;
+
         lista.appendChild(div);
       }
     });
