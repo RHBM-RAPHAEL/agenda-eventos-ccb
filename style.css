@@ -7,10 +7,14 @@
 }
 .evento p a {
   word-break: break-word;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere; /* mais agressivo que break-word */
   display: inline-block;
   max-width: 100%;
+  white-space: normal;
+  text-decoration: underline;
+  color: #1a73e8; /* Azul mais visível */
 }
+
 .evento p a {
   word-break: break-word;
   overflow-wrap: break-word;
