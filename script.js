@@ -173,7 +173,10 @@ function carregarMeusEventos() {
           <p><strong>Hora de início:</strong> ${evento.timeStart}</p>
           <p><strong>Hora de término:</strong> ${evento.timeEnd}</p>
           <p><strong>Local:</strong> ${localComLinks}</p>
-          <p><strong>Descrição:</strong> ${descricaoComLinks}</p>`;
+          <p><strong>Descrição:</strong> ${descricaoComLinks}</p>
+          <button class="btnEditar" data-id="${eventoKey}">Editar</button>
+          <button class="btnExcluir" data-id="${eventoKey}">Excluir</button>`;
+
 
 
         lista.appendChild(div);
