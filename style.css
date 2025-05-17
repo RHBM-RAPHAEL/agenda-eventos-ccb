@@ -17,6 +17,17 @@ body {
   min-height: 100vh;
 }
 
+.logo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid #4CAF50;
+  display: block;
+  margin: 0 auto 20px;
+  object-fit: cover;
+  max-width: 100%;
+}
+
 h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -206,14 +217,16 @@ footer p {
   .logo {
     width: 120px;
     height: 120px;
-    border-radius: 50%;
-    border: 4px solid #4CAF50;
-    display: block;
-    margin: 0 auto 20px;
-    object-fit: cover;
   }
 
   .evento, .events {
     padding: 10px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 850px) {
+  .logo {
+    width: 120px;
+    height: 120px;
   }
 }
