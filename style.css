@@ -64,7 +64,7 @@ button:hover {
   background-color: #45a049;
 }
 
-#listaEventos, #listaMeusEventos {
+#listaEventos {
   display: block;
   margin-top: 20px;
   width: 100%;
@@ -106,7 +106,6 @@ button:hover {
   overflow-wrap: break-word;
   display: inline-block;
   max-width: 100%;
-  white-space: normal;
 }
 
 .evento button, .events button {
