@@ -5,29 +5,6 @@
   box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.evento p a {
-  word-break: break-word;
-  overflow-wrap: break-word;
-  display: inline-block;
-  max-width: 100%;
-}
-.evento p a {
-  word-break: break-word;
-  overflow-wrap: anywhere; /* mais agressivo que break-word */
-  display: inline-block;
-  max-width: 100%;
-  white-space: normal;
-  text-decoration: underline;
-  color: #1a73e8; /* Azul mais visível */
-}
-
-.evento p a {
-  word-break: break-word;
-  overflow-wrap: break-word;
-  display: inline-block;
-  max-width: 100%;
-  white-space: normal;
-}
 
 body {
   background: url('foto agenda.jpg') no-repeat center center fixed;
@@ -87,13 +64,13 @@ button:hover {
   background-color: #45a049;
 }
 
-#listaEventos {
+#listaEventos, #listaMeusEventos {
   display: block;
   margin-top: 20px;
   width: 100%;
 }
 
-.evento {
+.evento, .events {
   background-color: #fafafa;
   padding: 15px;
   margin-bottom: 15px;
@@ -104,34 +81,35 @@ button:hover {
   word-wrap: break-word;
 }
 
-.evento:hover {
+.evento:hover, .events:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.evento h3 {
+.evento h3, .events h3 {
   margin-top: 0;
   font-size: 20px;
   color: #333;
 }
 
-.evento p {
+.evento p, .events p {
   font-size: 16px;
   color: #555;
   line-height: 1.5;
   word-wrap: break-word;
 }
 
-.evento p a {
+.evento p a, .events p a {
   color: #1a0dab;
   text-decoration: underline;
   word-break: break-word;
   overflow-wrap: break-word;
   display: inline-block;
   max-width: 100%;
+  white-space: normal;
 }
 
-.evento button {
+.evento button, .events button {
   background-color: #f44336;
   color: white;
   padding: 6px 10px;
@@ -144,7 +122,7 @@ button:hover {
   width: auto;
 }
 
-.evento button:hover {
+.evento button:hover, .events button:hover {
   background-color: #d32f2f;
 }
 
@@ -208,6 +186,7 @@ footer p {
 .menu-secoes button:hover {
   background-color: #1976D2;
 }
+
 @media screen and (max-width: 768px) {
   body {
     padding: 20px;
@@ -235,7 +214,7 @@ footer p {
     object-fit: cover;
   }
 
-  .evento {
+  .evento, .events {
     padding: 10px;
   }
 }
